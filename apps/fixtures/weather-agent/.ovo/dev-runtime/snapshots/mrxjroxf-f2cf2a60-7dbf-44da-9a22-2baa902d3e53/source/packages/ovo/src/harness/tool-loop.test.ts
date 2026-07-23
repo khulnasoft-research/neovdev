@@ -3349,7 +3349,7 @@ describe("createToolLoopHarness", () => {
   });
 
   it("surfaces a terminal model-call error to the parent as a failed task result", async () => {
-    // Regression test for https://github.com/vercel/ovo/issues/412 — a
+    // Regression test for https://github.com/khulnasoft/ovo/issues/412 — a
     // delegated subagent runs in task mode; when its model id does not
     // resolve (terminal 404), the failure must reach the parent as an
     // error result, not a successful empty output.

@@ -11,7 +11,7 @@ function basePayload(extra: Record<string, unknown>): Record<string, unknown> {
   return {
     installation: { id: 55 },
     repository: {
-      full_name: "vercel/ovo",
+      full_name: "khulnasoft/ovo",
       id: 123,
       name: "ovo",
       owner: { login: "vercel" },

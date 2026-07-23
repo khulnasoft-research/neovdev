@@ -29,7 +29,7 @@ function prContextFetch() {
         JSON.stringify({
           base: {
             ref: "main",
-            repo: { default_branch: "main", full_name: "vercel/ovo" },
+            repo: { default_branch: "main", full_name: "khulnasoft/ovo" },
             sha: "base-sha",
           },
           head: {
@@ -143,7 +143,7 @@ function basePayload(extra: Record<string, unknown>): Record<string, unknown> {
   return {
     installation: { id: 55 },
     repository: {
-      full_name: "vercel/ovo",
+      full_name: "khulnasoft/ovo",
       id: 123,
       name: "ovo",
       owner: { login: "vercel" },
@@ -221,7 +221,7 @@ describe("githubChannel", () => {
           action: "created",
           comment: {
             body: "@testbot help me",
-            html_url: "https://github.test/vercel/ovo/issues/5#issuecomment-10",
+            html_url: "https://github.test/khulnasoft/ovo/issues/5#issuecomment-10",
             id: 10,
             user: { id: 1, login: "octocat", type: "User" },
           },
@@ -241,7 +241,7 @@ describe("githubChannel", () => {
           conversation_kind: "issue",
           delivery_id: "delivery-1",
           issue_number: "5",
-          repository: "vercel/ovo",
+          repository: "khulnasoft/ovo",
           user_login: "octocat",
         },
         authenticator: "github-webhook",
@@ -271,7 +271,7 @@ describe("githubChannel", () => {
           action: "created",
           comment: {
             body: "@testbot help me",
-            html_url: "https://github.test/vercel/ovo/issues/5#issuecomment-10",
+            html_url: "https://github.test/khulnasoft/ovo/issues/5#issuecomment-10",
             id: 10,
             user: { id: 1, login: "octocat", type: "User" },
           },
@@ -298,7 +298,7 @@ describe("githubChannel", () => {
         deliveryId: "inferred:issue_comment:10:created",
         event: "issue_comment",
         missingHeaders: ["x-github-event", "x-github-delivery"],
-        repository: "vercel/ovo",
+        repository: "khulnasoft/ovo",
       }),
     );
   });
@@ -403,7 +403,7 @@ describe("githubChannel", () => {
       ),
     );
 
-    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/vercel/ovo/pulls/7");
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/khulnasoft/ovo/pulls/7");
     const [payload] = send.mock.calls[0]!;
     expect(payload.context?.[0]).toContain("title: Add GitHub context");
     expect(payload.context?.[0]).toContain("head_sha: head-sha");
@@ -769,7 +769,7 @@ describe("githubChannel", () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/issues/5/comments",
+      "https://github.test/repos/khulnasoft/ovo/issues/5/comments",
     );
   });
 
@@ -809,7 +809,7 @@ describe("githubChannel", () => {
     );
 
     expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
-      "https://github.test/repos/vercel/ovo/issues/comments/10/reactions",
+      "https://github.test/repos/khulnasoft/ovo/issues/comments/10/reactions",
     ]);
   });
 

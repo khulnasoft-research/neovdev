@@ -22,7 +22,7 @@ concurrency:
 
 env:
   GHCR_REGISTRY: ghcr.io
-  GHCR_IMAGE_NAME: vercel/ovo
+  GHCR_IMAGE_NAME: khulnasoft/ovo
   VCR_REGISTRY: vcr.vercel.com
   VCR_PROJECT_SLUG: ovo-e2e
   VCR_REPOSITORY: ovo
@@ -79,7 +79,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=ovo Sandbox
             org.opencontainers.image.description=Sandbox base image for ovo agents.
-            org.opencontainers.image.source=https://github.com/vercel/ovo
+            org.opencontainers.image.source=https://github.com/khulnasoft/ovo
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

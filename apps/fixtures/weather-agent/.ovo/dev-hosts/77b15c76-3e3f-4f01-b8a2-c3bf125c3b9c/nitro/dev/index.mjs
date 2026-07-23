@@ -64820,7 +64820,7 @@ async function setDockerNetworkPolicy(e, t, n) {
 function resolveDockerSandboxOptions(e = {}) {
   return {
     env: e.env ?? {},
-    image: e.image ?? `ghcr.io/vercel/ovo:latest`,
+    image: e.image ?? `ghcr.io/khulnasoft/ovo:latest`,
     networkPolicy: e.networkPolicy ?? `allow-all`,
     pullPolicy: e.pullPolicy ?? `if-not-present`,
   };
@@ -66157,7 +66157,7 @@ function getLocalRootPath(e) {
 }
 //#endregion
 //#region ../../../packages/ovo/dist/src/execution/sandbox/bindings/microsandbox-options.js
-const MICROSANDBOX_DEFAULT_IMAGE = `ghcr.io/vercel/ovo:latest`,
+const MICROSANDBOX_DEFAULT_IMAGE = `ghcr.io/khulnasoft/ovo:latest`,
   MICROSANDBOX_DEFAULT_CPUS = 1,
   MICROSANDBOX_DEFAULT_MEMORY_MIB = 1024,
   MICROSANDBOX_DEFAULT_PULL_POLICY = `if-missing`,
@@ -66166,7 +66166,7 @@ function resolveMicrosandboxOptions(e) {
   return {
     cpus: e?.cpus ?? 1,
     env: e?.env ?? {},
-    image: e?.image ?? `ghcr.io/vercel/ovo:latest`,
+    image: e?.image ?? `ghcr.io/khulnasoft/ovo:latest`,
     memoryMiB: e?.memoryMiB ?? 1024,
     networkPolicy: e?.networkPolicy,
     pullPolicy: e?.pullPolicy ?? `if-missing`,
@@ -87674,7 +87674,7 @@ async function createVercelEveImageSandbox(e) {
         fetch: a,
       });
 }
-const VERCEL_EVE_SANDBOX_IMAGE = `vercel/ovo:latest`;
+const VERCEL_EVE_SANDBOX_IMAGE = `khulnasoft/ovo:latest`;
 //#endregion
 //#region ../../../packages/ovo/dist/src/execution/sandbox/bindings/vercel-errors.js
 function isVercelSnapshotUnavailableError(e) {

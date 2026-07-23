@@ -28,9 +28,9 @@ describe("truncateTypingStatus", () => {
 
   it("strips Markdown formatting that assistant status renders literally", () => {
     expect(truncateTypingStatus("**Considering turbo tasks**")).toBe("Considering turbo tasks");
-    expect(truncateTypingStatus("Running `turbo` for [ovo](https://github.com/vercel/ovo)")).toBe(
-      "Running turbo for ovo",
-    );
+    expect(
+      truncateTypingStatus("Running `turbo` for [ovo](https://github.com/khulnasoft/ovo)"),
+    ).toBe("Running turbo for ovo");
   });
 
   it("caps at the typing-status limit with a trailing ellipsis", () => {

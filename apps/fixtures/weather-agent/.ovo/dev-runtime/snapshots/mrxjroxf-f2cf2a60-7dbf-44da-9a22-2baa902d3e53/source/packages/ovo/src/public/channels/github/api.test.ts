@@ -57,7 +57,7 @@ describe("GitHub API helpers", () => {
     expect(posted.id).toBe(10);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0]!;
-    expect(url).toBe("https://github.test/repos/vercel/ovo/issues/5/comments");
+    expect(url).toBe("https://github.test/repos/khulnasoft/ovo/issues/5/comments");
     expect(new Headers(init.headers).get("authorization")).toBe("Bearer ghs_test");
     expect(requestBody(init)).toEqual({ body: "hello" });
   });
@@ -77,7 +77,7 @@ describe("GitHub API helpers", () => {
     });
 
     expect(fetchMock.mock.calls[0]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/pulls/7/comments/99/replies",
+      "https://github.test/repos/khulnasoft/ovo/pulls/7/comments/99/replies",
     );
     expect(requestBody(fetchMock.mock.calls[0]?.[1])).toEqual({ body: "inline reply" });
   });
@@ -101,7 +101,7 @@ describe("GitHub API helpers", () => {
     });
 
     expect(fetchMock.mock.calls[0]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/pulls/7/comments",
+      "https://github.test/repos/khulnasoft/ovo/pulls/7/comments",
     );
     expect(requestBody(fetchMock.mock.calls[0]?.[1])).toMatchObject({
       body: "inline comment",
@@ -123,7 +123,7 @@ describe("GitHub API helpers", () => {
     });
 
     expect(fetchMock.mock.calls[0]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/pulls/comments/99",
+      "https://github.test/repos/khulnasoft/ovo/pulls/comments/99",
     );
     expect(fetchMock.mock.calls[0]?.[1]?.method).toBe("PATCH");
     expect(requestBody(fetchMock.mock.calls[0]?.[1])).toEqual({ body: "updated inline reply" });
@@ -151,12 +151,12 @@ describe("GitHub API helpers", () => {
         credentials,
         installationId: 123,
         method: "GET",
-        path: "/repos/vercel/ovo",
+        path: "/repos/khulnasoft/ovo",
       }),
     ).rejects.toBeInstanceOf(GitHubApiError);
 
     expect(fetchMock.mock.calls[0]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/issues/comments/44/reactions",
+      "https://github.test/repos/khulnasoft/ovo/issues/comments/44/reactions",
     );
   });
 
@@ -167,7 +167,7 @@ describe("GitHub API helpers", () => {
         jsonResponse({
           base: {
             ref: "main",
-            repo: { default_branch: "main", full_name: "vercel/ovo" },
+            repo: { default_branch: "main", full_name: "khulnasoft/ovo" },
             sha: "base-sha",
           },
           changed_files: 1,
@@ -232,7 +232,7 @@ describe("GitHub API helpers", () => {
       },
     ]);
     expect(fetchMock.mock.calls[1]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/pulls/7/files?per_page=5",
+      "https://github.test/repos/khulnasoft/ovo/pulls/7/files?per_page=5",
     );
   });
 });

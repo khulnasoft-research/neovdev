@@ -47,4 +47,4 @@ export async function createVercelEveImageSandbox(input: {
   });
 }
 
-const VERCEL_EVE_SANDBOX_IMAGE = "vercel/ovo:latest";
+const VERCEL_EVE_SANDBOX_IMAGE = "khulnasoft/ovo:latest";

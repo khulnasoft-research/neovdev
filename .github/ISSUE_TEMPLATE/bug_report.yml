@@ -7,9 +7,9 @@ body:
       value: |
         Thanks for taking the time to file a bug report. Before opening a new issue:
 
-        - [Search existing issues](https://github.com/vercel/ovo/issues) and upvote instead of duplicating — it gets bugs fixed faster.
+        - [Search existing issues](https://github.com/khulnasoft/ovo/issues) and upvote instead of duplicating — it gets bugs fixed faster.
         - Verify the bug still reproduces on the **latest** ovo release; it may already be fixed.
-        - For questions or help with your own project, use [Discussions](https://github.com/vercel/ovo/discussions) instead.
+        - For questions or help with your own project, use [Discussions](https://github.com/khulnasoft/ovo/discussions) instead.
   - type: input
     id: reproduction
     attributes:

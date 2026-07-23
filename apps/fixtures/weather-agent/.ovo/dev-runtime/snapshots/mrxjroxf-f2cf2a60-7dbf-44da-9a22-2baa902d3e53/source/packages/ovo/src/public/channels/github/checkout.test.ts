@@ -28,7 +28,7 @@ function pullRequest(overrides: Record<string, unknown> = {}): Record<string, un
   return {
     base: {
       ref: "main",
-      repo: { default_branch: "main", full_name: "vercel/ovo" },
+      repo: { default_branch: "main", full_name: "khulnasoft/ovo" },
       sha: "b".repeat(40),
     },
     head: { ref: "feature", repo: { full_name: "octocat/ovo" }, sha: null },
@@ -80,7 +80,7 @@ describe("GitHub checkout", () => {
     );
     // Clean remote — the token is never embedded in the URL.
     expect(sandbox.commandLog).toContain(
-      `cd '/workspace' && git remote add origin 'https://github.com/vercel/ovo.git'`,
+      `cd '/workspace' && git remote add origin 'https://github.com/khulnasoft/ovo.git'`,
     );
     // No scrub step and no token anywhere in the command stream.
     expect(sandbox.commandLog.some((command) => command.includes("git remote set-url"))).toBe(
@@ -150,7 +150,7 @@ describe("GitHub checkout", () => {
       repo: "ovo",
     });
 
-    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/vercel/ovo/pulls/7");
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/khulnasoft/ovo/pulls/7");
     expect(checkout.ref).toBe("refs/pull/7/head");
     expect(sandbox.commandLog).toContain(
       "cd '/workspace' && GIT_TERMINAL_PROMPT=0 git fetch --depth 1 origin 'refs/pull/7/head'",

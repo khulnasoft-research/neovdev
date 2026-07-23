@@ -18,7 +18,7 @@ import { vercel } from "ovo/sandbox/vercel";
  * Backend is left as the framework default so this fixture works both
  * locally (where `defaultBackend()` resolves to `docker()`) and on Vercel
  * deployments (where it resolves to `vercel()`). Both run the published
- * `ghcr.io/vercel/ovo:latest` base image, which ships Python, Node, and git;
+ * `ghcr.io/khulnasoft/ovo:latest` base image, which ships Python, Node, and git;
  * the bootstrap below assumes that real-binary environment and is not meant
  * to run against the dependency-free `just-bash` fallback.
  *

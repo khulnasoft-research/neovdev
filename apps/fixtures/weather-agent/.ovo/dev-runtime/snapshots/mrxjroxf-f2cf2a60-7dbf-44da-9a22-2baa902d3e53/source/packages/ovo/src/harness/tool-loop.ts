@@ -1185,7 +1185,7 @@ export function createToolLoopHarness(config: ToolLoopHarnessConfig): StepFn {
           // In task mode (delegated subagent runs) the terminal failure
           // must be the task's error result so the parent driver resumes
           // with a failed `subagent-result` instead of a successful empty
-          // output (https://github.com/vercel/ovo/issues/412).
+          // output (https://github.com/khulnasoft/ovo/issues/412).
           return {
             next:
               config.mode === "task"

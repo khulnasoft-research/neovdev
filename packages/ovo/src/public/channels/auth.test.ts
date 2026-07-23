@@ -549,7 +549,7 @@ describe("routeAuth", () => {
   });
 
   // ---------------------------------------------------------------------------
-  // Declared challenges (vercel/ovo#909): the 401 `www-authenticate` header
+  // Declared challenges (khulnasoft/ovo#909): the 401 `www-authenticate` header
   // must reflect the auth strategies actually configured on the route,
   // rather than always defaulting to `Bearer`.
   // ---------------------------------------------------------------------------

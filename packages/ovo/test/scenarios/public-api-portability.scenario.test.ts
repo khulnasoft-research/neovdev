@@ -49,7 +49,7 @@ import { microsandbox } from "ovo/sandbox/microsandbox";
 import { vercel } from "ovo/sandbox/vercel";
 
 const fallback = defaultBackend({
-  docker: { image: "ghcr.io/vercel/ovo:latest" },
+  docker: { image: "ghcr.io/khulnasoft/ovo:latest" },
   justBash: {},
   microsandbox: {},
   vercel: { resources: { vcpus: 2 } },

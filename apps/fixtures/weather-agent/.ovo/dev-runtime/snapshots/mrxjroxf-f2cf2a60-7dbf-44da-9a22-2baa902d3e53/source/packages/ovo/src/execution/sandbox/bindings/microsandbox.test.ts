@@ -32,7 +32,7 @@ describe.skipIf(onWindows)("createMicrosandboxSandboxBackend", () => {
   });
 
   it("defaults to ovo's published sandbox runtime image", () => {
-    expect(MICROSANDBOX_DEFAULT_IMAGE).toBe("ghcr.io/vercel/ovo:latest");
+    expect(MICROSANDBOX_DEFAULT_IMAGE).toBe("ghcr.io/khulnasoft/ovo:latest");
     expect(resolveMicrosandboxOptions(undefined).image).toBe(MICROSANDBOX_DEFAULT_IMAGE);
   });
 

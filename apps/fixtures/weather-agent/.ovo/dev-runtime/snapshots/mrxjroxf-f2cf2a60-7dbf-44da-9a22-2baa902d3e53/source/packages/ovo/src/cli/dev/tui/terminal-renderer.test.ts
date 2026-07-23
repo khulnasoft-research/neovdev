@@ -278,7 +278,7 @@ describe("TerminalRenderer (inline scrollback)", () => {
           toolName: "web_fetch",
           input: {
             format: "markdown",
-            url: "https://github.com/vercel/ovo/issues/648",
+            url: "https://github.com/khulnasoft/ovo/issues/648",
           },
         },
         {
@@ -292,7 +292,7 @@ describe("TerminalRenderer (inline scrollback)", () => {
     );
 
     const snapshot = screen.snapshot();
-    expect(snapshot).toContain("Fetched https://github.com/vercel/ovo/issues/648");
+    expect(snapshot).toContain("Fetched https://github.com/khulnasoft/ovo/issues/648");
     expect(snapshot).not.toContain("format=markdown");
     expect(snapshot).not.toContain("large fetched page");
     renderer.shutdown();

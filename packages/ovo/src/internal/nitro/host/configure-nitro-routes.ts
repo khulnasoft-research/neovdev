@@ -328,7 +328,7 @@ function registerDevelopmentControlRoutes(
     // The complete config is resolved here, in the unbundled host process,
     // and baked into the handler: resolving the module-map loader path from
     // inside the bundled dev server can land on the authored app instead of
-    // the installed ovo package (vercel/ovo#311).
+    // the installed ovo package (khulnasoft/ovo#311).
     args: JSON.stringify(artifactsConfig),
     handlerExport: "handleDevScheduleDispatchRequest",
     method: "POST",

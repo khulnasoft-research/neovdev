@@ -17,7 +17,7 @@ export interface MicrosandboxSandboxCreateOptions {
    * Python, or ripgrep in sandbox bootstrap or provide them through a
    * custom image.
    *
-   * @default "ghcr.io/vercel/ovo:latest"
+   * @default "ghcr.io/khulnasoft/ovo:latest"
    */
   readonly image?: string;
   /** Number of virtual CPUs assigned to each sandbox. @default 1 */

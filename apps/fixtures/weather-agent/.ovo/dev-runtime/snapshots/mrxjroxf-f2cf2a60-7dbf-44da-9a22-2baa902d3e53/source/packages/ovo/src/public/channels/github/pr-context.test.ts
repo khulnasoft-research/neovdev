@@ -30,7 +30,7 @@ function pullRequest(overrides: Record<string, unknown> = {}): Record<string, un
     additions: 12,
     base: {
       ref: "main",
-      repo: { default_branch: "main", full_name: "vercel/ovo" },
+      repo: { default_branch: "main", full_name: "khulnasoft/ovo" },
       sha: "base-sha",
     },
     body: "This PR adds GitHub context.",
@@ -42,7 +42,7 @@ function pullRequest(overrides: Record<string, unknown> = {}): Record<string, un
       repo: { full_name: "octocat/ovo" },
       sha: "head-sha",
     },
-    html_url: "https://github.test/vercel/ovo/pull/7",
+    html_url: "https://github.test/khulnasoft/ovo/pull/7",
     mergeable: true,
     number: 7,
     state: "open",
@@ -117,7 +117,7 @@ describe("SHA pinning", () => {
       return Promise.resolve(
         jsonResponse(
           pullRequest({
-            base: { ref: "main", repo: { full_name: "vercel/ovo" }, sha: "other-live-base" },
+            base: { ref: "main", repo: { full_name: "khulnasoft/ovo" }, sha: "other-live-base" },
             head: { ref: "feature/github", repo: { full_name: "octocat/ovo" }, sha: liveHead },
           }),
         ),
@@ -135,9 +135,9 @@ describe("SHA pinning", () => {
       repo: "ovo",
     });
 
-    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/vercel/ovo/pulls/7");
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/khulnasoft/ovo/pulls/7");
     expect(fetchMock.mock.calls[1]?.[0]).toBe(
-      `https://github.test/repos/vercel/ovo/compare/${webhookBase}...${webhookHead}`,
+      `https://github.test/repos/khulnasoft/ovo/compare/${webhookBase}...${webhookHead}`,
     );
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(text(messages)).toContain(`head_sha: ${webhookHead}`);
@@ -168,9 +168,9 @@ describe("GitHub pull-request context", () => {
 
     const messages = await build(fetchMock);
 
-    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/vercel/ovo/pulls/7");
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://github.test/repos/khulnasoft/ovo/pulls/7");
     expect(fetchMock.mock.calls[1]?.[0]).toBe(
-      "https://github.test/repos/vercel/ovo/pulls/7/files?per_page=50",
+      "https://github.test/repos/khulnasoft/ovo/pulls/7/files?per_page=50",
     );
     expect(text(messages)).toContain("title: Add GitHub context");
     expect(text(messages)).toContain("head_sha: head-sha");

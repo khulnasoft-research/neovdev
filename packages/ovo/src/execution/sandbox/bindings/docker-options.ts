@@ -10,7 +10,7 @@ import type {
  * Default base image for the Docker backend: ovo's published sandbox
  * runtime image.
  */
-export const DEFAULT_DOCKER_SANDBOX_IMAGE = "ghcr.io/vercel/ovo:latest";
+export const DEFAULT_DOCKER_SANDBOX_IMAGE = "ghcr.io/khulnasoft/ovo:latest";
 
 /**
  * Fully-defaulted Docker backend options consumed by the backend
