@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "#compiled/zod/index.js";
 
 const source = z.object({
   exportName: z.string().optional(),
@@ -129,6 +129,11 @@ export const AgentInfoResultSchema = z.object({
       contextWindowTokens: z.number().optional(),
       id: z.string(),
       providerOptions: z.unknown().optional(),
+      // An unrecognized future effort level degrades to absent, not a parse failure.
+      reasoning: z
+        .enum(["provider-default", "none", "minimal", "low", "medium", "high", "xhigh"])
+        .optional()
+        .catch(undefined),
       source: source.optional(),
       routing: modelRouting.optional(),
       endpoint: modelEndpoint.optional(),

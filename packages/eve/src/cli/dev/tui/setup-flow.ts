@@ -1,5 +1,6 @@
 import type { ChannelSetupChoice, ChannelSetupChoiceOptions } from "#setup/cli/index.js";
 import type { SearchActionOption } from "#setup/cli/select-state.js";
+import type { ModelSettingsRequest, ModelSettingsResult } from "#setup/flows/model.js";
 import type { ProviderPickerChoice, ProviderPickerRequest } from "#setup/flows/provider.js";
 import type { SelectNotice } from "#setup/prompter.js";
 
@@ -11,6 +12,9 @@ export type SetupEditableSelectResult =
 
 /** Animation shown while a setup flow is between questions. */
 export type SetupFlowIndicator = "spinner" | "pulse";
+
+/** Ephemeral setup status, with external user action distinct from background work. */
+export type SetupFlowStatus = string | { kind: "external-action"; text: string; emphasis: string };
 
 interface SetupSelectRequestBase {
   message: string;
@@ -29,6 +33,7 @@ interface SetupSearchAction extends SearchActionOption {
 
 interface SetupSearchSelectRequest extends SetupSelectRequestBase {
   kind: "search";
+  layout?: "task-list";
   initialValue?: string;
   placeholder?: string;
   searchAction?: SetupSearchAction;
@@ -75,6 +80,8 @@ export interface SetupFlowRenderer {
   }): Promise<SetupEditableSelectResult | undefined>;
   /** Provider-only picker with masked async validation. Not part of Prompter. */
   readProviderPicker(options: ProviderPickerRequest): Promise<ProviderPickerChoice | undefined>;
+  /** Composite Change-model screen: catalog list, reasoning slider, tier toggle. Not part of Prompter. */
+  readModelEditor(options: ModelSettingsRequest): Promise<ModelSettingsResult | undefined>;
   readText(options: {
     message: string;
     placeholder?: string;
@@ -92,7 +99,7 @@ export interface SetupFlowRenderer {
    * whichever settles first wins.
    */
   readChoice(options: ChannelSetupChoiceOptions): ChannelSetupChoice;
-  setStatus(text: string | undefined): void;
+  setStatus(status: SetupFlowStatus | undefined): void;
   renderLine(text: string, tone: "info" | "success" | "warning" | "error"): void;
   renderOutput(text: string): void;
   /**

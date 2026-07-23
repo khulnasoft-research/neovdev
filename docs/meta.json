@@ -9,6 +9,7 @@
     "skills",
     "channels",
     "connections",
+    "extensions",
     "sandbox",
     "subagents",
     "schedules",
@@ -16,6 +17,7 @@
     "---",
     "guides",
     "concepts",
+    "patterns",
     "---",
     "reference",
     "tutorial"

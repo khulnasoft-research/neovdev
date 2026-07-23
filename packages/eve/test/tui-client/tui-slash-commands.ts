@@ -3,7 +3,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { Client } from "eve/client";
-import { createPromptCommandHandler, EveTUIRunner, MockScreen, MockUserInput } from "./lib/tui.ts";
+import {
+  createPromptCommandHandler,
+  EveTUIRunner,
+  MockScreen,
+  MockUserInput,
+  promptCommandsFor,
+} from "./lib/tui.ts";
 
 import { theme } from "./lib/theme.ts";
 
@@ -13,7 +19,7 @@ import { theme } from "./lib/theme.ts";
  *   1. A turn against an unreachable server renders an error region.
  *   2. `/new` clears the transcript and starts a fresh session, the error
  *      region disappears and the screen returns to the empty prompt.
- *   3. `/deploy` (with no local setup context) renders the local-only notice
+ *   3. `/deploy` (in a remote command context) renders the local-only notice
  *      instead of suspending into a setup flow.
  *   4. `/exit` terminates the runner, exactly as Ctrl+C would.
  *   5. Local `/channels` opens the real setup picker, Escape cancels it, and
@@ -34,7 +40,14 @@ void (async () => {
     screen,
     userInput: input,
     name: "TUI slash commands",
-    promptCommandHandler: createPromptCommandHandler({}),
+    availablePromptCommands: promptCommandsFor("remote"),
+    promptCommandHandler: createPromptCommandHandler({
+      target: {
+        kind: "remote",
+        serverUrl: UNREACHABLE_HOST,
+        workspaceRoot: process.cwd(),
+      },
+    }),
   });
 
   const runPromise = runner.run().catch((error: unknown) => {
@@ -45,7 +58,7 @@ void (async () => {
   });
 
   try {
-    await screen.waitForText("❯", 5_000);
+    await screen.waitForIdlePrompt(5_000);
 
     input.type("boom");
     input.enter();
@@ -54,36 +67,22 @@ void (async () => {
 
     // Wait until `readPrompt` is active again so the next keystrokes
     // aren't dropped in the gap between turns.
-    await screen.waitForText("❯", 5_000);
+    await screen.waitForIdlePrompt(5_000);
     input.type("/new");
     input.enter();
-    await screen.waitForText("❯", 5_000);
+    await screen.waitForIdlePrompt(5_000);
     if (screen.snapshot().includes("Error")) {
       throw new Error(`/new did not clear the transcript:\n${screen.snapshot()}`);
     }
     console.log(theme.muted("[tui-slash-commands] /new cleared the transcript"));
 
-    // The command handler has no appRoot (this session is not a local `eve dev`),
-    // so the setup commands answer with the local-only notice instead of
-    // suspending into a flow. Proves parse → dispatch → notice with no network.
+    // Remote setup commands return a local-only notice instead of opening a flow.
     input.type("/deploy");
     input.enter();
     await screen.waitForText("/deploy needs eve dev running the local server", 5_000);
     console.log(theme.muted("[tui-slash-commands] /deploy rendered the local-only notice"));
 
-    await screen.waitForText("❯", 5_000);
-    input.type("/login");
-    input.enter();
-    await screen.waitForText("/login needs eve dev running the local server", 5_000);
-    console.log(theme.muted("[tui-slash-commands] /login rendered the local-only notice"));
-
-    await screen.waitForText("❯", 5_000);
-    input.type("/vc");
-    input.enter();
-    await screen.waitForText("/vc needs eve dev running the local server", 5_000);
-    console.log(theme.muted("[tui-slash-commands] /vc rendered the local-only notice"));
-
-    await screen.waitForText("❯", 5_000);
+    await screen.waitForIdlePrompt(5_000);
     input.type("/exit");
     input.enter();
 
@@ -114,7 +113,10 @@ async function runLocalChannelsCancellation(): Promise<void> {
     userInput: input,
     name: "TUI local setup",
     appRoot,
-    promptCommandHandler: createPromptCommandHandler({ appRoot }),
+    availablePromptCommands: promptCommandsFor("local"),
+    promptCommandHandler: createPromptCommandHandler({
+      target: { kind: "local", serverUrl: UNREACHABLE_HOST, workspaceRoot: appRoot },
+    }),
   });
   const runPromise = runner.run();
 
@@ -127,13 +129,13 @@ async function runLocalChannelsCancellation(): Promise<void> {
       "utf8",
     );
 
-    await screen.waitForText("❯", 5_000);
+    await screen.waitForIdlePrompt(5_000);
     input.type("/channels");
     input.enter();
     await screen.waitForText("Where will you chat with your agent?", 10_000);
     input.send("\x1b");
-    await screen.waitForText("/channels cancelled.", 5_000);
-    await screen.waitForText("❯", 5_000);
+    await screen.waitForText("/channels dismissed.", 5_000);
+    await screen.waitForIdlePrompt(5_000);
     console.log(theme.muted("[tui-slash-commands] local /channels cancelled back to prompt"));
 
     input.type("/exit");

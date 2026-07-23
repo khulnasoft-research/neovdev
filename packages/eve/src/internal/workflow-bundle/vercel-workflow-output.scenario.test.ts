@@ -279,7 +279,7 @@ describe("emitBundledWorkflowFunctionDirectory", () => {
     expect(config.supportsResponseStreaming).toBe(true);
     expect(config.environment).toEqual({
       NODE_OPTIONS: "--experimental-require-module",
-      WORKFLOW_QUEUE_NAMESPACE: "eve",
+      WORKFLOW_PRECONDITION_GUARD: "1",
     });
   });
 

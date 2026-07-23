@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { EVE_CREATE_SESSION_ROUTE_PATH } from "#protocol/routes.js";
 import type { SessionAuthContext } from "#channel/types.js";
+import { withVercelOidcProjectResolver } from "#runtime/governance/auth/vercel-oidc-project.js";
 import {
   type AuthFn,
   createIpAllowList,
@@ -16,6 +17,7 @@ import {
   none,
   placeholderAuth,
   routeAuth,
+  type UnauthorizedChallenge,
   UnauthenticatedError,
   vercelOidc,
   vercelSubject,
@@ -23,6 +25,7 @@ import {
   verifyJwtEcdsa,
   verifyJwtHmac,
   verifyVercelOidc,
+  withAuthChallenges,
 } from "#public/channels/auth.js";
 
 const TEST_ROUTE_URL = `https://example.com${EVE_CREATE_SESSION_ROUTE_PATH}`;
@@ -50,6 +53,15 @@ describe("verifyHttpBasic", () => {
       password: "top-secret",
     });
     expect(result.ok).toBe(false);
+  });
+
+  it("normalizes credentials to NFC before comparison", () => {
+    const result = verifyHttpBasic(
+      `Basic ${Buffer.from("caf\u00e9:s\u00e9cret", "utf8").toString("base64")}`,
+      { username: "cafe\u0301", password: "se\u0301cret" },
+    );
+
+    expect(result.ok).toBe(true);
   });
 
   it("rejects requests with no authorization header", () => {
@@ -535,6 +547,156 @@ describe("routeAuth", () => {
 
     expect(result).toEqual(SAMPLE_CONTEXT);
   });
+
+  // ---------------------------------------------------------------------------
+  // Declared challenges (vercel/eve#909): the 401 `www-authenticate` header
+  // must reflect the auth strategies actually configured on the route,
+  // rather than always defaulting to `Bearer`.
+  // ---------------------------------------------------------------------------
+
+  it("advertises a Basic challenge when the route is protected only by httpBasic", async () => {
+    const request = makeRequest();
+    const result = await routeAuth(request, [
+      httpBasic({ password: "top-secret", username: "ops" }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.status).toBe(401);
+      expect(result.headers.get("www-authenticate")).toBe('Basic realm="eve", charset="UTF-8"');
+    }
+  });
+
+  it("renders the realm before charset in the Basic challenge", async () => {
+    const request = makeRequest();
+    const result = await routeAuth(request, [
+      httpBasic({ password: "top-secret", username: "ops" }, { realm: "agent" }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.headers.get("www-authenticate")).toBe('Basic realm="agent", charset="UTF-8"');
+    }
+  });
+
+  it("preserves an explicitly empty Basic realm", async () => {
+    const result = await routeAuth(makeRequest(), [
+      httpBasic({ password: "top-secret", username: "ops" }, { realm: "" }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.headers.get("www-authenticate")).toBe('Basic realm="", charset="UTF-8"');
+    }
+  });
+
+  it("advertises Bearer for a lone jwtHmac strategy", async () => {
+    const request = makeRequest();
+    const result = await routeAuth(request, [
+      jwtHmac({
+        algorithm: "HS256",
+        audiences: ["weather-agent"],
+        issuer: "https://internal.example",
+        secret: "shared-secret",
+      }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.headers.get("www-authenticate")).toBe("Bearer");
+    }
+  });
+
+  it("advertises both Basic and Bearer for a mixed httpBasic + jwtHmac route", async () => {
+    const request = makeRequest();
+    const result = await routeAuth(request, [
+      httpBasic({ password: "top-secret", username: "ops" }),
+      jwtHmac({
+        algorithm: "HS256",
+        audiences: ["weather-agent"],
+        issuer: "https://internal.example",
+        secret: "shared-secret",
+      }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      const header = result.headers.get("www-authenticate");
+      expect(header).toContain('Basic realm="eve", charset="UTF-8"');
+      expect(header).toContain("Bearer");
+    }
+  });
+
+  it("dedupes repeated Bearer challenges from multiple bearer strategies", async () => {
+    const request = makeRequest();
+    const result = await routeAuth(request, [
+      vercelOidc(),
+      jwtHmac({
+        algorithm: "HS256",
+        audiences: ["weather-agent"],
+        issuer: "https://internal.example",
+        secret: "shared-secret",
+      }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.headers.get("www-authenticate")).toBe("Bearer");
+    }
+  });
+
+  it("does not emit www-authenticate on a successful authentication", async () => {
+    const result = await routeAuth(makeRequest(), [
+      httpBasic({ password: "top-secret", username: "ops" }),
+      none(),
+    ]);
+
+    expect(result).not.toBeInstanceOf(Response);
+    expect(result).toMatchObject({ principalType: "anonymous" });
+  });
+
+  it("gives precedence to a thrown UnauthenticatedError over collected challenges", async () => {
+    const request = makeRequest();
+    const result = await routeAuth(request, [
+      () => {
+        throw new UnauthenticatedError({ message: "custom rejection" });
+      },
+      httpBasic({ password: "top-secret", username: "ops" }),
+    ]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.status).toBe(401);
+      // The thrown error's own response wins outright: `UnauthenticatedError`
+      // declares no challenges of its own, so it carries no Basic challenge
+      // from the strategy that never ran (nor any www-authenticate header).
+      expect(result.headers.has("www-authenticate")).toBe(false);
+      await expect(result.json()).resolves.toMatchObject({ error: "custom rejection" });
+    }
+  });
+
+  it("falls back to Bearer when no configured strategy declares a challenge", async () => {
+    const result = await routeAuth(makeRequest(), [() => null, () => undefined]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.headers.get("www-authenticate")).toBe("Bearer");
+    }
+  });
+
+  it("advertises a challenge declared on a custom AuthFn via withAuthChallenges", async () => {
+    const challenges: readonly UnauthorizedChallenge[] = [
+      { scheme: "Basic", parameters: { realm: "x" } },
+    ];
+    const customAuthFn = withAuthChallenges<Request>(() => null, challenges);
+
+    const result = await routeAuth(makeRequest(), [customAuthFn]);
+
+    expect(result).toBeInstanceOf(Response);
+    if (result instanceof Response) {
+      expect(result.headers.get("www-authenticate")).toBe('Basic realm="x"');
+    }
+  });
 });
 
 describe("placeholderAuth", () => {
@@ -689,6 +851,143 @@ describe("verifyVercelOidc", () => {
           subject: "owner:acme:project:weather-agent:environment:production",
         });
       }
+    } finally {
+      issuer.restore();
+    }
+  });
+
+  it("authenticates a development Vercel user token as a user principal", async () => {
+    vi.stubEnv("VERCEL_PROJECT_ID", "prj_current");
+    vi.stubEnv("VERCEL_TARGET_ENV", "development");
+
+    const issuer = await installMockedVercelIssuer("development-user-accept");
+    try {
+      const token = await issuer.signToken({
+        environment: "development",
+        owner: "acme",
+        owner_id: "team_acme",
+        project: "weather-agent",
+        project_id: "prj_current",
+        sub: "owner:acme:project:weather-agent:environment:development",
+        user_id: "user_ada",
+      });
+
+      const result = await verifyVercelOidc(token);
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.sessionAuth).toMatchObject({
+          authenticator: "oidc",
+          principalType: "user",
+          subject: "user_ada",
+        });
+      }
+    } finally {
+      issuer.restore();
+    }
+  });
+
+  it("uses an explicit current-project binding for a development user token", async () => {
+    vi.stubEnv("VERCEL_PROJECT_ID", "");
+    vi.stubEnv("VERCEL_TARGET_ENV", "");
+    vi.stubEnv("VERCEL_ENV", "");
+
+    const issuer = await installMockedVercelIssuer("development-user-explicit-project");
+    try {
+      const token = await issuer.signToken({
+        environment: "development",
+        project_id: "prj_current",
+        sub: "owner:acme:project:weather-agent:environment:development",
+        user_id: "user_ada",
+      });
+
+      const result = await verifyVercelOidc(token, {
+        currentVercelProject: {
+          environment: "development",
+          projectId: "prj_current",
+        },
+      });
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.sessionAuth).toMatchObject({
+          principalType: "user",
+          subject: "user_ada",
+        });
+      }
+    } finally {
+      issuer.restore();
+    }
+  });
+
+  it("authenticates a development user token as a service principal on preview", async () => {
+    vi.stubEnv("VERCEL_PROJECT_ID", "prj_current");
+    vi.stubEnv("VERCEL_TARGET_ENV", "preview");
+
+    const issuer = await installMockedVercelIssuer("development-user-preview-service");
+    try {
+      const token = await issuer.signToken({
+        environment: "development",
+        project_id: "prj_current",
+        sub: "owner:acme:project:weather-agent:environment:development",
+        user_id: "user_ada",
+      });
+
+      const result = await verifyVercelOidc(token);
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.sessionAuth).toMatchObject({
+          principalType: "service",
+          subject: "owner:acme:project:weather-agent:environment:development",
+        });
+      }
+    } finally {
+      issuer.restore();
+    }
+  });
+
+  it("authenticates a development user token as a service principal on production", async () => {
+    vi.stubEnv("VERCEL_PROJECT_ID", "prj_current");
+    vi.stubEnv("VERCEL_TARGET_ENV", "production");
+
+    const issuer = await installMockedVercelIssuer("development-user-production-reject");
+    try {
+      const token = await issuer.signToken({
+        environment: "development",
+        project_id: "prj_current",
+        sub: "owner:acme:project:weather-agent:environment:development",
+        user_id: "user_ada",
+      });
+
+      const result = await verifyVercelOidc(token);
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.sessionAuth).toMatchObject({
+          principalType: "service",
+          subject: "owner:acme:project:weather-agent:environment:development",
+        });
+      }
+    } finally {
+      issuer.restore();
+    }
+  });
+
+  it("rejects a user_id claim outside development", async () => {
+    vi.stubEnv("VERCEL_PROJECT_ID", "prj_current");
+    vi.stubEnv("VERCEL_TARGET_ENV", "preview");
+
+    const issuer = await installMockedVercelIssuer("non-development-user-id");
+    try {
+      const token = await issuer.signToken({
+        environment: "preview",
+        project_id: "prj_current",
+        sub: "owner:acme:project:weather-agent:environment:preview",
+        user_id: "user_ada",
+      });
+
+      await expect(verifyVercelOidc(token)).resolves.toEqual({ ok: false });
     } finally {
       issuer.restore();
     }
@@ -1153,6 +1452,52 @@ describe("vercelOidc strategy helper", () => {
       headers: { authorization: `Bearer ${token}` },
     });
     await expect(Promise.resolve(authFn(request))).resolves.toBeNull();
+  });
+
+  it("uses the local host's linked project binding only for bearer requests", async () => {
+    vi.stubEnv("VERCEL_PROJECT_ID", "");
+    vi.stubEnv("VERCEL_TARGET_ENV", "");
+    vi.stubEnv("VERCEL_ENV", "");
+    const issuer = await installMockedVercelIssuer("local-host-binding");
+
+    try {
+      const resolveCurrentProject = vi.fn(() => ({
+        environment: "development" as const,
+        projectId: "prj_linked",
+      }));
+      const authFn = vercelOidc();
+      const unauthenticatedRequest = new Request("http://localhost/eve/v1/session");
+      await expect(
+        withVercelOidcProjectResolver(
+          { request: unauthenticatedRequest, resolveCurrentProject },
+          async () => await authFn(unauthenticatedRequest),
+        ),
+      ).resolves.toBeNull();
+      expect(resolveCurrentProject).not.toHaveBeenCalled();
+
+      const token = await issuer.signToken({
+        environment: "development",
+        project_id: "prj_linked",
+        sub: "owner:acme:project:weather-agent:environment:development",
+        user_id: "user_ada",
+      });
+      const request = new Request("http://localhost/eve/v1/session", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const result = await withVercelOidcProjectResolver(
+        {
+          request,
+          resolveCurrentProject,
+        },
+        async () => await authFn(request),
+      );
+
+      expect(result).toMatchObject({ principalType: "user", subject: "user_ada" });
+      expect(resolveCurrentProject).toHaveBeenCalledTimes(1);
+    } finally {
+      issuer.restore();
+      vi.unstubAllEnvs();
+    }
   });
 });
 

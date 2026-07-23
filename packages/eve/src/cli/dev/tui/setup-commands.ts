@@ -1,5 +1,6 @@
 import { HumanActionRequiredError } from "#setup/human-action.js";
 import { runChannelsFlow } from "#setup/flows/channels.js";
+import { runConnectionsFlow } from "#setup/flows/connections.js";
 import { runDeployFlow } from "#setup/flows/deploy.js";
 import {
   runInstallVercelCliFlow,
@@ -26,18 +27,20 @@ export type TuiSetupCommand = PromptCommandExtensionName;
  * move past their opening question.
  */
 export const SETUP_FLOW_CONFIG = {
-  vc: { title: "Install the Vercel CLI", indicator: "spinner" },
-  login: { title: "Log in to Vercel", indicator: "spinner" },
+  "vc:install": { title: "Install the Vercel CLI", indicator: "pulse" },
+  "vc:login": { title: "Log in to Vercel", indicator: "pulse" },
   model: { title: "Configure the agent model", indicator: "pulse" },
   channels: { title: "Agent channels", indicator: "pulse" },
+  connect: { title: "Agent connections", indicator: "pulse" },
   deploy: { title: "Deploy to Vercel", indicator: "spinner" },
 } satisfies Record<TuiSetupCommand, { title: string; indicator: SetupFlowIndicator }>;
 
 /** The prompter surface plus the working-state interrupt trap a command races against. */
 export type TuiSetupCommandRenderer = TuiPrompterRenderer &
-  Pick<SetupFlowRenderer, "readProviderPicker" | "waitForInterrupt">;
+  Pick<SetupFlowRenderer, "readProviderPicker" | "readModelEditor" | "waitForInterrupt">;
 
-type MuteableSetupRenderer = TuiPrompterRenderer & Pick<SetupFlowRenderer, "readProviderPicker">;
+type MuteableSetupRenderer = TuiPrompterRenderer &
+  Pick<SetupFlowRenderer, "readProviderPicker" | "readModelEditor">;
 
 export interface TuiSetupCommandInput {
   command: TuiSetupCommand;
@@ -47,6 +50,7 @@ export interface TuiSetupCommandInput {
   renderer: TuiSetupCommandRenderer;
   /** Initial model-flow step authorized by the runner's boot evidence. */
   initialModelStep?: "provider";
+  disabledConnectionReasons?: Readonly<Record<string, string>>;
   /** Test seam; defaults to the real TUI-native prompter over `renderer`. */
   createPrompter?: (renderer: TuiPrompterRenderer) => Prompter;
   /** Test seam; defaults to the real setup flows. */
@@ -59,6 +63,7 @@ export interface TuiSetupFlows {
   runLoginFlow: typeof runLoginFlow;
   runModelFlow: typeof runModelFlow;
   runChannelsFlow: typeof runChannelsFlow;
+  runConnectionsFlow: typeof runConnectionsFlow;
   runDeployFlow: typeof runDeployFlow;
 }
 
@@ -67,7 +72,7 @@ export interface TuiSetupCommandResult {
   /** Keep warning/error lines after the bordered panel closes. */
   preserveFlowDiagnostics: boolean;
   /** Status refresh required after the command settles. */
-  effect?: VercelStatusEffect | { kind: "model-access-changed" };
+  effect?: VercelStatusEffect | { kind: "connection-added" } | { kind: "model-access-changed" };
 }
 
 /**
@@ -86,6 +91,8 @@ function muteableRenderer(
       isMuted() ? Promise.resolve(undefined) : renderer.readEditableSelect(options),
     readProviderPicker: (options) =>
       isMuted() ? Promise.resolve(undefined) : renderer.readProviderPicker(options),
+    readModelEditor: (options) =>
+      isMuted() ? Promise.resolve(undefined) : renderer.readModelEditor(options),
     readText: (options) => (isMuted() ? Promise.resolve(undefined) : renderer.readText(options)),
     readAcknowledge: (options) =>
       isMuted() ? Promise.resolve() : renderer.readAcknowledge(options),
@@ -108,7 +115,7 @@ function muteableRenderer(
 }
 
 /**
- * Runs one TUI setup command (/model, /channels, /deploy) over the
+ * Runs one TUI setup command (/model, /channels, /connect, /deploy) over the
  * shared setup flows, asking through the TUI's own bordered panel. Never throws:
  * every outcome — done, cancelled, failed — folds into the returned command
  * result. Ctrl-C or Esc on the working indicator (no question open) aborts the
@@ -158,18 +165,19 @@ async function executeSetupCommand(
     runLoginFlow,
     runModelFlow,
     runChannelsFlow,
+    runConnectionsFlow,
     runDeployFlow,
     ...input.flows,
   };
 
   try {
     switch (command) {
-      case "vc": {
+      case "vc:install": {
         return installVercelCliResultMessage(
           await flows.runInstallVercelCliFlow({ appRoot, prompter, signal }),
         );
       }
-      case "login": {
+      case "vc:login": {
         return loginResultMessage(await flows.runLoginFlow({ appRoot, prompter, signal }));
       }
       case "model": {
@@ -179,6 +187,7 @@ async function executeSetupCommand(
           prompter,
           signal,
           deps: {
+            pickModelSettings: (request) => renderer.readModelEditor(request),
             runProviderFlow: (providerInput) =>
               runProviderFlow({ ...providerInput, picker: pickProvider }),
           },
@@ -188,7 +197,13 @@ async function executeSetupCommand(
         }
         const result = await flows.runModelFlow(modelInput);
         if (result.kind === "cancelled") {
-          return { message: "/model cancelled.", preserveFlowDiagnostics: false };
+          return {
+            message:
+              result.discardedDraft === true
+                ? "/model dismissed. Drafted changes were discarded; Done commits them."
+                : "/model dismissed.",
+            preserveFlowDiagnostics: false,
+          };
         }
         // One line per completed menu action: the apply line (it already
         // distinguishes success from a rejected slug), then the provider
@@ -221,7 +236,7 @@ async function executeSetupCommand(
               `Channel files changed, but /channels failed: ${result.message}`,
             );
           case "cancelled":
-            return { message: "/channels cancelled.", preserveFlowDiagnostics: true };
+            return { message: "/channels dismissed.", preserveFlowDiagnostics: true };
           case "deploy-and-chat":
             return await runDeployAndChat(flows, { appRoot, prompter, signal }, result.chat);
           case "done":
@@ -235,10 +250,50 @@ async function executeSetupCommand(
             };
         }
       }
+      case "connect": {
+        const result = await flows.runConnectionsFlow({
+          appRoot,
+          prompter,
+          signal,
+          disabledConnectionReasons: input.disabledConnectionReasons,
+        });
+        switch (result.kind) {
+          case "cancelled":
+            return {
+              message: "/connect dismissed.",
+              preserveFlowDiagnostics: true,
+              effect: { kind: "model-access-changed" },
+            };
+          case "failed":
+            return {
+              message:
+                result.addedConnections.length === 0
+                  ? `/connect failed: ${result.message}`
+                  : `Connection files changed, but /connect failed: ${result.message}`,
+              preserveFlowDiagnostics: true,
+              effect:
+                result.addedConnections.length === 0
+                  ? { kind: "model-access-changed" }
+                  : { kind: "connection-added" },
+            };
+          case "done":
+            return {
+              message:
+                result.addedConnections.length === 0
+                  ? "No connections added."
+                  : `Connections added: ${result.addedConnections.join(", ")}.`,
+              preserveFlowDiagnostics: true,
+              effect:
+                result.addedConnections.length === 0
+                  ? { kind: "model-access-changed" }
+                  : { kind: "connection-added" },
+            };
+        }
+      }
       case "deploy": {
         const result = await flows.runDeployFlow({ appRoot, prompter, interactive: true, signal });
         if (result.kind === "cancelled") {
-          return { message: "/deploy cancelled.", preserveFlowDiagnostics: true };
+          return { message: "/deploy dismissed.", preserveFlowDiagnostics: true };
         }
         if (result.kind === "needs-link") {
           return {
@@ -257,7 +312,7 @@ async function executeSetupCommand(
   } catch (error) {
     if (error instanceof WizardCancelledError) {
       return {
-        message: `/${command} cancelled.`,
+        message: `/${command} dismissed.`,
         preserveFlowDiagnostics: command !== "model",
       };
     }
@@ -291,11 +346,11 @@ function vercelActionOutcome(error: unknown, command: string): TuiSetupCommandRe
 function vercelActionMessage(kind: string, command: string): string | undefined {
   switch (kind) {
     case "vercel-login":
-      return `You're not logged in to Vercel — run /login, then retry /${command}.`;
+      return `You're not logged in to Vercel — run /vc:login, then retry /${command}.`;
     case "vercel-forbidden":
-      return `Vercel denied access to that team — run /login to re-authenticate (for example to complete SSO), or pick a team you can access, then retry /${command}.`;
+      return `Vercel denied access to that team — run /vc:login to re-authenticate (for example to complete SSO), or pick a team you can access, then retry /${command}.`;
     case "vercel-cli-missing":
-      return `The Vercel CLI isn't installed — run /vc to install it, then retry /${command}.`;
+      return `The Vercel CLI isn't installed — run /vc:install to install it, then retry /${command}.`;
     default:
       return undefined;
   }
@@ -318,7 +373,7 @@ async function runDeployAndChat(
   } catch (error) {
     if (error instanceof WizardCancelledError) {
       return pendingChannelsResult(
-        "Channels added, but /deploy was cancelled. Run /deploy to ship them.",
+        "Channels added, but /deploy was dismissed. Run /deploy to ship them.",
       );
     }
     const routed = vercelActionOutcome(error, "deploy");
@@ -328,7 +383,7 @@ async function runDeployAndChat(
   }
   if (result.kind === "cancelled") {
     return pendingChannelsResult(
-      "Channels added, but /deploy was cancelled. Run /deploy to ship them.",
+      "Channels added, but /deploy was dismissed. Run /deploy to ship them.",
     );
   }
   if (result.kind === "needs-link") {
@@ -359,7 +414,7 @@ async function runDeployAndChat(
 function installVercelCliResultMessage(result: InstallVercelCliResult): TuiSetupCommandResult {
   switch (result.kind) {
     case "cancelled":
-      return { message: "/vc cancelled.", preserveFlowDiagnostics: false };
+      return { message: "/vc:install dismissed.", preserveFlowDiagnostics: false };
     case "already":
       return { message: "The Vercel CLI is already installed.", preserveFlowDiagnostics: false };
     case "failed":
@@ -370,7 +425,7 @@ function installVercelCliResultMessage(result: InstallVercelCliResult): TuiSetup
       };
     case "installed":
       return {
-        message: "Installed the Vercel CLI. Run /login next.",
+        message: "Installed the Vercel CLI. Run /vc:login next.",
         preserveFlowDiagnostics: false,
         // The CLI now resolves, so the status line's identity probe can run.
         effect: { kind: "refresh-identity" },
@@ -382,17 +437,18 @@ function installVercelCliResultMessage(result: InstallVercelCliResult): TuiSetup
 function loginResultMessage(result: LoginFlowResult): TuiSetupCommandResult {
   switch (result.kind) {
     case "cancelled":
-      return { message: "/login cancelled.", preserveFlowDiagnostics: false };
+      return { message: "/vc:login dismissed.", preserveFlowDiagnostics: false };
     case "already":
       return { message: "You're already logged in to Vercel.", preserveFlowDiagnostics: false };
     case "cli-missing":
       return {
-        message: "The Vercel CLI isn't installed — run /vc to install it, then retry /login.",
+        message:
+          "The Vercel CLI isn't installed — run /vc:install to install it, then retry /vc:login.",
         preserveFlowDiagnostics: true,
       };
     case "failed":
       return {
-        message: "Vercel login didn't complete — run /login to try again.",
+        message: "Vercel login didn't complete — run /vc:login to try again.",
         preserveFlowDiagnostics: true,
       };
     case "logged-in":
@@ -405,7 +461,7 @@ function loginResultMessage(result: LoginFlowResult): TuiSetupCommandResult {
       };
     case "unavailable":
       return {
-        message: "Couldn't reach Vercel — check your connection, then retry /login.",
+        message: "Couldn't reach Vercel — check your connection, then retry /vc:login.",
         preserveFlowDiagnostics: true,
       };
   }
@@ -428,14 +484,33 @@ function pendingChannelsResult(message: string): TuiSetupCommandResult {
  * without linking anything.
  */
 function providerOutcomeMessage(outcome: ModelProviderOutcome): string {
-  const { credential, status } = outcome;
+  const { resolution, status } = outcome;
   if (status.kind === "gateway-project") {
-    return credential === undefined
-      ? "Project linked. No model credential found; set AI_GATEWAY_API_KEY in .env.local."
-      : `Project linked. Connected to AI Gateway via ${credential}.`;
+    if (resolution === undefined) {
+      return "Project linked. No model credential found; set AI_GATEWAY_API_KEY in .env.local.";
+    }
+    if (resolution.credential === "oidc") {
+      return "Project linked. Connected to AI Gateway via VERCEL_OIDC_TOKEN.";
+    }
+    // A gateway key outranks the project's OIDC token at runtime — claiming
+    // the OIDC connection while the key authenticates every call would split
+    // this message from the status bar and the actual resolution.
+    if (resolution.shadowedOidc !== undefined) {
+      const from = resolution.source.kind === "shell" ? "shell" : resolution.source.path;
+      const remove =
+        resolution.source.kind === "shell"
+          ? "unset it in your shell"
+          : `remove it from ${resolution.source.path}`;
+      return (
+        `Project linked. AI_GATEWAY_API_KEY (${from}) outranks the project's ` +
+        `VERCEL_OIDC_TOKEN and stays the active credential — ${remove} to run on the project.`
+      );
+    }
+    return "Project linked. Connected to AI Gateway via AI_GATEWAY_API_KEY.";
   }
   if (status.kind === "gateway-key") {
-    return `Connected to AI Gateway via ${status.envKey} in ${status.envFile}.`;
+    const where = status.source.kind === "shell" ? "your shell" : status.source.path;
+    return `Connected to AI Gateway via ${status.envKey} in ${where}.`;
   }
   return "Provider updated — no gateway credential detected; set AI_GATEWAY_API_KEY in .env.local.";
 }

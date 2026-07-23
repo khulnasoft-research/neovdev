@@ -13,6 +13,7 @@ import { authenticateHttpBasicStrategy } from "#runtime/governance/auth/http-bas
 import { authenticateJwtEcdsaStrategy } from "#runtime/governance/auth/jwt-ecdsa.js";
 import { authenticateJwtHmacStrategy } from "#runtime/governance/auth/jwt-hmac.js";
 import { authenticateOidcStrategy } from "#runtime/governance/auth/oidc.js";
+import { resolveVercelOidcCurrentProject } from "#runtime/governance/auth/vercel-oidc-project.js";
 import {
   createRuntimeSessionAuthContext,
   type ResolvedJwtEcdsaAuthStrategy,
@@ -57,8 +58,9 @@ export interface HttpBasicCredentials {
  * Verifies an HTTP Basic credential against the supplied username and
  * password. Returns `{ ok: true, sessionAuth }` on success or `{ ok: false }`
  * on a missing or mismatched credential. The password is compared with
- * constant-time hash equality so a timing side channel cannot leak it; the
- * username is compared directly.
+ * constant-time hash equality so a timing side channel cannot leak it. Both
+ * values are normalized to Unicode NFC before comparison, matching the
+ * `charset="UTF-8"` challenge advertised by {@link httpBasic}.
  */
 export function verifyHttpBasic(
   authorizationHeader: string | null,
@@ -268,6 +270,7 @@ export async function verifyOidc(
   const result = await runOidcVerification(token, {
     ...config,
     acceptCurrentVercelProject: false,
+    currentVercelProject: undefined,
   });
   return result.kind === "authenticated"
     ? { ok: true, sessionAuth: createRuntimeSessionAuthContext(result.principal) }
@@ -284,13 +287,16 @@ export async function verifyOidc(
  */
 async function runOidcVerification(
   token: string | null,
-  config: VerifyOidcConfig & { readonly acceptCurrentVercelProject: boolean },
+  config: VerifyOidcConfig & {
+    readonly acceptCurrentVercelProject: boolean;
+    readonly currentVercelProject: ResolvedOidcAuthStrategy["currentVercelProject"] | undefined;
+  },
 ): Promise<RouteStrategyAuthenticationResult> {
   if (token === null || token.length === 0) {
     return { kind: "not-authenticated" };
   }
 
-  const strategy: ResolvedOidcAuthStrategy = {
+  const baseStrategy = {
     acceptCurrentVercelProject: config.acceptCurrentVercelProject,
     audiences: [...config.audiences],
     clockSkewSeconds: config.clockSkewSeconds ?? 30,
@@ -300,7 +306,11 @@ async function runOidcVerification(
     kind: "oidc",
     ...(config.claims === undefined ? {} : { claims: config.claims }),
     ...(config.subjects === undefined ? {} : { subjects: config.subjects }),
-  };
+  } satisfies ResolvedOidcAuthStrategy;
+  const strategy =
+    config.currentVercelProject === undefined
+      ? baseStrategy
+      : { ...baseStrategy, currentVercelProject: config.currentVercelProject };
 
   return await authenticateOidcStrategy({ strategy, token });
 }
@@ -487,10 +497,85 @@ export type AuthFn<TEvent = Request> = (
 ) => SessionAuthContext | null | undefined | Promise<SessionAuthContext | null | undefined>;
 
 /**
+ * Symbol-keyed property carrying the `www-authenticate` challenges an
+ * {@link AuthFn} would satisfy, attached via {@link withAuthChallenges}.
+ * Reading it back off the function (rather than widening `AuthFn`'s call
+ * signature) lets {@link routeAuth} discover the right challenge scheme(s)
+ * for a 401 without every strategy needing to change shape.
+ */
+const AUTH_CHALLENGES_SYMBOL = Symbol.for("eve.channels.auth.challenges");
+
+/**
+ * Attaches declared `www-authenticate` challenges to an {@link AuthFn}
+ * without changing its call signature or behavior. {@link routeAuth} reads
+ * the declared challenges back when every entry in the walk skips, so the
+ * resulting 401 advertises the scheme(s) the configured strategies actually
+ * accept (e.g. `Basic` for {@link httpBasic}) instead of a fixed default.
+ *
+ * Built-in strategies (`httpBasic`, `jwtHmac`, `jwtEcdsa`, `oidc`,
+ * `vercelOidc`) already declare their challenge. Use this directly when
+ * authoring a custom `AuthFn`:
+ *
+ * ```ts
+ * const apiKey = withAuthChallenges(
+ *   (request) => (isValidApiKey(request) ? sessionAuth : null),
+ *   [{ scheme: "Bearer" }],
+ * );
+ * ```
+ */
+export function withAuthChallenges<TEvent>(
+  fn: AuthFn<TEvent>,
+  challenges: readonly UnauthorizedChallenge[],
+): AuthFn<TEvent> {
+  const wrapped: AuthFn<TEvent> = (event) => fn(event);
+  Object.defineProperty(wrapped, AUTH_CHALLENGES_SYMBOL, {
+    value: challenges,
+  });
+  return wrapped;
+}
+
+/**
+ * Reads the challenges {@link withAuthChallenges} attached to `fn`, or
+ * `undefined` when `fn` declared none (e.g. {@link none}, {@link localDev},
+ * {@link placeholderAuth}, or a custom `AuthFn` that never opted in).
+ */
+function getDeclaredChallenges<TEvent>(
+  fn: AuthFn<TEvent>,
+): readonly UnauthorizedChallenge[] | undefined {
+  return (fn as Partial<Record<typeof AUTH_CHALLENGES_SYMBOL, readonly UnauthorizedChallenge[]>>)[
+    AUTH_CHALLENGES_SYMBOL
+  ];
+}
+
+/**
+ * Collects the deduped, ordered set of challenges declared across `list` via
+ * {@link withAuthChallenges}. Dedupes by the rendered `www-authenticate`
+ * string so e.g. two `jwtHmac()` entries only contribute one `Bearer`.
+ */
+function collectDeclaredChallenges(
+  list: readonly AuthFn<Request>[],
+): readonly UnauthorizedChallenge[] {
+  const seenRendered = new Set<string>();
+  const challenges: UnauthorizedChallenge[] = [];
+  for (const fn of list) {
+    for (const challenge of getDeclaredChallenges(fn) ?? []) {
+      const rendered = formatChallenge(challenge);
+      if (seenRendered.has(rendered)) continue;
+      seenRendered.add(rendered);
+      challenges.push(challenge);
+    }
+  }
+  return challenges;
+}
+
+/**
  * Walks an `AuthFn` (or array) in order against `request`. The first entry
  * returning a {@link SessionAuthContext} wins; entries returning `null` or
  * `undefined` are skipped. If the walk exhausts without a winner (including
- * the empty-array case), returns a 401 {@link createUnauthorizedResponse}.
+ * the empty-array case), returns a 401 {@link createUnauthorizedResponse}
+ * whose `www-authenticate` challenges are collected from the entries'
+ * declared schemes (see {@link withAuthChallenges}), falling back to
+ * `Bearer` when none declared any.
  *
  * Channel factories that share this resolution policy (e.g. `eveChannel`, or
  * a custom `defineChannel` route handler) should call `routeAuth` rather than
@@ -521,7 +606,10 @@ export async function routeAuth(
     throw error;
   }
 
-  return createUnauthorizedResponse({ challenges: [{ scheme: "Bearer" }] });
+  const declaredChallenges = collectDeclaredChallenges(list);
+  return createUnauthorizedResponse({
+    challenges: declaredChallenges.length > 0 ? declaredChallenges : [{ scheme: "Bearer" }],
+  });
 }
 
 /**
@@ -530,7 +618,7 @@ export async function routeAuth(
  * error. Replace it before serving real users:
  *
  * ```ts
- * eveChannel({ auth: [localDev(), vercelOidc(), placeholderAuth()] });
+ * eveChannel({ auth: [vercelOidc(), localDev(), placeholderAuth()] });
  * ```
  *
  * Outside production it returns `null`, so the auth walk keeps the same local
@@ -578,8 +666,8 @@ export function none<TEvent = unknown>(): AuthFn<TEvent> {
  *
  * Matching requests get a synthetic principal with `principalType:
  * "local-dev"`. Every other request returns `null`, skipping to the next
- * entry under {@link routeAuth}, which makes `[localDev(), vercelOidc()]`
- * the canonical "open on localhost, Vercel OIDC in prod" pattern.
+ * entry under {@link routeAuth}, which makes `[vercelOidc(), localDev()]`
+ * the canonical "Vercel OIDC when present, open on localhost otherwise" pattern.
  *
  * The check is not based on bare `process.env.VERCEL`: a deployment
  * outside Vercel (Fly, Railway, raw container) leaves `VERCEL` unset and
@@ -627,7 +715,8 @@ const LOOPBACK_HOSTNAMES: ReadonlySet<string> = new Set(["localhost", "[::1]"]);
  */
 const LOOPBACK_IPV4_PREFIX = /^127\./;
 
-function isLoopbackRequest(request: Request): boolean {
+/** Returns whether a request URL names a loopback host accepted by {@link localDev}. */
+export function isLoopbackRequest(request: Request): boolean {
   let hostname: string;
   try {
     hostname = new URL(request.url).hostname;
@@ -680,6 +769,15 @@ const VERCEL_OIDC_AUDIENCE_PREFIX = "https://vercel.com/";
  */
 export interface VerifyVercelOidcOptions {
   /**
+   * Explicit current-project binding for the verified token. When omitted,
+   * the verifier reads `VERCEL_PROJECT_ID` and `VERCEL_TARGET_ENV` /
+   * `VERCEL_ENV` from the runtime environment.
+   */
+  readonly currentVercelProject?: {
+    readonly environment?: string;
+    readonly projectId: string;
+  };
+  /**
    * Optional `sub` patterns granting callers access on top of the always-on
    * current-project bypass. Patterns use AWS IAM-style `*` wildcards and may
    * target tokens minted by other Vercel projects (e.g.
@@ -694,23 +792,25 @@ export interface VerifyVercelOidcOptions {
  *
  * Acceptance rule:
  *
- * - Tokens whose `project_id` matches `VERCEL_PROJECT_ID` are **always**
- *   accepted regardless of `subjects`, so the deployment's own runtime
- *   callers (subagent, internal fetches) authenticate without being
- *   enumerated.
+ * - Current-project tokens that reach the service/runtime path are accepted
+ *   regardless of `subjects`, so the deployment's own runtime callers
+ *   (subagent, internal fetches) authenticate without being enumerated.
  * - Tokens with an `external_sub` claim authenticate as
- *   `principalType: "user"` when they match the current `VERCEL_PROJECT_ID`
- *   (if set) and `VERCEL_TARGET_ENV` / `VERCEL_ENV` (if set). `external_sub`
+ *   `principalType: "user"` when they match the configured current project
+ *   and environment. `external_sub`
  *   becomes the eve subject, `external_iss` or `connector_id` the eve issuer
  *   when present, and string-valued OIDC profile claims (`name`, `picture`,
  *   `email`) are exposed as auth attributes.
+ * - Development tokens with a `user_id` claim authenticate as
+ *   `principalType: "user"` only when both the token and configured current
+ *   project environment are `development`. Other same-project target
+ *   environments may use one as a `"service"` principal.
  * - Tokens from other Vercel projects are accepted **only** when their `sub`
  *   matches one of {@link VerifyVercelOidcOptions.subjects}.
  *
- * The `environment` claim is not constrained: production, preview, and
- * development tokens for the current project all authenticate. Non-user
- * principals are tagged `"runtime"` when the token's `environment` matches
- * the current deployment, otherwise `"service"`.
+ * Tokens without a `user_id` claim are accepted for the current project in
+ * production, preview, and development. They are tagged `"runtime"` when the
+ * token's `environment` matches the current deployment, otherwise `"service"`.
  */
 export async function verifyVercelOidc(
   token: string | null,
@@ -751,13 +851,15 @@ export async function verifyVercelOidc(
   }
 
   // `acceptCurrentVercelProject: true` activates the same-project bypass
-  // inside the OIDC verifier so any token minted for `VERCEL_PROJECT_ID`
+  // inside the OIDC verifier so any token minted for the configured project
   // is accepted regardless of `subjects`. The supplied `subjects`
   // matcher (defaulting to an empty list that matches nothing)
   // determines which **other** callers are allowed in.
+  const currentVercelProject = resolveCurrentVercelProject(opts);
   const result = await runOidcVerification(token, {
     acceptCurrentVercelProject: true,
     audiences: claims.audiences,
+    currentVercelProject,
     issuer: claims.issuer,
     subjects: opts.subjects ?? [],
   });
@@ -779,6 +881,20 @@ export async function verifyVercelOidc(
     ...(result.kind === "misconfigured" ? { detail: result.message } : {}),
   });
   return { ok: false };
+}
+
+function resolveCurrentVercelProject(
+  opts: VerifyVercelOidcOptions,
+): NonNullable<ResolvedOidcAuthStrategy["currentVercelProject"]> | undefined {
+  if (opts.currentVercelProject !== undefined) return opts.currentVercelProject;
+
+  const projectId = process.env.VERCEL_PROJECT_ID?.trim();
+  if (projectId === undefined || projectId.length === 0) return undefined;
+
+  const environment = process.env.VERCEL_TARGET_ENV?.trim() || process.env.VERCEL_ENV?.trim();
+  return environment === undefined || environment.length === 0
+    ? { projectId }
+    : { environment, projectId };
 }
 
 /**
@@ -875,54 +991,125 @@ function assertVercelSubjectSegment(field: "teamSlug" | "projectName", value: st
 /**
  * Returns an HTTP route auth callback backed by Vercel OIDC. See
  * {@link verifyVercelOidc} for the always-on current-project bypass and how
- * `subjects` extends acceptance to other Vercel projects.
+ * `subjects` extends acceptance to other Vercel projects. Declares a
+ * `Bearer` {@link withAuthChallenges} challenge for {@link routeAuth}'s 401.
  */
 export function vercelOidc(opts: VerifyVercelOidcOptions = {}): AuthFn<Request> {
-  return async (request) => {
-    const token = extractBearerToken(request.headers.get("authorization"));
-    const result = await verifyVercelOidc(token, opts);
-    return result.ok ? result.sessionAuth : null;
-  };
+  return withAuthChallenges(
+    async (request) => {
+      const token = extractBearerToken(request.headers.get("authorization"));
+      const currentVercelProject =
+        opts.currentVercelProject ??
+        (token !== null && isLocalDevelopmentVercelOidcRequest(request)
+          ? await resolveVercelOidcCurrentProject(request)
+          : undefined);
+      const result = await verifyVercelOidc(
+        token,
+        currentVercelProject === undefined ? opts : { ...opts, currentVercelProject },
+      );
+      return result.ok ? result.sessionAuth : null;
+    },
+    [{ scheme: "Bearer" }],
+  );
 }
 
-/** Returns an {@link AuthFn} that verifies HTTP Basic credentials via {@link verifyHttpBasic}. */
-export function httpBasic(credentials: HttpBasicCredentials): AuthFn<Request> {
-  return (request) => {
-    const result = verifyHttpBasic(request.headers.get("authorization"), credentials);
-    return result.ok ? result.sessionAuth : null;
-  };
+function isLocalDevelopmentVercelOidcRequest(request: Request): boolean {
+  if (process.env.VERCEL_ENV === "development") return true;
+  if (process.env.VERCEL_ENV === "preview" || process.env.VERCEL_ENV === "production") {
+    return false;
+  }
+  return isLoopbackRequest(request);
 }
 
-/** Returns an {@link AuthFn} that verifies an HMAC-signed bearer JWT via {@link verifyJwtHmac}. */
+/**
+ * Options accepted by {@link httpBasic}.
+ */
+export interface HttpBasicAuthOptions {
+  /**
+   * Optional `realm` parameter advertised on the `WWW-Authenticate: Basic`
+   * challenge (e.g. browsers show it in the native login prompt). Defaults
+   * to `"eve"`.
+   */
+  readonly realm?: string;
+}
+
+/**
+ * Returns an {@link AuthFn} that verifies HTTP Basic credentials via
+ * {@link verifyHttpBasic}. Declares a `Basic` {@link withAuthChallenges}
+ * challenge so a {@link routeAuth} 401 advertises `WWW-Authenticate: Basic`
+ * (with `realm` first, when given, then `charset="UTF-8"`) instead of the
+ * `Bearer` fallback.
+ */
+export function httpBasic(
+  credentials: HttpBasicCredentials,
+  options?: HttpBasicAuthOptions,
+): AuthFn<Request> {
+  const parameters: Record<string, string> = {
+    realm: options?.realm ?? "eve",
+    charset: "UTF-8",
+  };
+  return withAuthChallenges(
+    (request) => {
+      const result = verifyHttpBasic(request.headers.get("authorization"), credentials);
+      return result.ok ? result.sessionAuth : null;
+    },
+    [
+      {
+        parameters,
+        scheme: "Basic",
+      },
+    ],
+  );
+}
+
+/**
+ * Returns an {@link AuthFn} that verifies an HMAC-signed bearer JWT via
+ * {@link verifyJwtHmac}. Declares a `Bearer` {@link withAuthChallenges}
+ * challenge for {@link routeAuth}'s 401.
+ */
 export function jwtHmac(config: VerifyJwtHmacConfig): AuthFn<Request> {
-  return async (request) => {
-    const token = extractBearerToken(request.headers.get("authorization"));
-    const result = await verifyJwtHmac(token, config);
-    return result.ok ? result.sessionAuth : null;
-  };
+  return withAuthChallenges(
+    async (request) => {
+      const token = extractBearerToken(request.headers.get("authorization"));
+      const result = await verifyJwtHmac(token, config);
+      return result.ok ? result.sessionAuth : null;
+    },
+    [{ scheme: "Bearer" }],
+  );
 }
 
-/** Returns an {@link AuthFn} that verifies an ECDSA-signed bearer JWT via {@link verifyJwtEcdsa}. */
+/**
+ * Returns an {@link AuthFn} that verifies an ECDSA-signed bearer JWT via
+ * {@link verifyJwtEcdsa}. Declares a `Bearer` {@link withAuthChallenges}
+ * challenge for {@link routeAuth}'s 401.
+ */
 export function jwtEcdsa(config: VerifyJwtEcdsaConfig): AuthFn<Request> {
-  return async (request) => {
-    const token = extractBearerToken(request.headers.get("authorization"));
-    const result = await verifyJwtEcdsa(token, config);
-    return result.ok ? result.sessionAuth : null;
-  };
+  return withAuthChallenges(
+    async (request) => {
+      const token = extractBearerToken(request.headers.get("authorization"));
+      const result = await verifyJwtEcdsa(token, config);
+      return result.ok ? result.sessionAuth : null;
+    },
+    [{ scheme: "Bearer" }],
+  );
 }
 
 /**
  * Returns an {@link AuthFn} that verifies an OIDC bearer token on the inbound
  * request via {@link verifyOidc}. Use {@link vercelOidc} instead for
  * Vercel-issued tokens: it preconfigures the issuer, audience, and runtime
- * principal flag.
+ * principal flag. Declares a `Bearer` {@link withAuthChallenges} challenge
+ * for {@link routeAuth}'s 401.
  */
 export function oidc(config: VerifyOidcConfig): AuthFn<Request> {
-  return async (request) => {
-    const token = extractBearerToken(request.headers.get("authorization"));
-    const result = await verifyOidc(token, config);
-    return result.ok ? result.sessionAuth : null;
-  };
+  return withAuthChallenges(
+    async (request) => {
+      const token = extractBearerToken(request.headers.get("authorization"));
+      const result = await verifyOidc(token, config);
+      return result.ok ? result.sessionAuth : null;
+    },
+    [{ scheme: "Bearer" }],
+  );
 }
 
 // ---------------------------------------------------------------------------

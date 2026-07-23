@@ -29,6 +29,8 @@ export type TerminalKey =
   | { type: "ctrl-e" }
   | { type: "ctrl-d" }
   | { type: "ctrl-k" }
+  | { type: "ctrl-n" }
+  | { type: "ctrl-p" }
   | { type: "ctrl-u" }
   | { type: "ctrl-w" }
   | { type: "ctrl-l" }
@@ -172,6 +174,10 @@ export function parseKey(chunk: Buffer): TerminalKey {
       return { type: "ctrl-d" };
     case "\u000b":
       return { type: "ctrl-k" };
+    case "\u000e":
+      return { type: "ctrl-n" };
+    case "\u0010":
+      return { type: "ctrl-p" };
     case "\u000c":
       return { type: "ctrl-l" };
     case "\u0012":
@@ -276,9 +282,36 @@ export function formatCompactTokenCount(count: number): string {
 }
 
 /**
- * The status line's token-flow segment: `↑ 394.4K ↓ 4.3K`, input (prompt)
- * tokens up, output tokens down, both from the latest usage report. A known
- * `--context-size` appends the context-fill percentage of the input side.
+ * Reveals `text` one character per `stepMs` of elapsed time, typewriter
+ * style: the first character shows immediately, the full text after
+ * `(length - 1) * stepMs`. Painted on the shared ticker beat, so no timer
+ * of its own.
+ */
+export function typewriterText(text: string, elapsedMs: number, stepMs: number): string {
+  const visible = Math.floor(Math.max(0, elapsedMs) / stepMs) + 1;
+  return visible >= text.length ? text : text.slice(0, visible);
+}
+
+/**
+ * Formats a turn's wall-clock duration for the end-of-turn stats line:
+ * `42s`, `3min 24s`, `1h 12min`. Sub-second turns round up to `1s` — a
+ * `0s` coda would read as a measurement error.
+ */
+export function formatTurnDuration(elapsedMs: number): string {
+  const totalSeconds = Math.max(1, Math.round(elapsedMs / 1000));
+  const seconds = totalSeconds % 60;
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  if (totalMinutes === 0) return `${seconds}s`;
+  const minutes = totalMinutes % 60;
+  const hours = Math.floor(totalMinutes / 60);
+  if (hours === 0) return seconds === 0 ? `${minutes}min` : `${minutes}min ${seconds}s`;
+  return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}min`;
+}
+
+/**
+ * The turn bar and coda's token-flow segment: `↑ 394.4K ↓ 4.3K`, input
+ * (prompt) tokens up, output tokens down. A known `--context-size` appends
+ * the context-fill percentage of the input side.
  */
 export function formatTokenFlow(
   flow: { inputTokens: number; outputTokens: number; contextSize?: number },
