@@ -37,7 +37,7 @@ import type { ComponentProps } from "react";
 
 type LogoProps = ComponentProps<"svg">;
 
-export const eveLogo = (props: LogoProps) => (
+export const ovoLogo = (props: LogoProps) => (
   <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path d="M12 2 2 19.5h20L12 2Zm0 4.7 6.1 10.6H5.9L12 6.7Z" fill="currentColor" />
   </svg>
@@ -153,9 +153,12 @@ export const twilioLogo = (props: LogoProps) => (
   </svg>
 );
 
-export const vercelLogo = (props: LogoProps) => (
+export const khulnasoftLogo = (props: LogoProps) => (
   <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M12 3 23 21H1L12 3Z" fill="currentColor" />
+    <path
+      d="M13.6449 4.5H2.52612L10.3592 19.5H14.1811C18.2055 19.5 21.4667 16.2681 21.4736 12.2719C21.4717 7.98375 17.9686 4.5075 13.6449 4.5ZM14.1811 17.625H11.4955L5.6205 6.375H13.6411C16.9242 6.38125 19.5967 9.02688 19.598 12.2688C19.5936 15.2225 17.163 17.625 14.1811 17.625Z"
+      fill="currentColor"
+    />
   </svg>
 );
 
@@ -340,7 +343,7 @@ export const agentBrowserLogo = (props: LogoProps) => (
 );
 
 export const logos = {
-  eve: eveLogo,
+  ovo: ovoLogo,
   web: webLogo,
   "browser-use": browserUseLogo,
   github: githubLogo,
@@ -349,7 +352,7 @@ export const logos = {
   teams: teamsLogo,
   telegram: telegramLogo,
   twilio: twilioLogo,
-  vercel: vercelLogo,
+  khulnasoft: khulnasoftLogo,
   linear: linearLogo,
   notion: notionLogo,
   datadog: datadogLogo,
