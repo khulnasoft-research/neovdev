@@ -5,13 +5,13 @@ import {
   connectionEntries,
   connectionProtocols as protocolsForIdentity,
   extensionEntries,
-} from "@vercel/ovo-catalog";
+} from "@khulnasoft/ovo-catalog";
 import type { LogoKey } from "./logos";
 
 /**
  * The docs integration gallery layers presentation (logo, keywords, setup
  * markdown, auth modes) on top of the shared identity catalog
- * (`@vercel/ovo-catalog`). Identity — slug, name, kind, tagline, and a
+ * (`@khulnasoft/ovo-catalog`). Identity — slug, name, kind, tagline, and a
  * connection's transport + model-facing description — comes from the catalog
  * and is never re-declared here; this module owns only the docs-facing overlay,
  * keyed by slug.
@@ -20,8 +20,8 @@ import type { LogoKey } from "./logos";
 export type IntegrationType = "channel" | "connection" | "extension";
 
 /** Wire protocol and transport identity types are owned by the shared catalog. */
-export type { ConnectionProtocol, McpTransport, OpenApiTransport } from "@vercel/ovo-catalog";
-import type { ConnectionProtocol } from "@vercel/ovo-catalog";
+export type { ConnectionProtocol, McpTransport, OpenApiTransport } from "@khulnasoft/ovo-catalog";
+import type { ConnectionProtocol } from "@khulnasoft/ovo-catalog";
 
 /**
  * How a connection authenticates. A mode uses either Vercel Connect (`user`,
@@ -546,7 +546,7 @@ The extension also supports inline screenshots, session naming, proxies, and pro
 
 /**
  * Connection presentation overlay, keyed by catalog slug. Transport (`mcp`,
- * `openapi`) and the model-facing description come from `@vercel/ovo-catalog`;
+ * `openapi`) and the model-facing description come from `@khulnasoft/ovo-catalog`;
  * this carries the docs-only auth modes, optional connector UID, and configure
  * note.
  */

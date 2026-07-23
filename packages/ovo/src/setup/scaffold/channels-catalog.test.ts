@@ -1,4 +1,4 @@
-import { channelEntries } from "@vercel/ovo-catalog";
+import { channelEntries } from "@khulnasoft/ovo-catalog";
 import { describe, expect, test } from "vitest";
 import { SCAFFOLDABLE_CHANNELS } from "./channels-catalog.js";
 

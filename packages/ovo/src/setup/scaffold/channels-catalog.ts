@@ -3,14 +3,14 @@
  * `ovo channels add`.
  *
  * Channel *identity* (slug, name, and whether it is scaffoldable) is owned by
- * `@vercel/ovo-catalog`, the cross-surface source of truth shared with the docs
+ * `@khulnasoft/ovo-catalog`, the cross-surface source of truth shared with the docs
  * gallery. This module overlays the scaffolder-only concerns — the internal
  * {@link ChannelKind} (the catalog's `ovo` web-chat channel is surfaced to users
  * as `web`), the picker copy, and the picker order — and validates that the
  * overlay and the catalog cannot drift apart.
  */
 
-import { channelEntries } from "@vercel/ovo-catalog";
+import { channelEntries } from "@khulnasoft/ovo-catalog";
 import type { ChannelKind } from "./update/channels.js";
 
 /** Scaffolder overlay for one catalog channel the CLI can scaffold. */
@@ -70,7 +70,7 @@ function buildScaffoldableChannels(): ScaffoldableChannel[] {
   for (const scaffold of CHANNEL_SCAFFOLDS) {
     if (!scaffoldableSlugs.delete(scaffold.slug)) {
       throw new Error(
-        `Channel overlay "${scaffold.slug}" is not a scaffoldable channel in @vercel/ovo-catalog.`,
+        `Channel overlay "${scaffold.slug}" is not a scaffoldable channel in @khulnasoft/ovo-catalog.`,
       );
     }
     const channel: ScaffoldableChannel = {
@@ -97,7 +97,7 @@ function buildScaffoldableChannels(): ScaffoldableChannel[] {
 
 /**
  * Channels the CLI can scaffold, in picker order. Derived from
- * `@vercel/ovo-catalog` (`surfaces.scaffoldable`) overlaid with
+ * `@khulnasoft/ovo-catalog` (`surfaces.scaffoldable`) overlaid with
  * {@link CHANNEL_SCAFFOLDS}. Throws at module load if the two disagree.
  */
 export const SCAFFOLDABLE_CHANNELS: readonly ScaffoldableChannel[] = buildScaffoldableChannels();

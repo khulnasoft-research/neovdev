@@ -51,7 +51,7 @@
  *             durable state belongs on `ctx.ovo`.
  *   rule 28 — Imports under `packages/ovo/src/setup/scaffold/**` stay within
  *             their layer: node:* builtins, relative siblings, and the shared
- *             `@vercel/ovo-catalog` data package. The scaffold stays free of
+ *             `@khulnasoft/ovo-catalog` data package. The scaffold stays free of
  *             framework runtime, compiler, terminal UI, and provider SDK
  *             dependencies.
  *   rule 29 — Changeset package keys must match workspace package names.
@@ -512,12 +512,12 @@ function checkRule27(posix, lines, violations) {
 const SCAFFOLD_PREFIX = "packages/ovo/src/setup/scaffold/";
 
 // The curated connection and channel catalogs (and any future surface
-// overlays) read canonical identity from `@vercel/ovo-catalog`, a
+// overlays) read canonical identity from `@khulnasoft/ovo-catalog`, a
 // dependency-free data package shared across the scaffolder and docs. It
 // carries no runtime, compiler, or provider-SDK weight, so the entire scaffold
 // layer may import it. The terminal UI adapters (which carry @clack/core and
 // picocolors) live outside the scaffold, in `packages/ovo/src/setup/cli/`.
-const SCAFFOLD_ALLOWED_PACKAGES = new Set(["@vercel/ovo-catalog"]);
+const SCAFFOLD_ALLOWED_PACKAGES = new Set(["@khulnasoft/ovo-catalog"]);
 
 const SCAFFOLD_ALLOWED_INTERNAL_IMPORTS = new Set([]);
 
@@ -558,7 +558,7 @@ function checkRule28(posix, lines, violations) {
             rule: 28,
             file: posix,
             line: idx + 1,
-            message: `import from "${spec}" not allowed in the packages/ovo/src/setup/scaffold source layer. Scaffold modules allow only node:* builtins, relative files, and @vercel/ovo-catalog. Keep runtime, compiler, terminal UI, and provider SDK dependencies in their owning package.`,
+            message: `import from "${spec}" not allowed in the packages/ovo/src/setup/scaffold source layer. Scaffold modules allow only node:* builtins, relative files, and @khulnasoft/ovo-catalog. Keep runtime, compiler, terminal UI, and provider SDK dependencies in their owning package.`,
           });
         }
       }

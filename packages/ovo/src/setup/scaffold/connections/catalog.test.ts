@@ -12,7 +12,7 @@ import {
   mcpServiceHost,
   SUPPORTED_PROTOCOLS,
 } from "./catalog.js";
-import { connectionEntries } from "@vercel/ovo-catalog";
+import { connectionEntries } from "@khulnasoft/ovo-catalog";
 
 describe("catalog integrity", () => {
   test("every entry declares the endpoint for each protocol it lists", () => {
