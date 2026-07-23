@@ -75,7 +75,7 @@ Runtime accessors live on the subpath that owns the concern:
 - `getSkill(identifier)` — handle for a named skill visible to the current agent (`ovo/skills`)
 - `getContext(key)`, `requireContext(key)`, `hasContext(key)`, `setContext(key)`, `ensureContext(key, factory)` — unified context helpers (`ovo/context`)
 
-The complete API reference, including types and lower-level runtime primitives, is in the [TypeScript API documentation](https://ovo.dev/docs/reference/typescript-api).
+The complete API reference, including types and lower-level runtime primitives, is in the [TypeScript API documentation](https://khulnasoft.com/docs/ovo/reference/typescript-api).
 
 ## Tiny Example
 
@@ -140,22 +140,22 @@ CLI commands:
 
 ## Deploying
 
-ovo is built to be durable. The runtime is Nitro + Workflows. Read the [deployment guide](https://ovo.dev/docs/guides/deployment) for the deployment path, environment variables, and configuration.
+ovo is built to be durable. The runtime is Nitro + Workflows. Read the [deployment guide](https://khulnasoft.com/docs/ovo/guides/deployment) for the deployment path, environment variables, and configuration.
 
 ## Read Next
 
 These files ship inside the installed package at `node_modules/ovo/docs/`:
 
-- [Full docs index](https://ovo.dev/docs) — recommended entry point
-- [Getting Started](https://ovo.dev/docs/getting-started) — install, scaffold, and run locally
-- [Project Layout](https://ovo.dev/docs/reference/project-layout) — every authored directory in depth
-- [`agent.ts`](https://ovo.dev/docs/agent-config) — agent config reference
-- [TypeScript API](https://ovo.dev/docs/reference/typescript-api) — complete `define*` and runtime helper reference
-- [Vercel Deployment](https://ovo.dev/docs/guides/deployment) — deploy to production
+- [Full docs index](https://khulnasoft.com/docs/ovo) — recommended entry point
+- [Getting Started](https://khulnasoft.com/docs/ovo/getting-started) — install, scaffold, and run locally
+- [Project Layout](https://khulnasoft.com/docs/ovo/reference/project-layout) — every authored directory in depth
+- [`agent.ts`](https://khulnasoft.com/docs/ovo/agent-config) — agent config reference
+- [TypeScript API](https://khulnasoft.com/docs/ovo/reference/typescript-api) — complete `define*` and runtime helper reference
+- [Vercel Deployment](https://khulnasoft.com/docs/ovo/guides/deployment) — deploy to production
 
-By authoring concern: [Tools](https://ovo.dev/docs/tools) · [Channels](https://ovo.dev/docs/channels/overview) · [Hooks](https://ovo.dev/docs/guides/hooks) · [Skills](https://ovo.dev/docs/skills) · [Sandbox](https://ovo.dev/docs/sandbox) · [Connections](https://ovo.dev/docs/connections) · [Subagents](https://ovo.dev/docs/subagents) · [Schedules](https://ovo.dev/docs/schedules) · [Evals](https://ovo.dev/docs/evals/overview)
+By authoring concern: [Tools](https://khulnasoft.com/docs/ovo/tools) · [Channels](https://khulnasoft.com/docs/ovo/channels/overview) · [Hooks](https://khulnasoft.com/docs/ovo/guides/hooks) · [Skills](https://khulnasoft.com/docs/ovo/skills) · [Sandbox](https://khulnasoft.com/docs/ovo/sandbox) · [Connections](https://khulnasoft.com/docs/ovo/connections) · [Subagents](https://khulnasoft.com/docs/ovo/subagents) · [Schedules](https://khulnasoft.com/docs/ovo/schedules) · [Evals](https://khulnasoft.com/docs/ovo/evals/overview)
 
-By runtime concern: [Sessions and Streaming](https://ovo.dev/docs/concepts/sessions-runs-and-streaming) · [Session Context](https://ovo.dev/docs/guides/session-context) · [Context Control](https://ovo.dev/docs/concepts/context-control) · [Auth and Route Protection](https://ovo.dev/docs/guides/auth-and-route-protection) · [CLI, Build, and Debugging](https://ovo.dev/docs/reference/cli) · [Instrumentation](https://ovo.dev/docs/guides/instrumentation)
+By runtime concern: [Sessions and Streaming](https://khulnasoft.com/docs/ovo/concepts/sessions-runs-and-streaming) · [Session Context](https://khulnasoft.com/docs/ovo/guides/session-context) · [Context Control](https://khulnasoft.com/docs/ovo/concepts/context-control) · [Auth and Route Protection](https://khulnasoft.com/docs/ovo/guides/auth-and-route-protection) · [CLI, Build, and Debugging](https://khulnasoft.com/docs/ovo/reference/cli) · [Instrumentation](https://khulnasoft.com/docs/ovo/guides/instrumentation)
 
 ## Architecture (Internals)
 

@@ -139,7 +139,7 @@ Before writing code, read the Extensions guide from the installed ovo package
 docs. In most installs, those docs are at \`node_modules/ovo/docs/extensions.md\`.
 In workspaces or local package installs, resolve the installed \`ovo\` package
 location first and read its \`docs/extensions.md\`. If package docs are
-unavailable, use https://ovo.dev/docs/extensions as a fallback.
+unavailable, use https://khulnasoft.com/docs/ovo/extensions as a fallback.
 
 ## Authoring
 

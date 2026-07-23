@@ -4,7 +4,7 @@ Work from the project directory. Once ovo is installed, the full docs are bundle
 with the installed package and match its version exactly. In most installs, they
 are at `node_modules/ovo/docs/`. In workspaces or local package installs, resolve
 the installed `ovo` package location first and read its `docs/` directory. If
-package docs are unavailable, use https://ovo.dev/docs as a fallback. Read
+package docs are unavailable, use https://khulnasoft.com/docs/ovo as a fallback. Read
 `README.md` in the package docs first, then the guide for what you're adding,
 such as `connections`, `channels/slack`, or `guides/auth-and-route-protection`
 for the Vercel Connect flow.

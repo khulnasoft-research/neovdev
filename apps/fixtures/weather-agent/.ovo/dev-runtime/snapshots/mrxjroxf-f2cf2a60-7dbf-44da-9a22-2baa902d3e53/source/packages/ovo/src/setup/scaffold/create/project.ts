@@ -268,7 +268,7 @@ This project uses the ovo framework. Before writing code, read the relevant guid
 from the installed ovo package docs. In most installs, those docs are at
 \`node_modules/ovo/docs/\`. In workspaces or local package installs, resolve the
 installed \`ovo\` package location first and read its \`docs/\` directory. If
-package docs are unavailable, use https://ovo.dev/docs as a fallback.
+package docs are unavailable, use https://khulnasoft.com/docs/ovo as a fallback.
 `,
   "CLAUDE.md": `@AGENTS.md
 `,

@@ -44,7 +44,7 @@ export const EXTERNAL_PROVIDER_INSTRUCTIONS_TITLE = "Using another model provide
 export const EXTERNAL_PROVIDER_INSTRUCTIONS: readonly string[] = [
   `Set your provider's API key in ${AI_GATEWAY_API_KEY_ENV_FILE} — e.g. ANTHROPIC_API_KEY or OPENAI_API_KEY.`,
   'In agent/agent.ts, set `model` to a provider-authored model — e.g. `anthropic("claude-opus-4.8")` from `@ai-sdk/anthropic`.',
-  "See https://ovo.dev/docs/agent-config for details.",
+  "See https://khulnasoft.com/docs/ovo/agent-config for details.",
   "A running `ovo dev` reloads env files automatically — no restart needed.",
 ];
 
