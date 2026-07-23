@@ -10,11 +10,11 @@ you can both (a) verify the worker forwards the right payload to the command and
 
 It reads the ``DispatchPayload`` (JSON) on stdin and:
   1. logs a summary of what it received and writes the full payload to
-     ``OZ_LOCAL_RUN_LOG_DIR/payload-<run_id>.json`` for inspection,
-  2. launches ``$OZ_BIN <base_args...>`` detached (fire-and-forget) with the
+     ``NEODEV_LOCAL_RUN_LOG_DIR/payload-<run_id>.json`` for inspection,
+  2. launches ``$NEODEV_BIN <base_args...>`` detached (fire-and-forget) with the
      payload's ``env`` applied, writing the run's output to a per-task log file;
      after the CLI exits, the same detached wrapper reports completion via
-     ``$OZ_BIN harness-support --run-id <run_id> report-shutdown``, as the
+     ``$NEODEV_BIN harness-support --run-id <run_id> report-shutdown``, as the
      command backend contract requires (see ../../README.md),
   3. exits 0 once the run is launched. The agent reports its own terminal state
      to the server (base_args already carries --task-id / --server-root-url), so
@@ -24,10 +24,10 @@ This mirrors how the `direct` backend executes the host neodev binary, but route
 through the command backend, so it ignores docker_image / sidecars.
 
 Required environment:
-  OZ_BIN                The oz/Warp binary to exec; base_args is appended to it.
+  NEODEV_BIN                The oz/Warp binary to exec; base_args is appended to it.
 
 Optional environment:
-  OZ_LOCAL_RUN_LOG_DIR  Directory for per-task payload + run logs (default: tmp).
+  NEODEV_LOCAL_RUN_LOG_DIR  Directory for per-task payload + run logs (default: tmp).
 
 Exit 0  => run launched (the worker treats the task as dispatched).
 Exit !=0 => failed to launch; the worker marks the task failed.
@@ -42,9 +42,9 @@ import tempfile
 
 
 def main():
-    oz_bin = os.environ.get("OZ_BIN")
-    if not oz_bin:
-        sys.stderr.write("OZ_BIN must be set to the oz/Warp binary path\n")
+    neodev_bin = os.environ.get("NEODEV_BIN")
+    if not neodev_bin:
+        sys.stderr.write("NEODEV_BIN must be set to the oz/Warp binary path\n")
         return 2
 
     try:
@@ -57,7 +57,7 @@ def main():
     base_args = payload.get("base_args") or []
     env_overlay = payload.get("env") or {}
 
-    log_dir = os.environ.get("OZ_LOCAL_RUN_LOG_DIR") or tempfile.gettempdir()
+    log_dir = os.environ.get("NEODEV_LOCAL_RUN_LOG_DIR") or tempfile.gettempdir()
     os.makedirs(log_dir, exist_ok=True)
 
     # Persist the full payload so the forwarded contents are easy to inspect.
@@ -93,10 +93,10 @@ def main():
     # running `neodev harness-support report-shutdown` with the run ID once the CLI
     # exits. Chain the run and the report inside one detached shell so this
     # dispatch command can still return immediately (fire-and-forget).
-    run_cmd = " ".join(shlex.quote(arg) for arg in [oz_bin, *base_args])
+    run_cmd = " ".join(shlex.quote(arg) for arg in [neodev_bin, *base_args])
     report_cmd = " ".join(
         shlex.quote(arg)
-        for arg in [oz_bin, "harness-support", "--run-id", str(run_id), "report-shutdown"]
+        for arg in [neodev_bin, "harness-support", "--run-id", str(run_id), "report-shutdown"]
     )
     wrapper = f"{run_cmd}; {report_cmd}"
 

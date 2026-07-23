@@ -52,7 +52,7 @@ function setArch(arch: NodeJS.Architecture): void {
 }
 
 function setDefaultInputs(): void {
-  coreInputs.set("oz_channel", "stable");
+  coreInputs.set("neodev_channel", "stable");
   coreInputs.set("prompt", "Say hello");
   coreInputs.set("saved_prompt", "");
   coreInputs.set("skill", "");
@@ -63,7 +63,7 @@ function setDefaultInputs(): void {
   coreInputs.set("profile", "");
   coreInputs.set("output_format", "text");
   coreInputs.set("warp_api_key", "test-api-key");
-  coreInputs.set("oz_version", "latest");
+  coreInputs.set("neodev_version", "latest");
   coreInputs.set("cloud", "false");
   coreInputs.set("computer_use", "false");
   coreInputs.set("host", "");
@@ -429,7 +429,7 @@ describe("reportShutdown", () => {
   it("reports clean shutdown for a saved successful run", async () => {
     coreState.set(index.RUN_ID_STATE, "run-clean");
     coreState.set(index.EXIT_CODE_STATE, "0");
-    coreInputs.set("oz_channel", "preview");
+    coreInputs.set("neodev_channel", "preview");
     execMocks.getExecOutput.mockResolvedValue({
       exitCode: 0,
       stdout: "",

@@ -151,10 +151,10 @@ func (b *KubernetesBackend) ExecuteTask(ctx context.Context, params *TaskParams)
 
 	baseEnv := envSliceFromMap(b.config.TaskEnv)
 	mainEnv := mergeEnvVars(params.EnvVars, append(baseEnv,
-		fmt.Sprintf("OZ_ENVIRONMENT_FILE=%s", defaultSetupEnvironmentFile),
-		fmt.Sprintf("OZ_WORKSPACE_ROOT=%s", defaultWorkspaceMountPath),
-		"OZ_WORKER_BACKEND="+kubernetesBackendTypeName,
-		fmt.Sprintf("OZ_RUN_ID=%s", params.TaskID),
+		fmt.Sprintf("NEODEV_ENVIRONMENT_FILE=%s", defaultSetupEnvironmentFile),
+		fmt.Sprintf("NEODEV_WORKSPACE_ROOT=%s", defaultWorkspaceMountPath),
+		"NEODEV_WORKER_BACKEND="+kubernetesBackendTypeName,
+		fmt.Sprintf("NEODEV_RUN_ID=%s", params.TaskID),
 	))
 
 	volumes := []corev1.Volume{
@@ -1187,9 +1187,9 @@ func taskExecutionID(params *TaskParams) string {
 
 func kubernetesTaskWrapperScript() string {
 	return strings.Join([]string{
-		"if [ -f \"$OZ_ENVIRONMENT_FILE\" ]; then",
+		"if [ -f \"$NEODEV_ENVIRONMENT_FILE\" ]; then",
 		"  set -a",
-		"  . \"$OZ_ENVIRONMENT_FILE\"",
+		"  . \"$NEODEV_ENVIRONMENT_FILE\"",
 		"  set +a",
 		"fi",
 		"",

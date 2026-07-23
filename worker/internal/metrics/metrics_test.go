@@ -101,7 +101,7 @@ func TestRecordTaskCompletedEmitsCounterAndHistogram(t *testing.T) {
 
 	rm := collect(t, reader)
 
-	completed := findMetric(t, rm, "oz_worker_tasks_completed_total")
+	completed := findMetric(t, rm, "neodev_worker_tasks_completed_total")
 	sum, ok := completed.Data.(metricdata.Sum[int64])
 	if !ok {
 		t.Fatalf("expected Sum[int64], got %T", completed.Data)
@@ -118,7 +118,7 @@ func TestRecordTaskCompletedEmitsCounterAndHistogram(t *testing.T) {
 		t.Errorf("failed count = %d, want 1", got)
 	}
 
-	hist := findMetric(t, rm, "oz_worker_task_duration_seconds")
+	hist := findMetric(t, rm, "neodev_worker_task_duration_seconds")
 	if _, ok := hist.Data.(metricdata.Histogram[float64]); !ok {
 		t.Fatalf("expected Histogram[float64], got %T", hist.Data)
 	}
@@ -134,7 +134,7 @@ func TestTasksActiveTracksUpDown(t *testing.T) {
 
 	rm := collect(t, reader)
 
-	active := findMetric(t, rm, "oz_worker_tasks_active")
+	active := findMetric(t, rm, "neodev_worker_tasks_active")
 	sum, ok := active.Data.(metricdata.Sum[int64])
 	if !ok {
 		t.Fatalf("expected Sum[int64] for UpDownCounter, got %T", active.Data)
@@ -153,7 +153,7 @@ func TestSetConnectedEmitsGauge(t *testing.T) {
 	SetConnected(true)
 	rm := collect(t, reader)
 
-	connected := findMetric(t, rm, "oz_worker_connected")
+	connected := findMetric(t, rm, "neodev_worker_connected")
 	g, ok := connected.Data.(metricdata.Gauge[int64])
 	if !ok {
 		t.Fatalf("expected Gauge[int64], got %T", connected.Data)
@@ -164,7 +164,7 @@ func TestSetConnectedEmitsGauge(t *testing.T) {
 
 	SetConnected(false)
 	rm = collect(t, reader)
-	connected = findMetric(t, rm, "oz_worker_connected")
+	connected = findMetric(t, rm, "neodev_worker_connected")
 	g = connected.Data.(metricdata.Gauge[int64])
 	if g.DataPoints[0].Value != 0 {
 		t.Errorf("connected gauge after disconnect = %d, want 0", g.DataPoints[0].Value)
@@ -177,7 +177,7 @@ func TestSetMaxConcurrentEmitsGauge(t *testing.T) {
 	SetMaxConcurrent(0)
 	rm := collect(t, reader)
 
-	maxConcurrent := findMetric(t, rm, "oz_worker_tasks_max_concurrent")
+	maxConcurrent := findMetric(t, rm, "neodev_worker_tasks_max_concurrent")
 	g, ok := maxConcurrent.Data.(metricdata.Gauge[int64])
 	if !ok {
 		t.Fatalf("expected Gauge[int64], got %T", maxConcurrent.Data)
@@ -188,7 +188,7 @@ func TestSetMaxConcurrentEmitsGauge(t *testing.T) {
 
 	SetMaxConcurrent(4)
 	rm = collect(t, reader)
-	maxConcurrent = findMetric(t, rm, "oz_worker_tasks_max_concurrent")
+	maxConcurrent = findMetric(t, rm, "neodev_worker_tasks_max_concurrent")
 	g = maxConcurrent.Data.(metricdata.Gauge[int64])
 	if len(g.DataPoints) != 1 || g.DataPoints[0].Value != 4 {
 		t.Errorf("max concurrent gauge = %+v, want value 4", g.DataPoints)
@@ -203,7 +203,7 @@ func TestRecordTaskRejectedTagsReason(t *testing.T) {
 	RecordTaskRejected("not_ready")
 
 	rm := collect(t, reader)
-	rejected := findMetric(t, rm, "oz_worker_tasks_rejected_total")
+	rejected := findMetric(t, rm, "neodev_worker_tasks_rejected_total")
 	sum := rejected.Data.(metricdata.Sum[int64])
 
 	byReason := map[string]int64{}
@@ -245,13 +245,13 @@ func TestPrimeInstrumentsExposesAllSeriesAtStartup(t *testing.T) {
 	rm := collect(t, reader)
 
 	want := []string{
-		"oz_worker_connected",
-		"oz_worker_tasks_active",
-		"oz_worker_tasks_max_concurrent",
-		"oz_worker_tasks_rejected_total",
-		"oz_worker_tasks_completed_total",
-		"oz_worker_task_failures_total",
-		"oz_worker_websocket_reconnects_total",
+		"neodev_worker_connected",
+		"neodev_worker_tasks_active",
+		"neodev_worker_tasks_max_concurrent",
+		"neodev_worker_tasks_rejected_total",
+		"neodev_worker_tasks_completed_total",
+		"neodev_worker_task_failures_total",
+		"neodev_worker_websocket_reconnects_total",
 	}
 	for _, name := range want {
 		findMetric(t, rm, name) // fails the test if missing
@@ -259,21 +259,21 @@ func TestPrimeInstrumentsExposesAllSeriesAtStartup(t *testing.T) {
 
 	// Spot-check that label-bearing counters were primed for every known
 	// label value, so dashboards can query them by name immediately.
-	completed := findMetric(t, rm, "oz_worker_tasks_completed_total").Data.(metricdata.Sum[int64])
+	completed := findMetric(t, rm, "neodev_worker_tasks_completed_total").Data.(metricdata.Sum[int64])
 	results := map[string]bool{}
 	for _, dp := range completed.DataPoints {
 		v, _ := dp.Attributes.Value("result")
 		results[v.AsString()] = true
 		if dp.Value != 0 {
-			t.Errorf("primed %s{result=%s} = %d, want 0", "oz_worker_tasks_completed_total", v.AsString(), dp.Value)
+			t.Errorf("primed %s{result=%s} = %d, want 0", "neodev_worker_tasks_completed_total", v.AsString(), dp.Value)
 		}
 	}
 	for _, want := range []string{"succeeded", "failed", "cancelled"} {
 		if !results[want] {
-			t.Errorf("oz_worker_tasks_completed_total missing primed series for result=%s", want)
+			t.Errorf("neodev_worker_tasks_completed_total missing primed series for result=%s", want)
 		}
 	}
-	failures := findMetric(t, rm, "oz_worker_task_failures_total").Data.(metricdata.Sum[int64])
+	failures := findMetric(t, rm, "neodev_worker_task_failures_total").Data.(metricdata.Sum[int64])
 	failureSeries := map[string]bool{}
 	for _, dp := range failures.DataPoints {
 		phase, _ := dp.Attributes.Value("phase")
@@ -281,7 +281,7 @@ func TestPrimeInstrumentsExposesAllSeriesAtStartup(t *testing.T) {
 		key := phase.AsString() + "/" + reason.AsString()
 		failureSeries[key] = true
 		if dp.Value != 0 {
-			t.Errorf("primed oz_worker_task_failures_total{%s} = %d, want 0", key, dp.Value)
+			t.Errorf("primed neodev_worker_task_failures_total{%s} = %d, want 0", key, dp.Value)
 		}
 	}
 	for _, want := range []string{
@@ -290,38 +290,38 @@ func TestPrimeInstrumentsExposesAllSeriesAtStartup(t *testing.T) {
 		TaskFailurePhaseCleanup + "/" + TaskFailureReasonCleanup,
 	} {
 		if !failureSeries[want] {
-			t.Errorf("oz_worker_task_failures_total missing primed series for %s", want)
+			t.Errorf("neodev_worker_task_failures_total missing primed series for %s", want)
 		}
 	}
 
-	wsReconnects := findMetric(t, rm, "oz_worker_websocket_reconnects_total").Data.(metricdata.Sum[int64])
+	wsReconnects := findMetric(t, rm, "neodev_worker_websocket_reconnects_total").Data.(metricdata.Sum[int64])
 	reasons := map[string]bool{}
 	for _, dp := range wsReconnects.DataPoints {
 		v, _ := dp.Attributes.Value("reason")
 		reasons[v.AsString()] = true
 		if dp.Value != 0 {
-			t.Errorf("primed %s{reason=%s} = %d, want 0", "oz_worker_websocket_reconnects_total", v.AsString(), dp.Value)
+			t.Errorf("primed %s{reason=%s} = %d, want 0", "neodev_worker_websocket_reconnects_total", v.AsString(), dp.Value)
 		}
 	}
 	for _, want := range []string{WSReconnectReasonDialFailed, WSReconnectReasonRemoteClose} {
 		if !reasons[want] {
-			t.Errorf("oz_worker_websocket_reconnects_total missing primed series for reason=%s", want)
+			t.Errorf("neodev_worker_websocket_reconnects_total missing primed series for reason=%s", want)
 		}
 	}
 
-	rejected := findMetric(t, rm, "oz_worker_tasks_rejected_total").Data.(metricdata.Sum[int64])
+	rejected := findMetric(t, rm, "neodev_worker_tasks_rejected_total").Data.(metricdata.Sum[int64])
 	var haveAtCapacity bool
 	for _, dp := range rejected.DataPoints {
 		v, _ := dp.Attributes.Value("reason")
 		if v.AsString() == RejectReasonAtCapacity {
 			haveAtCapacity = true
 			if dp.Value != 0 {
-				t.Errorf("primed oz_worker_tasks_rejected_total{reason=at_capacity} = %d, want 0", dp.Value)
+				t.Errorf("primed neodev_worker_tasks_rejected_total{reason=at_capacity} = %d, want 0", dp.Value)
 			}
 		}
 	}
 	if !haveAtCapacity {
-		t.Errorf("oz_worker_tasks_rejected_total missing primed series for reason=at_capacity")
+		t.Errorf("neodev_worker_tasks_rejected_total missing primed series for reason=at_capacity")
 	}
 
 	// The duration histogram is intentionally NOT primed; verify it stays
@@ -329,8 +329,8 @@ func TestPrimeInstrumentsExposesAllSeriesAtStartup(t *testing.T) {
 	// synthetic 0-second observation.
 	for _, sm := range rm.ScopeMetrics {
 		for _, m := range sm.Metrics {
-			if m.Name == "oz_worker_task_duration_seconds" {
-				t.Errorf("oz_worker_task_duration_seconds was emitted at startup; expected to remain absent until first task")
+			if m.Name == "neodev_worker_task_duration_seconds" {
+				t.Errorf("neodev_worker_task_duration_seconds was emitted at startup; expected to remain absent until first task")
 			}
 		}
 	}

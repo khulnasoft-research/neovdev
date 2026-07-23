@@ -124,7 +124,7 @@ func TestKubernetesSidecarMaterializationScriptMatchesExpectedShell(t *testing.T
 func TestKubernetesTaskWrapperScriptDelegatesToEntrypoint(t *testing.T) {
 	script := kubernetesTaskWrapperScript()
 	requiredSnippets := []string{
-		". \"$OZ_ENVIRONMENT_FILE\"",
+		". \"$NEODEV_ENVIRONMENT_FILE\"",
 		"exec /agent/entrypoint.sh \"$@\"",
 	}
 	for _, snippet := range requiredSnippets {
@@ -867,11 +867,11 @@ func TestExecuteTaskUsesImageVolumesForSidecars(t *testing.T) {
 	for _, env := range taskContainer.Env {
 		envMap[env.Name] = env.Value
 	}
-	if envMap["OZ_RUN_ID"] != "task-1" {
-		t.Fatalf("OZ_RUN_ID = %q, want %q", envMap["OZ_RUN_ID"], "task-1")
+	if envMap["NEODEV_RUN_ID"] != "task-1" {
+		t.Fatalf("NEODEV_RUN_ID = %q, want %q", envMap["NEODEV_RUN_ID"], "task-1")
 	}
-	if _, ok := envMap["OZ_EXECUTION_ID"]; ok {
-		t.Fatal("expected OZ_EXECUTION_ID to be omitted from task container env")
+	if _, ok := envMap["NEODEV_EXECUTION_ID"]; ok {
+		t.Fatal("expected NEODEV_EXECUTION_ID to be omitted from task container env")
 	}
 	var taskSidecarMount *corev1.VolumeMount
 	for i := range taskContainer.VolumeMounts {
@@ -1033,8 +1033,8 @@ func TestExecuteTaskUsesCopyInitContainersByDefault(t *testing.T) {
 	for _, env := range taskContainer.Env {
 		envMap[env.Name] = env.Value
 	}
-	if _, ok := envMap["OZ_EXECUTION_ID"]; ok {
-		t.Fatal("expected fallback OZ_EXECUTION_ID to be omitted from task container env")
+	if _, ok := envMap["NEODEV_EXECUTION_ID"]; ok {
+		t.Fatal("expected fallback NEODEV_EXECUTION_ID to be omitted from task container env")
 	}
 	var taskSidecarMount *corev1.VolumeMount
 	for i := range taskContainer.VolumeMounts {

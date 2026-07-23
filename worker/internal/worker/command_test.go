@@ -135,8 +135,8 @@ func TestCommandBackendDoesNotLeakSecretsIntoSubprocessEnv(t *testing.T) {
 		t.Fatalf("failed to read captured env: %v", err)
 	}
 	env := string(data)
-	if !strings.Contains(env, "OZ_RUN_ID=task-1") {
-		t.Errorf("expected OZ_RUN_ID in subprocess env, got:\n%s", env)
+	if !strings.Contains(env, "NEODEV_RUN_ID=task-1") {
+		t.Errorf("expected NEODEV_RUN_ID in subprocess env, got:\n%s", env)
 	}
 	if !strings.Contains(env, "OPERATOR_VAR=ok") {
 		t.Errorf("expected operator env var in subprocess env")
@@ -152,9 +152,9 @@ func TestCommandBackendWellKnownVarsCannotBeClobberedByOperatorEnv(t *testing.T)
 		DispatchCommand: "env > " + outFile,
 		// Operator attempts to override well-known vars — they must not take effect.
 		Env: map[string]string{
-			"OZ_RUN_ID":         "operator-injected",
-			"OZ_EXECUTION_ID":   "operator-injected",
-			"OZ_WORKER_BACKEND": "operator-injected",
+			"NEODEV_RUN_ID":         "operator-injected",
+			"NEODEV_EXECUTION_ID":   "operator-injected",
+			"NEODEV_WORKER_BACKEND": "operator-injected",
 		},
 	})
 
@@ -167,14 +167,14 @@ func TestCommandBackendWellKnownVarsCannotBeClobberedByOperatorEnv(t *testing.T)
 		t.Fatalf("failed to read captured env: %v", err)
 	}
 	env := string(data)
-	if !strings.Contains(env, "OZ_RUN_ID=task-1") {
-		t.Errorf("OZ_RUN_ID must be the actual task ID, not overridable by operator Env; got:\n%s", env)
+	if !strings.Contains(env, "NEODEV_RUN_ID=task-1") {
+		t.Errorf("NEODEV_RUN_ID must be the actual task ID, not overridable by operator Env; got:\n%s", env)
 	}
-	if !strings.Contains(env, "OZ_EXECUTION_ID=exec-1") {
-		t.Errorf("OZ_EXECUTION_ID must be the actual execution ID, not overridable by operator Env; got:\n%s", env)
+	if !strings.Contains(env, "NEODEV_EXECUTION_ID=exec-1") {
+		t.Errorf("NEODEV_EXECUTION_ID must be the actual execution ID, not overridable by operator Env; got:\n%s", env)
 	}
-	if !strings.Contains(env, "OZ_WORKER_BACKEND=command") {
-		t.Errorf("OZ_WORKER_BACKEND must be 'command', not overridable by operator Env; got:\n%s", env)
+	if !strings.Contains(env, "NEODEV_WORKER_BACKEND=command") {
+		t.Errorf("NEODEV_WORKER_BACKEND must be 'command', not overridable by operator Env; got:\n%s", env)
 	}
 }
 

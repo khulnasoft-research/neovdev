@@ -6,8 +6,8 @@ It is written in Python (standard library only — no dependencies to install) s
 
 ## Files
 
-- `dispatch.py` — reads the JSON payload on stdin, transforms it (see `transform()`), and `POST`s it to `OZ_DISPATCH_URL`. Exit `0` means dispatched (fire-and-forget); non-zero means the worker fails the task. This is the template for delegating to a remote HTTP runtime.
-- `cancel.py` — `POST`s `{run_id, execution_id}` to `OZ_CANCEL_URL` when a dispatched task is cancelled (best-effort).
+- `dispatch.py` — reads the JSON payload on stdin, transforms it (see `transform()`), and `POST`s it to `NEODEV_DISPATCH_URL`. Exit `0` means dispatched (fire-and-forget); non-zero means the worker fails the task. This is the template for delegating to a remote HTTP runtime.
+- `cancel.py` — `POST`s `{run_id, execution_id}` to `NEODEV_CANCEL_URL` when a dispatched task is cancelled (best-effort).
 - `dispatch-neodev-local.py` — a **local end-to-end** variant that, instead of forwarding to a remote API, launches the real `oz` agent on the host using the payload's `base_args` (fire-and-forget). Use it to exercise the command backend locally and confirm the worker forwards the right payload. See [Local end-to-end testing](#local-end-to-end-testing).
 
 Requires `python3` on the worker host.
@@ -55,12 +55,12 @@ backend:
     cancel_command: "python3 /opt/oz/cancel.py"
     dispatch_timeout: "60s"
     environment:
-      - name: OZ_DISPATCH_URL
+      - name: NEODEV_DISPATCH_URL
         value: "https://my-runtime.internal/oz/dispatch"
-      - name: OZ_CANCEL_URL
+      - name: NEODEV_CANCEL_URL
         value: "https://my-runtime.internal/oz/cancel"
       # Omit `value` to inherit the secret from the worker's host environment.
-      - name: OZ_DISPATCH_AUTH_HEADER
+      - name: NEODEV_DISPATCH_AUTH_HEADER
 ```
 
 (The scripts are executable, so `dispatch_command: "/opt/oz/dispatch.py"` also works.)
@@ -82,18 +82,18 @@ backend:
 }
 ```
 
-The non-secret identifiers `OZ_RUN_ID`, `OZ_EXECUTION_ID`, `OZ_WORKER_BACKEND`, `OZ_SERVER_ROOT_URL`, and `OZ_DOCKER_IMAGE` are also set in the script's environment. Secrets appear only in the stdin payload.
+The non-secret identifiers `NEODEV_RUN_ID`, `NEODEV_EXECUTION_ID`, `NEODEV_WORKER_BACKEND`, `NEODEV_SERVER_ROOT_URL`, and `NEODEV_DOCKER_IMAGE` are also set in the script's environment. Secrets appear only in the stdin payload.
 
 Your runtime should launch the agent with `base_args` inside an environment built from `docker_image` + `sidecars`, injecting `env`. Because `base_args` already includes `--task-id` and `--server-root-url`, the agent reports its own progress and terminal state to Warp — the worker does not. Once the CLI exits, your runtime must report completion by running `neodev harness-support --run-id <run_id> report-shutdown` (see the [command backend docs](../../README.md#command)). Keep the exit-code contract: exit `0` only when the task is durably accepted for execution.
 
 ## Local end-to-end testing
 
-`dispatch-neodev-local.py` lets you exercise the whole command-backend path against a local stack — local warp-server, local session-sharing-server, and a running `neodev-agent-worker` — using a real agent run. It reads the payload, logs a summary of what the worker forwarded (so you can verify the contract), writes the full payload to `OZ_LOCAL_RUN_LOG_DIR/payload-<run_id>.json`, then launches `$OZ_BIN <base_args...>` detached with the payload's `env` applied. When the CLI exits, the detached wrapper reports completion with `$OZ_BIN harness-support --run-id <run_id> report-shutdown`, as the dispatch contract requires.
+`dispatch-neodev-local.py` lets you exercise the whole command-backend path against a local stack — local warp-server, local session-sharing-server, and a running `neodev-agent-worker` — using a real agent run. It reads the payload, logs a summary of what the worker forwarded (so you can verify the contract), writes the full payload to `NEODEV_LOCAL_RUN_LOG_DIR/payload-<run_id>.json`, then launches `$NEODEV_BIN <base_args...>` detached with the payload's `env` applied. When the CLI exits, the detached wrapper reports completion with `$NEODEV_BIN harness-support --run-id <run_id> report-shutdown`, as the dispatch contract requires.
 
 Required/optional environment for this script:
 
-- `OZ_BIN` (required): the local `oz`/Warp binary to exec (the same kind of binary the `direct` backend uses).
-- `OZ_LOCAL_RUN_LOG_DIR` (optional): where to write per-task payloads and run logs (defaults to a temp dir).
+- `NEODEV_BIN` (required): the local `oz`/Warp binary to exec (the same kind of binary the `direct` backend uses).
+- `NEODEV_LOCAL_RUN_LOG_DIR` (optional): where to write per-task payloads and run logs (defaults to a temp dir).
 
 The easiest way to run the full stack is `warp-server`'s `script/neodev-local`, which boots the servers and the worker for you. Once it supports the command backend, run:
 

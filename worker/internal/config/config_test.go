@@ -304,8 +304,8 @@ backend:
     image_pull_policy: "IfNotPresent"
     use_image_volumes: true
     preflight_image: "registry.internal/platform/preflight:1.0"
-    setup_command: "printf 'SETUP=done\n' > \"$OZ_ENVIRONMENT_FILE\""
-    teardown_command: "rm -rf \"$OZ_WORKSPACE_ROOT/tmp\""
+    setup_command: "printf 'SETUP=done\n' > \"$NEODEV_ENVIRONMENT_FILE\""
+    teardown_command: "rm -rf \"$NEODEV_WORKSPACE_ROOT/tmp\""
     extra_labels:
       team: "platform"
     extra_annotations:

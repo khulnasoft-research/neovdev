@@ -205,7 +205,7 @@ git config --global user.email main@example.com
 		WorkspaceRoot: workspaceRoot,
 		OzPath:        ozPath,
 		NoCleanup:     true,
-		SetupCommand:  `printf 'GIT_CONFIG_GLOBAL=%s\n' "$OVERRIDE_CFG" > "$OZ_ENVIRONMENT_FILE"`,
+		SetupCommand:  `printf 'GIT_CONFIG_GLOBAL=%s\n' "$OVERRIDE_CFG" > "$NEODEV_ENVIRONMENT_FILE"`,
 		Env: map[string]string{
 			"MAIN_CFG_CAPTURE": mainCfgCapture,
 			"OVERRIDE_CFG":     overrideCfg,
@@ -301,8 +301,8 @@ func TestDirectBackendRedirectsGlobalGitConfig(t *testing.T) {
 	ozPath := filepath.Join(testDir, "oz")
 	script := `#!/bin/sh
 set -eu
-printf '%s' "$HOME" > "$OZ_HOME_CAPTURE"
-printf '%s' "$GIT_CONFIG_GLOBAL" > "$OZ_CFG_CAPTURE"
+printf '%s' "$HOME" > "$NEODEV_HOME_CAPTURE"
+printf '%s' "$GIT_CONFIG_GLOBAL" > "$NEODEV_CFG_CAPTURE"
 git config --global --add url."https://x-access-token:tok@github.com/".insteadOf "ssh://git@github.com/"
 `
 	if err := os.WriteFile(ozPath, []byte(script), 0o755); err != nil {
@@ -315,8 +315,8 @@ git config --global --add url."https://x-access-token:tok@github.com/".insteadOf
 		OzPath:        ozPath,
 		NoCleanup:     true,
 		Env: map[string]string{
-			"OZ_HOME_CAPTURE": homeCapture,
-			"OZ_CFG_CAPTURE":  cfgCapture,
+			"NEODEV_HOME_CAPTURE": homeCapture,
+			"NEODEV_CFG_CAPTURE":  cfgCapture,
 		},
 	})
 	if err != nil {

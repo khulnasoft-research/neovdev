@@ -57,7 +57,7 @@ type TaskAssignmentMessage struct {
 	AdditionalSidecars []SidecarMount `json:"additional_sidecars,omitempty"`
 	// AdditionalOzArgs are server-resolved supplemental arguments for the oz
 	// CLI. The worker forwards these tokens without deriving task semantics.
-	AdditionalOzArgs []string `json:"additional_oz_args,omitempty"`
+	AdditionalOzArgs []string `json:"additional_neodev_args,omitempty"`
 	// InstanceShape, when set, is the runner's resolved compute size. Containerized
 	// backends size the task container/pod from it; omitted when the run has no explicit
 	// runner instance shape, in which case the worker keeps its default sizing.

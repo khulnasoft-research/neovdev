@@ -331,49 +331,49 @@ func newResource(ctx context.Context, cfg Config) (*resource.Resource, error) {
 
 func buildInstruments(m metric.Meter) (*instruments, error) {
 	connected, err := m.Int64Gauge(
-		"oz_worker_connected",
+		"neodev_worker_connected",
 		metric.WithDescription("1 while the worker has an active WebSocket connection to warp-server, 0 otherwise."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	tasksActive, err := m.Int64UpDownCounter(
-		"oz_worker_tasks_active",
+		"neodev_worker_tasks_active",
 		metric.WithDescription("Number of tasks the worker is currently executing."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	tasksMaxConcurrent, err := m.Int64Gauge(
-		"oz_worker_tasks_max_concurrent",
+		"neodev_worker_tasks_max_concurrent",
 		metric.WithDescription("Configured upper bound on concurrent tasks for this worker. 0 means unlimited."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	tasksClaimed, err := m.Int64Counter(
-		"oz_worker_tasks_claimed_total",
+		"neodev_worker_tasks_claimed_total",
 		metric.WithDescription("Total tasks the worker has claimed since process start."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	tasksRejected, err := m.Int64Counter(
-		"oz_worker_tasks_rejected_total",
+		"neodev_worker_tasks_rejected_total",
 		metric.WithDescription("Total tasks the worker has rejected since process start."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	tasksCompleted, err := m.Int64Counter(
-		"oz_worker_tasks_completed_total",
+		"neodev_worker_tasks_completed_total",
 		metric.WithDescription("Total tasks the worker has finished, labeled by terminal result."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	taskDuration, err := m.Float64Histogram(
-		"oz_worker_task_duration_seconds",
+		"neodev_worker_task_duration_seconds",
 		metric.WithDescription("Wall-clock duration of task execution on the worker, labeled by terminal result."),
 		metric.WithUnit("s"),
 	)
@@ -381,21 +381,21 @@ func buildInstruments(m metric.Meter) (*instruments, error) {
 		return nil, err
 	}
 	taskFailures, err := m.Int64Counter(
-		"oz_worker_task_failures_total",
+		"neodev_worker_task_failures_total",
 		metric.WithDescription("Task failures labeled by bounded execution phase and reason."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	wsReconnects, err := m.Int64Counter(
-		"oz_worker_websocket_reconnects_total",
+		"neodev_worker_websocket_reconnects_total",
 		metric.WithDescription("Total WebSocket reconnect attempts since process start."),
 	)
 	if err != nil {
 		return nil, err
 	}
 	workerInfo, err := m.Int64Gauge(
-		"oz_worker_info",
+		"neodev_worker_info",
 		metric.WithDescription("Constant 1 with build/runtime metadata as labels."),
 	)
 	if err != nil {
@@ -515,7 +515,7 @@ func SetWorkerInfo(version, backend, workerID string) {
 // StartTaskSpan starts a trace span for a single task execution. It is a no-op
 // unless OTEL_TRACES_EXPORTER is configured by the operator.
 func StartTaskSpan(ctx context.Context, taskID, title string) (context.Context, trace.Span) {
-	return otel.Tracer(scopeName).Start(ctx, "oz_worker.task",
+	return otel.Tracer(scopeName).Start(ctx, "neodev_worker.task",
 		trace.WithAttributes(
 			attribute.String("task.id", taskID),
 			attribute.String("task.title", title),

@@ -2,7 +2,7 @@
 """Reference dispatch command for the neodev-agent-worker "command" backend.
 
 It reads the task ``DispatchPayload`` (JSON) on stdin, transforms it into a
-hypothetical runtime's REST API shape, and POSTs it to ``OZ_DISPATCH_URL``.
+hypothetical runtime's REST API shape, and POSTs it to ``NEODEV_DISPATCH_URL``.
 
 Use it as a template for delegating task execution to a self-hosted runtime that
 is already configured to run neodev agents on demand. The part you customize is
@@ -13,14 +13,14 @@ Only the Python standard library is used, so there are no dependencies to
 install on the worker host.
 
 Required environment:
-  OZ_DISPATCH_URL           REST endpoint to POST the transformed body to.
+  NEODEV_DISPATCH_URL           REST endpoint to POST the transformed body to.
 
 Optional environment:
-  OZ_DISPATCH_AUTH_HEADER   Authorization header value (e.g. "Bearer ...").
-  OZ_DISPATCH_TIMEOUT_SECS  Request timeout in seconds (default 30).
+  NEODEV_DISPATCH_AUTH_HEADER   Authorization header value (e.g. "Bearer ...").
+  NEODEV_DISPATCH_TIMEOUT_SECS  Request timeout in seconds (default 30).
 
 Also provided by the worker (no need to set these yourself):
-  OZ_RUN_ID, OZ_EXECUTION_ID, OZ_WORKER_BACKEND, OZ_SERVER_ROOT_URL, OZ_DOCKER_IMAGE
+  NEODEV_RUN_ID, NEODEV_EXECUTION_ID, NEODEV_WORKER_BACKEND, NEODEV_SERVER_ROOT_URL, NEODEV_DOCKER_IMAGE
 
 Exit semantics (the contract the command backend relies on):
   exit 0    => task accepted for dispatch; the remote runtime now owns it and
@@ -74,11 +74,11 @@ def transform(payload):
 
 
 def main():
-    url = os.environ.get("OZ_DISPATCH_URL")
+    url = os.environ.get("NEODEV_DISPATCH_URL")
     if not url:
-        sys.stderr.write("OZ_DISPATCH_URL must be set\n")
+        sys.stderr.write("NEODEV_DISPATCH_URL must be set\n")
         return 2
-    timeout = float(os.environ.get("OZ_DISPATCH_TIMEOUT_SECS", "30"))
+    timeout = float(os.environ.get("NEODEV_DISPATCH_TIMEOUT_SECS", "30"))
 
     try:
         payload = json.load(sys.stdin)
@@ -90,8 +90,8 @@ def main():
 
     request = urllib.request.Request(url, data=body, method="POST")
     request.add_header("Content-Type", "application/json")
-    request.add_header("X-Oz-Run-Id", os.environ.get("OZ_RUN_ID", ""))
-    auth = os.environ.get("OZ_DISPATCH_AUTH_HEADER")
+    request.add_header("X-Oz-Run-Id", os.environ.get("NEODEV_RUN_ID", ""))
+    auth = os.environ.get("NEODEV_DISPATCH_AUTH_HEADER")
     if auth:
         request.add_header("Authorization", auth)
 

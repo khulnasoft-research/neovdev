@@ -26,7 +26,7 @@ jobs:
     with:
       docker_tag: ${{ needs.generate-tag.outputs.tag_name }}
       publish_latest: true
-      # Stamp the same tag into main.Version so `oz_worker_info{version=...}`
+      # Stamp the same tag into main.Version so `neodev_worker_info{version=...}`
       # in /metrics matches the published release tag and Docker image tag.
       version: ${{ needs.generate-tag.outputs.tag_name }}
 

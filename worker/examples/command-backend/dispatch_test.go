@@ -82,8 +82,8 @@ func TestDispatchScriptTransformsAndPostsPayload(t *testing.T) {
 	defer srv.Close()
 
 	if err := runDispatch(t, []string{
-		"OZ_DISPATCH_URL=" + srv.URL,
-		"OZ_RUN_ID=task-1",
+		"NEODEV_DISPATCH_URL=" + srv.URL,
+		"NEODEV_RUN_ID=task-1",
 	}, samplePayload); err != nil {
 		t.Fatalf("dispatch script returned error on 2xx: %v", err)
 	}
@@ -129,8 +129,8 @@ func TestDispatchScriptFailsOnServerError(t *testing.T) {
 	defer srv.Close()
 
 	if err := runDispatch(t, []string{
-		"OZ_DISPATCH_URL=" + srv.URL,
-		"OZ_RUN_ID=task-1",
+		"NEODEV_DISPATCH_URL=" + srv.URL,
+		"NEODEV_RUN_ID=task-1",
 	}, samplePayload); err == nil {
 		t.Fatal("expected non-zero exit when the endpoint returns 500")
 	}
@@ -139,11 +139,11 @@ func TestDispatchScriptFailsOnServerError(t *testing.T) {
 func TestDispatchScriptRequiresURL(t *testing.T) {
 	requirePython(t)
 	cmd := exec.Command("python3", "dispatch.py")
-	// Start from a clean env so OZ_DISPATCH_URL is definitely unset.
+	// Start from a clean env so NEODEV_DISPATCH_URL is definitely unset.
 	cmd.Env = []string{"PATH=" + os.Getenv("PATH")}
 	cmd.Stdin = strings.NewReader(samplePayload)
 	if err := cmd.Run(); err == nil {
-		t.Fatal("expected non-zero exit when OZ_DISPATCH_URL is unset")
+		t.Fatal("expected non-zero exit when NEODEV_DISPATCH_URL is unset")
 	}
 }
 
@@ -175,7 +175,7 @@ func TestDispatchOzLocalLaunchesBinaryWithBaseArgs(t *testing.T) {
 	requirePython(t)
 	dir := t.TempDir()
 
-	// Stub OZ_BIN appends its argv and a forwarded env var on each invocation:
+	// Stub NEODEV_BIN appends its argv and a forwarded env var on each invocation:
 	// once for the run itself, then for the report-shutdown call.
 	invocation := filepath.Join(dir, "invocation.txt")
 	stub := filepath.Join(dir, "neodev-stub.sh")
@@ -185,7 +185,7 @@ func TestDispatchOzLocalLaunchesBinaryWithBaseArgs(t *testing.T) {
 	}
 
 	cmd := exec.Command("python3", "dispatch-neodev-local.py")
-	cmd.Env = append(os.Environ(), "OZ_BIN="+stub, "OZ_LOCAL_RUN_LOG_DIR="+dir)
+	cmd.Env = append(os.Environ(), "NEODEV_BIN="+stub, "NEODEV_LOCAL_RUN_LOG_DIR="+dir)
 	cmd.Stdin = strings.NewReader(`{"run_id":"task-1","base_args":["agent","run","--task-id","task-1"],"env":{"WITH_LOCAL_SERVER":"1"}}`)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("dispatch-neodev-local.py failed: %v\n%s", err, out)
@@ -219,6 +219,6 @@ func TestDispatchOzLocalRequiresOzBin(t *testing.T) {
 	cmd.Env = []string{"PATH=" + os.Getenv("PATH")}
 	cmd.Stdin = strings.NewReader(`{"run_id":"t","base_args":["agent","run"]}`)
 	if err := cmd.Run(); err == nil {
-		t.Fatal("expected non-zero exit when OZ_BIN is unset")
+		t.Fatal("expected non-zero exit when NEODEV_BIN is unset")
 	}
 }

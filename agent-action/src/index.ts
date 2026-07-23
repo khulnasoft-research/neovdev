@@ -8,9 +8,9 @@ import * as exec from "@actions/exec";
 import * as tc from "@actions/tool-cache";
 import * as http from "@actions/http-client";
 
-export const MAIN_STARTED_STATE = "oz_action_main_started";
-export const RUN_ID_STATE = "oz_action_run_id";
-export const EXIT_CODE_STATE = "oz_action_exit_code";
+export const MAIN_STARTED_STATE = "neodev_action_main_started";
+export const RUN_ID_STATE = "neodev_action_run_id";
+export const EXIT_CODE_STATE = "neodev_action_exit_code";
 
 const RUN_ID_TEXT_PATTERN = /^Run ID:\s*(\S+)\s*$/m;
 
@@ -85,7 +85,7 @@ interface RunAgentOptions {
 // Run Neodev agent.
 export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
   core.saveState(MAIN_STARTED_STATE, "true");
-  const channel = core.getInput("oz_channel");
+  const channel = core.getInput("neodev_channel");
   const prompt = core.getInput("prompt");
   const savedPrompt = core.getInput("saved_prompt");
   const skill = core.getInput("skill");
@@ -106,7 +106,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
   const command = commandForChannel(channel);
 
   if (!options.skipInstall) {
-    await installOz(channel, core.getInput("oz_version"));
+    await installOz(channel, core.getInput("neodev_version"));
   }
 
   const cloud = core.getBooleanInput("cloud");
@@ -270,7 +270,7 @@ export async function reportShutdown(): Promise<void> {
     return;
   }
 
-  const channel = core.getInput("oz_channel");
+  const channel = core.getInput("neodev_channel");
   let command: string;
   try {
     command = commandForChannel(channel);
@@ -369,7 +369,7 @@ async function downloadOzDeb(channel: string, version: string): Promise<string> 
       debVersion = version;
       version = "v" + version;
     }
-    debUrl = `https://releases.warp.dev/${channel}/${version}/oz_${channel}_${debVersion}_${debArch}.deb`;
+    debUrl = `https://releases.warp.dev/${channel}/${version}/neodev_${channel}_${debVersion}_${debArch}.deb`;
   }
 
   const cacheVersion = `${channel}-${version}`;

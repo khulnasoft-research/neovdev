@@ -57,7 +57,7 @@ type DockerConfig struct {
 type DirectConfig struct {
 	WorkspaceRoot   string     `yaml:"workspace_root"`
 	TargetDir       string     `yaml:"target_dir"`
-	OzPath          string     `yaml:"oz_path"`
+	OzPath          string     `yaml:"neodev_path"`
 	SetupCommand    string     `yaml:"setup_command"`
 	TeardownCommand string     `yaml:"teardown_command"`
 	Environment     []EnvEntry `yaml:"environment" validate:"dive"`

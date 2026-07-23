@@ -194,10 +194,10 @@ func (b *DirectBackend) ExecuteTask(ctx context.Context, params *TaskParams) Exe
 	// 4. Run setup command if configured.
 	if b.config.SetupCommand != "" {
 		setupEnv := append(envVars,
-			fmt.Sprintf("OZ_WORKSPACE_ROOT=%s", workspaceDir),
-			"OZ_WORKER_BACKEND=direct",
-			fmt.Sprintf("OZ_RUN_ID=%s", taskID),
-			fmt.Sprintf("OZ_ENVIRONMENT_FILE=%s", envFilePath),
+			fmt.Sprintf("NEODEV_WORKSPACE_ROOT=%s", workspaceDir),
+			"NEODEV_WORKER_BACKEND=direct",
+			fmt.Sprintf("NEODEV_RUN_ID=%s", taskID),
+			fmt.Sprintf("NEODEV_ENVIRONMENT_FILE=%s", envFilePath),
 		)
 
 		log.Infof(ctx, "Running setup command: %s", b.config.SetupCommand)
@@ -281,10 +281,10 @@ func (b *DirectBackend) runTeardownIfConfigured(ctx context.Context, taskID, wor
 		return
 	}
 	teardownEnv := []string{
-		fmt.Sprintf("OZ_WORKSPACE_ROOT=%s", workspaceDir),
+		fmt.Sprintf("NEODEV_WORKSPACE_ROOT=%s", workspaceDir),
 		fmt.Sprintf("GIT_CONFIG_GLOBAL=%s", gitConfigPath),
-		"OZ_WORKER_BACKEND=direct",
-		fmt.Sprintf("OZ_RUN_ID=%s", taskID),
+		"NEODEV_WORKER_BACKEND=direct",
+		fmt.Sprintf("NEODEV_RUN_ID=%s", taskID),
 	}
 	log.Infof(ctx, "Running teardown command: %s", b.config.TeardownCommand)
 	if err := b.runCommand(ctx, b.config.TeardownCommand, workspaceDir, teardownEnv); err != nil {

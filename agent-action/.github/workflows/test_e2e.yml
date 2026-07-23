@@ -16,7 +16,7 @@ jobs:
         uses: ./.
         id: oz
         with:
-          oz_channel: preview
+          neodev_channel: preview
           prompt: Say hello
           warp_api_key: ${{ secrets.WARP_API_KEY }}
 
@@ -33,7 +33,7 @@ jobs:
         uses: ./.
         id: neodev-skill
         with:
-          oz_channel: preview
+          neodev_channel: preview
           skill: "test-skill"
           warp_api_key: ${{ secrets.WARP_API_KEY }}
 
