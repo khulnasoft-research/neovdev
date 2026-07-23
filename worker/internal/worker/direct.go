@@ -59,7 +59,7 @@ func prepareTaskGitConfig(workspaceDir string, usingTargetDir bool) (string, fun
 
 	// In shared target-dir mode the workspace is the user's real checkout, so keep
 	// the throwaway global config in a temporary directory outside of it.
-	dir, err := os.MkdirTemp("", "oz-gitconfig-")
+	dir, err := os.MkdirTemp("", "neodev-gitconfig-")
 	if err != nil {
 		return "", nil, fmt.Errorf("failed to create temporary git config directory: %w", err)
 	}
@@ -168,7 +168,7 @@ func (b *DirectBackend) ExecuteTask(ctx context.Context, params *TaskParams) Exe
 	}()
 
 	// 2. Create temp environment file for setup script to write to.
-	envFile, err := os.CreateTemp(workspaceDir, "oz-env-*")
+	envFile, err := os.CreateTemp(workspaceDir, "neodev-env-*")
 	if err != nil {
 		return executeError(newBackendFailure(metrics.TaskFailurePhaseBackend, metrics.TaskFailureReasonWorkspaceSetup, fmt.Errorf("failed to create environment file: %w", err)))
 	}

@@ -14,7 +14,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-X main.Version=${VERSION}" -o oz-agent-worker .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-X main.Version=${VERSION}" -o neodev-agent-worker .
 
 # Runtime stage
 FROM alpine:3.22
@@ -27,7 +27,7 @@ RUN apk --no-cache add ca-certificates \
 WORKDIR /app
 
 # Copy the binary from builder
-COPY --from=builder /app/oz-agent-worker .
+COPY --from=builder /app/neodev-agent-worker .
 USER oz
 
-ENTRYPOINT ["./oz-agent-worker"]
+ENTRYPOINT ["./neodev-agent-worker"]

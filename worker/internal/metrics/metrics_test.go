@@ -363,7 +363,7 @@ func TestNewResourceIncludesWorkerAttrs(t *testing.T) {
 		t.Fatalf("newResource: %v", err)
 	}
 	want := map[string]string{
-		"service.name":    "oz-agent-worker",
+		"service.name":    "neodev-agent-worker",
 		"service.version": "v1.2.3",
 		"worker.id":       "alpha",
 		"worker.backend":  "kubernetes",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reference dispatch command for the oz-agent-worker "command" backend.
+"""Reference dispatch command for the neodev-agent-worker "command" backend.
 
 It reads the task ``DispatchPayload`` (JSON) on stdin, transforms it into a
 hypothetical runtime's REST API shape, and POSTs it to ``OZ_DISPATCH_URL``.

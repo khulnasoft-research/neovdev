@@ -1,5 +1,5 @@
 {
-  "name": "oz-cli-action",
+  "name": "neodev-cli-action",
   "version": "0.0.1",
   "private": true,
   "description": "Run the Neodev agent in a GitHub workflow",

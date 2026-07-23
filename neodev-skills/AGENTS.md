@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Repository Overview
 
-This is the `oz-skills` repository - a public catalog of reusable Agent Skills for Warp AI agents and Oz. These are pre-built skills that external users can copy into their projects to teach agents about common workflows and best practices.
+This is the `neodev-skills` repository - a public catalog of reusable Agent Skills for Warp AI agents and Oz. These are pre-built skills that external users can copy into their projects to teach agents about common workflows and best practices.
 
 ## Agent Skills Standard
 

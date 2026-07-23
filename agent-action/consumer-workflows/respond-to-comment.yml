@@ -7,8 +7,8 @@
 # Workflow: Respond to Comment
 # ======================================================================================
 # Usage:
-#   - Comment on a PR or Issue with "@oz-agent".
-#   - You can ask questions or request code changes (e.g., "@oz-agent fix this typo").
+#   - Comment on a PR or Issue with "@neodev-agent".
+#   - You can ask questions or request code changes (e.g., "@neodev-agent fix this typo").
 #
 # Setup:
 #   - Ensure WARP_API_KEY is set in Repository Secrets.

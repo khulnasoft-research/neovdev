@@ -21,7 +21,7 @@ rbac:
 warp:
   apiKeySecret:
     create: false
-    name: oz-agent-worker
+    name: neodev-agent-worker
     key: WARP_API_KEY
     value: ""
   webSocketURL: wss://oz.warp.dev/api/v1/selfhosted/worker/ws

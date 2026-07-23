@@ -1,6 +1,6 @@
 # Command backend — HTTP REST reference
 
-A templatable reference for the `oz-agent-worker` [`command` backend](../../README.md#command). The worker invokes a dispatch command per task and hands it the task payload as JSON on stdin; this reference **transforms** that payload into a runtime's API shape and forwards it to an HTTP REST endpoint so a self-hosted runtime can launch the agent on demand.
+A templatable reference for the `neodev-agent-worker` [`command` backend](../../README.md#command). The worker invokes a dispatch command per task and hands it the task payload as JSON on stdin; this reference **transforms** that payload into a runtime's API shape and forwards it to an HTTP REST endpoint so a self-hosted runtime can launch the agent on demand.
 
 It is written in Python (standard library only — no dependencies to install) so the transformation logic is easy to read and extend.
 
@@ -8,7 +8,7 @@ It is written in Python (standard library only — no dependencies to install) s
 
 - `dispatch.py` — reads the JSON payload on stdin, transforms it (see `transform()`), and `POST`s it to `OZ_DISPATCH_URL`. Exit `0` means dispatched (fire-and-forget); non-zero means the worker fails the task. This is the template for delegating to a remote HTTP runtime.
 - `cancel.py` — `POST`s `{run_id, execution_id}` to `OZ_CANCEL_URL` when a dispatched task is cancelled (best-effort).
-- `dispatch-oz-local.py` — a **local end-to-end** variant that, instead of forwarding to a remote API, launches the real `oz` agent on the host using the payload's `base_args` (fire-and-forget). Use it to exercise the command backend locally and confirm the worker forwards the right payload. See [Local end-to-end testing](#local-end-to-end-testing).
+- `dispatch-neodev-local.py` — a **local end-to-end** variant that, instead of forwarding to a remote API, launches the real `oz` agent on the host using the payload's `base_args` (fire-and-forget). Use it to exercise the command backend locally and confirm the worker forwards the right payload. See [Local end-to-end testing](#local-end-to-end-testing).
 
 Requires `python3` on the worker host.
 
@@ -88,18 +88,18 @@ Your runtime should launch the agent with `base_args` inside an environment buil
 
 ## Local end-to-end testing
 
-`dispatch-oz-local.py` lets you exercise the whole command-backend path against a local stack — local warp-server, local session-sharing-server, and a running `oz-agent-worker` — using a real agent run. It reads the payload, logs a summary of what the worker forwarded (so you can verify the contract), writes the full payload to `OZ_LOCAL_RUN_LOG_DIR/payload-<run_id>.json`, then launches `$OZ_BIN <base_args...>` detached with the payload's `env` applied. When the CLI exits, the detached wrapper reports completion with `$OZ_BIN harness-support --run-id <run_id> report-shutdown`, as the dispatch contract requires.
+`dispatch-neodev-local.py` lets you exercise the whole command-backend path against a local stack — local warp-server, local session-sharing-server, and a running `neodev-agent-worker` — using a real agent run. It reads the payload, logs a summary of what the worker forwarded (so you can verify the contract), writes the full payload to `OZ_LOCAL_RUN_LOG_DIR/payload-<run_id>.json`, then launches `$OZ_BIN <base_args...>` detached with the payload's `env` applied. When the CLI exits, the detached wrapper reports completion with `$OZ_BIN harness-support --run-id <run_id> report-shutdown`, as the dispatch contract requires.
 
 Required/optional environment for this script:
 
 - `OZ_BIN` (required): the local `oz`/Warp binary to exec (the same kind of binary the `direct` backend uses).
 - `OZ_LOCAL_RUN_LOG_DIR` (optional): where to write per-task payloads and run logs (defaults to a temp dir).
 
-The easiest way to run the full stack is `warp-server`'s `script/oz-local`, which boots the servers and the worker for you. Once it supports the command backend, run:
+The easiest way to run the full stack is `warp-server`'s `script/neodev-local`, which boots the servers and the worker for you. Once it supports the command backend, run:
 
 ```bash
 # from warp-server, with WARP_API_KEY exported and a local neodev bundle built
-./script/oz-local --worker-backend command --oz-path <path-to-oz-binary>
+./script/neodev-local --worker-backend command --neodev-path <path-to-neodev-binary>
 ```
 
 Then trigger a run routed to this worker (e.g. from `warp-internal`):
@@ -108,4 +108,4 @@ Then trigger a run routed to this worker (e.g. from `warp-internal`):
 WITH_LOCAL_SERVER=1 WITH_LOCAL_SESSION_SHARING_SERVER=1 ./script/run --host-id local-dev
 ```
 
-In the `oz-agent-worker` log you should see the worker claim the task and the `[dispatch-oz-local]` lines showing the forwarded `run_id`, `base_args`, and `env` keys; the agent then runs against your local server and reports its own status. Because runs are launched detached (fire-and-forget), they keep running after `script/oz-local` is stopped — find and stop them with `pgrep -fl 'agent run'` / `pkill -f 'agent run'` if needed.
+In the `neodev-agent-worker` log you should see the worker claim the task and the `[dispatch-neodev-local]` lines showing the forwarded `run_id`, `base_args`, and `env` keys; the agent then runs against your local server and reports its own status. Because runs are launched detached (fire-and-forget), they keep running after `script/neodev-local` is stopped — find and stop them with `pgrep -fl 'agent run'` / `pkill -f 'agent run'` if needed.

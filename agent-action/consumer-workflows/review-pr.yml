@@ -10,7 +10,7 @@
 #   - Runs automatically when a Pull Request first becomes reviewable:
 #     - A non-draft Pull Request is opened.
 #     - An existing draft Pull Request is marked ready for review.
-#   - Comment `/oz-review` on the Pull Request to request another review.
+#   - Comment `/neodev-review` on the Pull Request to request another review.
 #
 # Description:
 #   - Analyzes the PR diff and provides code review feedback.
@@ -25,7 +25,7 @@
 #   - A general summary comment if applicable.
 #
 # When to use:
-#   - Use this to get immediate feedback on code changes before human review, then run `/oz-review`
+#   - Use this to get immediate feedback on code changes before human review, then run `/neodev-review`
 #     again after addressing feedback or adding commits.
 # ======================================================================================
 name: Auto PR Review

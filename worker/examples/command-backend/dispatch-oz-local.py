@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Local real-run dispatch command for the oz-agent-worker "command" backend.
+"""Local real-run dispatch command for the neodev-agent-worker "command" backend.
 
 Unlike dispatch.py (which forwards the payload to an HTTP runtime), this
 reference runs the agent *for real* on the host using the worker-provided
 ``base_args``. It exists for local end-to-end testing of the command backend —
-for example via warp-server's ``script/oz-local --worker-backend command`` — so
+for example via warp-server's ``script/neodev-local --worker-backend command`` — so
 you can both (a) verify the worker forwards the right payload to the command and
 (b) trigger an actual run against your local server.
 
@@ -67,17 +67,17 @@ def main():
 
     # Log a summary so the worker log shows exactly what was forwarded.
     sys.stderr.write(
-        "[dispatch-oz-local] run_id=%s execution_id=%s image=%s\n"
+        "[dispatch-neodev-local] run_id=%s execution_id=%s image=%s\n"
         % (run_id, payload.get("execution_id", ""), payload.get("docker_image", ""))
     )
     sys.stderr.write(
-        "[dispatch-oz-local] base_args: %s\n"
+        "[dispatch-neodev-local] base_args: %s\n"
         % " ".join(shlex.quote(arg) for arg in base_args)
     )
     sys.stderr.write(
-        "[dispatch-oz-local] env keys: %s\n" % ", ".join(sorted(env_overlay))
+        "[dispatch-neodev-local] env keys: %s\n" % ", ".join(sorted(env_overlay))
     )
-    sys.stderr.write("[dispatch-oz-local] full payload: %s\n" % payload_path)
+    sys.stderr.write("[dispatch-neodev-local] full payload: %s\n" % payload_path)
 
     if not base_args:
         sys.stderr.write("payload has no base_args; nothing to run\n")
@@ -87,7 +87,7 @@ def main():
     child_env = dict(os.environ)
     child_env.update({str(key): str(value) for key, value in env_overlay.items()})
 
-    run_log_path = os.path.join(log_dir, f"oz-run-{run_id}.log")
+    run_log_path = os.path.join(log_dir, f"neodev-run-{run_id}.log")
 
     # The command backend contract requires the runtime to report completion by
     # running `neodev harness-support report-shutdown` with the run ID once the CLI
@@ -124,7 +124,7 @@ def main():
         run_log.close()
 
     sys.stderr.write(
-        f"[dispatch-oz-local] launched pid={proc.pid}; run output -> {run_log_path}\n"
+        f"[dispatch-neodev-local] launched pid={proc.pid}; run output -> {run_log_path}\n"
     )
     return 0
 

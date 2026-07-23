@@ -311,7 +311,7 @@ func primeInstruments(ctx context.Context, set *instruments) {
 
 func newResource(ctx context.Context, cfg Config) (*resource.Resource, error) {
 	attrs := []attribute.KeyValue{
-		semconv.ServiceName("oz-agent-worker"),
+		semconv.ServiceName("neodev-agent-worker"),
 	}
 	if cfg.Version != "" {
 		attrs = append(attrs, semconv.ServiceVersion(cfg.Version))

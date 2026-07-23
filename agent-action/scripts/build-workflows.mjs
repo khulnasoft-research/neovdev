@@ -264,7 +264,7 @@ function updateOzAgentActionInputs(job, workflowCallInputs) {
 
 function pinOzAgentVersionInText(yamlText, version) {
   if (!version) return yamlText;
-  const pattern = /(uses:\s*warpdotdev\/oz-agent-action@)[^\s]+/g;
+  const pattern = /(uses:\s*warpdotdev\/neodev-agent-action@)[^\s]+/g;
   return yamlText.replace(pattern, `$1${version}`);
 }
 

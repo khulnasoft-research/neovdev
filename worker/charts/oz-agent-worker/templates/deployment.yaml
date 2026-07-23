@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "oz-agent-worker.fullname" . }}
+  name: {{ include "neodev-agent-worker.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "oz-agent-worker.labels" . | nindent 4 }}
+    {{- include "neodev-agent-worker.labels" . | nindent 4 }}
   {{- with .Values.worker.deploymentAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -13,11 +13,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "oz-agent-worker.selectorLabels" . | nindent 6 }}
+      {{- include "neodev-agent-worker.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "oz-agent-worker.selectorLabels" . | nindent 8 }}
+        {{- include "neodev-agent-worker.selectorLabels" . | nindent 8 }}
         {{- with .Values.worker.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -31,7 +31,7 @@ spec:
         {{- end }}
     spec:
       terminationGracePeriodSeconds: {{ .Values.worker.terminationGracePeriodSeconds }}
-      serviceAccountName: {{ include "oz-agent-worker.serviceAccountName" . }}
+      serviceAccountName: {{ include "neodev-agent-worker.serviceAccountName" . }}
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -41,12 +41,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: oz-agent-worker
+        - name: neodev-agent-worker
           image: "{{ .Values.image.repository }}:{{ required "image.tag is required" .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - --config-file
-            - /etc/oz-agent-worker/config.yaml
+            - /etc/neodev-agent-worker/config.yaml
             - --backend
             - kubernetes
             - --log-level
@@ -62,7 +62,7 @@ spec:
             - name: WARP_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "oz-agent-worker.apiKeySecretName" . }}
+                  name: {{ include "neodev-agent-worker.apiKeySecretName" . }}
                   key: {{ .Values.warp.apiKeySecret.key }}
             {{- with .Values.worker.extraEnv }}
             {{- toYaml . | nindent 12 }}
@@ -96,7 +96,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: config
-              mountPath: /etc/oz-agent-worker
+              mountPath: /etc/neodev-agent-worker
               readOnly: true
           {{- with .Values.worker.livenessProbe }}
           livenessProbe:
@@ -113,7 +113,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "oz-agent-worker.fullname" . }}-config
+            name: {{ include "neodev-agent-worker.fullname" . }}-config
       {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

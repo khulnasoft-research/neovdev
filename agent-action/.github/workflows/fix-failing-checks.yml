@@ -57,7 +57,7 @@ jobs:
     name: Fix Failure
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }} &&
-      !startsWith(github.event.workflow_run.head_branch, 'oz-agent-fix/')
+      !startsWith(github.event.workflow_run.head_branch, 'neodev-agent-fix/')
     permissions:
       contents: write
       pull-requests: write
@@ -193,7 +193,7 @@ jobs:
             echo "Warning: Summary file $SUMMARY_FILE not found."
           fi
 
-          FIX_BRANCH="oz-agent-fix/run-$RUN_ID"
+          FIX_BRANCH="neodev-agent-fix/run-$RUN_ID"
           git config user.name "Neodev Agent"
           git config user.email "agent@warp.dev"
 

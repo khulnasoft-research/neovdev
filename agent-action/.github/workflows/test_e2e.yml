@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Neodev with skill from repository
         uses: ./.
-        id: oz-skill
+        id: neodev-skill
         with:
           oz_channel: preview
           skill: "test-skill"
@@ -39,7 +39,7 @@ jobs:
 
       - name: Verify skill output
         env:
-          SKILL_OUTPUT: ${{ steps.oz-skill.outputs.agent_output }}
+          SKILL_OUTPUT: ${{ steps.neodev-skill.outputs.agent_output }}
         run: |
           if [[ -z "$SKILL_OUTPUT" ]]; then
             echo "Warp skill produced no output"

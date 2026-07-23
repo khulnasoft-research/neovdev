@@ -178,17 +178,17 @@ func TestDispatchOzLocalLaunchesBinaryWithBaseArgs(t *testing.T) {
 	// Stub OZ_BIN appends its argv and a forwarded env var on each invocation:
 	// once for the run itself, then for the report-shutdown call.
 	invocation := filepath.Join(dir, "invocation.txt")
-	stub := filepath.Join(dir, "oz-stub.sh")
+	stub := filepath.Join(dir, "neodev-stub.sh")
 	script := "#!/bin/sh\n{ echo \"argv:$*\"; echo \"WITH_LOCAL_SERVER=$WITH_LOCAL_SERVER\"; } >> \"" + invocation + "\"\n"
 	if err := os.WriteFile(stub, []byte(script), 0o755); err != nil {
 		t.Fatalf("failed to write stub: %v", err)
 	}
 
-	cmd := exec.Command("python3", "dispatch-oz-local.py")
+	cmd := exec.Command("python3", "dispatch-neodev-local.py")
 	cmd.Env = append(os.Environ(), "OZ_BIN="+stub, "OZ_LOCAL_RUN_LOG_DIR="+dir)
 	cmd.Stdin = strings.NewReader(`{"run_id":"task-1","base_args":["agent","run","--task-id","task-1"],"env":{"WITH_LOCAL_SERVER":"1"}}`)
 	if out, err := cmd.CombinedOutput(); err != nil {
-		t.Fatalf("dispatch-oz-local.py failed: %v\n%s", err, out)
+		t.Fatalf("dispatch-neodev-local.py failed: %v\n%s", err, out)
 	}
 
 	// The launched (detached) wrapper writes asynchronously: the run's argv
@@ -215,7 +215,7 @@ func TestDispatchOzLocalLaunchesBinaryWithBaseArgs(t *testing.T) {
 
 func TestDispatchOzLocalRequiresOzBin(t *testing.T) {
 	requirePython(t)
-	cmd := exec.Command("python3", "dispatch-oz-local.py")
+	cmd := exec.Command("python3", "dispatch-neodev-local.py")
 	cmd.Env = []string{"PATH=" + os.Getenv("PATH")}
 	cmd.Stdin = strings.NewReader(`{"run_id":"t","base_args":["agent","run"]}`)
 	if err := cmd.Run(); err == nil {

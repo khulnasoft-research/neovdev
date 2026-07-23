@@ -19,7 +19,7 @@ function commandForChannel(channel: string): string {
     case "stable":
       return "oz";
     case "preview":
-      return "oz-preview";
+      return "neodev-preview";
     default:
       throw new Error(`Unsupported channel ${channel}`);
   }
@@ -339,7 +339,7 @@ async function downloadOzDeb(channel: string, version: string): Promise<string> 
   }
 
   if (version === "latest") {
-    const client = new http.HttpClient("oz-action", undefined, { allowRedirects: false });
+    const client = new http.HttpClient("neodev-action", undefined, { allowRedirects: false });
     const response = await client.get(
       `https://app.warp.dev/download/cli?os=linux&package=deb&arch=${arch}&channel=${channel}`,
     );

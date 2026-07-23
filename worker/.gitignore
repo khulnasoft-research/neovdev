@@ -16,8 +16,8 @@ go.work
 go.work.sum
 
 # Binary
-/oz-agent-worker
-/oz-agent-worker.exe
+/neodev-agent-worker
+/neodev-agent-worker.exe
 
 # Dependency directories
 vendor/

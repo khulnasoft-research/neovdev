@@ -54,7 +54,7 @@ on:
         required: true
 jobs:
   auto_fix:
-    if: github.event.label.name == 'oz-agent'
+    if: github.event.label.name == 'neodev-agent'
     name: Auto Fix Issue
     runs-on: ubuntu-latest
     permissions:

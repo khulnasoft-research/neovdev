@@ -26,7 +26,7 @@ func TestKubernetesTaskJobNameEmbedsFullRunIDAndExecSuffix(t *testing.T) {
 	execID := "019f5df0-aaaa-bbbb-cccc-abcdef012345"
 
 	name := kubernetesTaskJobName(runID, execID)
-	want := "oz-task-019f5de4-bfd1-762e-92ed-199c971abcba-exec-ef012345"
+	want := "neodev-task-019f5de4-bfd1-762e-92ed-199c971abcba-exec-ef012345"
 	if name != want {
 		t.Fatalf("job name = %q, want %q", name, want)
 	}
@@ -42,15 +42,15 @@ func TestKubernetesTaskJobNameEmbedsFullRunIDAndExecSuffix(t *testing.T) {
 }
 
 func TestKubernetesTaskJobNameFallsBackForEmptyIDs(t *testing.T) {
-	if name := kubernetesTaskJobName("", ""); name != "oz-task-run-exec-exec" {
-		t.Fatalf("job name = %q, want %q", name, "oz-task-run-exec-exec")
+	if name := kubernetesTaskJobName("", ""); name != "neodev-task-run-exec-exec" {
+		t.Fatalf("job name = %q, want %q", name, "neodev-task-run-exec-exec")
 	}
 }
 
 func TestKubernetesTaskJobNameSanitizesIDs(t *testing.T) {
 	// Uppercase and non-DNS characters are lowercased/replaced; short IDs are used in full.
-	if name := kubernetesTaskJobName("RUN_1", "exec.2"); name != "oz-task-run-1-exec-exec-2" {
-		t.Fatalf("job name = %q, want %q", name, "oz-task-run-1-exec-exec-2")
+	if name := kubernetesTaskJobName("RUN_1", "exec.2"); name != "neodev-task-run-1-exec-exec-2" {
+		t.Fatalf("job name = %q, want %q", name, "neodev-task-run-1-exec-exec-2")
 	}
 }
 
@@ -1440,7 +1440,7 @@ func TestRunStartupPreflightCreatesLegacyRootInitJobAndWaitsForPodCreationByDefa
 			Namespace:      "agents",
 			PreflightImage: preflightImage,
 			PodTemplate: &corev1.PodSpec{
-				ServiceAccountName: "oz-agent-worker",
+				ServiceAccountName: "neodev-agent-worker",
 				ImagePullSecrets: []corev1.LocalObjectReference{
 					{Name: "registry-creds"},
 				},
@@ -1504,8 +1504,8 @@ func TestRunStartupPreflightCreatesImageVolumeJobAndWaitsForSuccess(t *testing.T
 		if !job.Spec.Template.Spec.Containers[0].VolumeMounts[0].ReadOnly {
 			t.Fatal("expected preflight volume mount to be read-only")
 		}
-		if job.Spec.Template.Spec.ServiceAccountName != "oz-agent-worker" {
-			t.Fatalf("serviceAccountName = %q, want %q", job.Spec.Template.Spec.ServiceAccountName, "oz-agent-worker")
+		if job.Spec.Template.Spec.ServiceAccountName != "neodev-agent-worker" {
+			t.Fatalf("serviceAccountName = %q, want %q", job.Spec.Template.Spec.ServiceAccountName, "neodev-agent-worker")
 		}
 		if len(job.Spec.Template.Spec.ImagePullSecrets) != 1 || job.Spec.Template.Spec.ImagePullSecrets[0].Name != "registry-creds" {
 			t.Fatalf("imagePullSecrets = %+v, want registry-creds", job.Spec.Template.Spec.ImagePullSecrets)
@@ -1560,7 +1560,7 @@ func TestRunStartupPreflightCreatesImageVolumeJobAndWaitsForSuccess(t *testing.T
 			PreflightImage:  preflightImage,
 			UseImageVolumes: true,
 			PodTemplate: &corev1.PodSpec{
-				ServiceAccountName: "oz-agent-worker",
+				ServiceAccountName: "neodev-agent-worker",
 				ImagePullSecrets: []corev1.LocalObjectReference{
 					{Name: "registry-creds"},
 				},
@@ -1685,7 +1685,7 @@ func TestRunStartupPreflightFailsOnFailedCreateEvent(t *testing.T) {
 				{
 					Type:    corev1.EventTypeWarning,
 					Reason:  "FailedCreate",
-					Message: "pods \"oz-preflight-abc\" is forbidden: violates PodSecurity \"restricted:latest\"",
+					Message: "pods \"neodev-preflight-abc\" is forbidden: violates PodSecurity \"restricted:latest\"",
 				},
 			},
 		}, nil

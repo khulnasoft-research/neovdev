@@ -7,7 +7,7 @@
 # Workflow: Auto Fix Issue
 # ======================================================================================
 # Usage:
-#   - Apply the label 'oz-agent' to any GitHub Issue.
+#   - Apply the label 'neodev-agent' to any GitHub Issue.
 #   - This workflow will trigger, analyze the issue, and attempt to write code to fix it.
 #
 # Setup:

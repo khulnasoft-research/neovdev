@@ -236,7 +236,7 @@ func TestLoadValidDirectConfig(t *testing.T) {
 worker_id: "direct-worker"
 backend:
   direct:
-    workspace_root: "/tmp/oz-workspaces"
+    workspace_root: "/tmp/neodev-workspaces"
     setup_command: "/opt/setup.sh"
     teardown_command: "/opt/teardown.sh"
     environment:
@@ -255,8 +255,8 @@ backend:
 	if cfg.Backend.Docker != nil {
 		t.Error("docker backend should be nil")
 	}
-	if cfg.Backend.Direct.WorkspaceRoot != "/tmp/oz-workspaces" {
-		t.Errorf("workspace_root = %q, want %q", cfg.Backend.Direct.WorkspaceRoot, "/tmp/oz-workspaces")
+	if cfg.Backend.Direct.WorkspaceRoot != "/tmp/neodev-workspaces" {
+		t.Errorf("workspace_root = %q, want %q", cfg.Backend.Direct.WorkspaceRoot, "/tmp/neodev-workspaces")
 	}
 	if cfg.Backend.Direct.SetupCommand != "/opt/setup.sh" {
 		t.Errorf("setup_command = %q, want %q", cfg.Backend.Direct.SetupCommand, "/opt/setup.sh")
@@ -314,7 +314,7 @@ backend:
     workspace_size_limit: "10Gi"
     unschedulable_timeout: "2m"
     pod_template:
-      serviceAccountName: "oz-agent-worker"
+      serviceAccountName: "neodev-agent-worker"
       imagePullSecrets:
         - name: "registry-creds"
       nodeSelector:
@@ -366,7 +366,7 @@ backend:
 	if err != nil {
 		t.Fatalf("failed to marshal pod_template: %v", err)
 	}
-	if !strings.Contains(string(podTemplateYAML), "serviceAccountName: \"oz-agent-worker\"") {
+	if !strings.Contains(string(podTemplateYAML), "serviceAccountName: \"neodev-agent-worker\"") {
 		t.Fatalf("expected pod_template to retain serviceAccountName, got:\n%s", string(podTemplateYAML))
 	}
 }

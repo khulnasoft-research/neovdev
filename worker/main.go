@@ -45,7 +45,7 @@ func main() {
 	ctx := context.Background()
 
 	kong.Parse(&CLI,
-		kong.Name("oz-agent-worker"),
+		kong.Name("neodev-agent-worker"),
 		kong.Description("Self-hosted worker for Warp ambient agents."),
 		kong.UsageOnError(),
 		kong.Vars{},

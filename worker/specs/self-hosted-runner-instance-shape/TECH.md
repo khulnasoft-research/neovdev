@@ -2,7 +2,7 @@
 
 ## Context
 
-The `Runner` data model (REMOTE-1936, merged in `warp-server`) introduced `RunnerInstanceShape{ Vcpus, MemoryGb }` and server-side resolution of the effective compute for a run. The dispatcher resolves the shape and hands it to each worker; Warp-hosted backends apply it, but the self-hosted path drops it on the floor and no worker backend sizes its container/pod. See `PRODUCT.md` for behavior. This spec covers the cross-repo glue to transmit the resolved shape to `oz-agent-worker` and apply it per backend.
+The `Runner` data model (REMOTE-1936, merged in `warp-server`) introduced `RunnerInstanceShape{ Vcpus, MemoryGb }` and server-side resolution of the effective compute for a run. The dispatcher resolves the shape and hands it to each worker; Warp-hosted backends apply it, but the self-hosted path drops it on the floor and no worker backend sizes its container/pod. See `PRODUCT.md` for behavior. This spec covers the cross-repo glue to transmit the resolved shape to `neodev-agent-worker` and apply it per backend.
 
 The self-hosted dispatch wire is a hand-duplicated JSON struct, **not** protobuf: the server marshals [`selfhosted.TaskAssignmentMessage`](https://github.com/khulnasoft/cognix/blob/19782ff8fca12e6265d8dd88d3e02749adac204b/logic/ai/ambient_agents/workers/selfhosted/websocket.go#L105-L119) and the worker unmarshals its own copy, [`types.TaskAssignmentMessage`](https://neodev-worker/blob/6e63dcea048c228cf06a99128f1d74596cc35556/internal/types/messages.go#L34-L52). Any new field must be added identically to both.
 
@@ -14,7 +14,7 @@ Relevant code — `warp-server` @ `19782ff`:
 - [`logic/runners.go` `ResolveRunnerConfigForTask`](https://github.com/khulnasoft/cognix/blob/19782ff8fca12e6265d8dd88d3e02749adac204b/logic/runners.go) — returns the resolved `*RunnerConfig` (precedence + missing-runner fall-through) without applying the tenant default.
 - [`workers/namespace/namespace.go (470-481)`](https://github.com/khulnasoft/cognix/blob/19782ff8fca12e6265d8dd88d3e02749adac204b/logic/ai/ambient_agents/workers/namespace/namespace.go#L470-L481) and [`workers/dockersandbox/dockersandbox.go (258-296)`](https://github.com/khulnasoft/cognix/blob/19782ff8fca12e6265d8dd88d3e02749adac204b/logic/ai/ambient_agents/workers/dockersandbox/dockersandbox.go#L258-L296) — reference implementations of shape application (Warp-hosted).
 
-Relevant code — `oz-agent-worker` @ `6e63dce`:
+Relevant code — `neodev-agent-worker` @ `6e63dce`:
 
 - [`internal/types/messages.go (34-52)`](https://neodev-worker/blob/6e63dcea048c228cf06a99128f1d74596cc35556/internal/types/messages.go#L34-L52) — worker `TaskAssignmentMessage` (carries `docker_image`, no shape).
 - [`internal/worker/backend.go (13-36)`](https://neodev-worker/blob/6e63dcea048c228cf06a99128f1d74596cc35556/internal/worker/backend.go#L13-L36) — `TaskParams`, the backend-agnostic struct.
@@ -84,20 +84,20 @@ No change beyond accepting the new `TaskParams` field. The shape is ignored (PRO
 
 ### 7. Helm / docs
 
-No new chart value is required — the shape is dynamic per-run. Update `charts/oz-agent-worker/values.yaml` `kubernetesBackend.podTemplate` comment and the README to note that a runner instance shape overrides `pod_template` task-container `resources` per run, and that the direct backend does not enforce shapes.
+No new chart value is required — the shape is dynamic per-run. Update `charts/neodev-agent-worker/values.yaml` `kubernetesBackend.podTemplate` comment and the README to note that a runner instance shape overrides `pod_template` task-container `resources` per run, and that the direct backend does not enforce shapes.
 
 ## Testing and validation
 
 - **Server unit (`workers/selfhosted/websocket_test.go`)**: `TestInstanceShapeForWire` covers the resolved-shape → wire mapping (nil / zero / negative / partial / full) (PRODUCT 1, 4); `TestSendTaskToWorker_OmitsInstanceShapeWhenNoRunner` asserts `instance_shape` is absent from the marshaled JSON when the run has no runner shape, via the existing `map[string]json.RawMessage` check (PRODUCT 2, 3, 12). The populated-with-shape path is `instanceShapeForWire` (unit) composed with runner resolution, which is exercised end-to-end by the existing `test/integration/runners` suite rather than re-mocked here.
 - **Worker unit (`internal/worker/docker_test.go`, `kubernetes_test.go`)**: `TestDockerResourcesForShape` asserts `NanoCPUs`, `Memory`, and `MemorySwap == Memory` (hard cap) per positive axis, with nil/zero/negative ⇒ no limits (PRODUCT 5, 6, 10); `TestApplyInstanceShapeToContainer` and `TestMergeResourceRequirements` cover the k8s requests==limits set and per-axis override/merge (PRODUCT 8, 10); `TestBuildTaskPodSpecRunnerShapeOverridesPodTemplateResources` covers a runner shape overriding a `pod_template` resources block while preserving unrelated entries (PRODUCT 9); `TestExecuteTaskAppliesInstanceShape` asserts the shape lands on the built `*batchv1.Job` task container end-to-end via a fake clientset.
 - **Worker unit (`prepareTaskParams`)**: `assignment.InstanceShape` round-trips into `TaskParams.InstanceShape` (PRODUCT 3 threading).
-- **End-to-end (self-hosted, oz-local + oz-agent-worker)**: dispatch one runner at two shapes through the Docker backend and confirm each container boots with the requested CPU/memory limits; repeat against the Kubernetes backend and confirm the task pod is created with matching requests/limits and schedules. Mirrors REMOTE-1936 `TECH.md` "Self-hosted end-to-end" validation.
+- **End-to-end (self-hosted, neodev-local + neodev-agent-worker)**: dispatch one runner at two shapes through the Docker backend and confirm each container boots with the requested CPU/memory limits; repeat against the Kubernetes backend and confirm the task pod is created with matching requests/limits and schedules. Mirrors REMOTE-1936 `TECH.md` "Self-hosted end-to-end" validation.
 - **Compatibility**: old worker + new server (extra field ignored) and new worker + old server (nil shape ⇒ no limits) both run unchanged (PRODUCT 12).
-- Run `go test ./...` in `oz-agent-worker`; `./script/presubmit` in `warp-server`; `helm template` to confirm the chart still renders.
+- Run `go test ./...` in `neodev-agent-worker`; `./script/presubmit` in `warp-server`; `helm template` to confirm the chart still renders.
 
 ## Parallelization
 
-Two-repo change, but tightly coupled by an identical wire contract, so it is sequenced rather than fanned out. Land the additive wire field + server populate (`warp-server`) and the worker field + backend application (`oz-agent-worker`) as two PRs; because the field is optional both can merge in either order without breaking dispatch (PRODUCT 12). Within `oz-agent-worker` the Docker and Kubernetes backend edits touch separate files and could be split across local sub-agents on separate worktree branches (`oz/runner-shape-docker`, `oz/runner-shape-k8s`), but the wire/`TaskParams` change they both depend on is small and shared, so the coordination overhead outweighs the wall-clock savings — implement sequentially in one branch per repo.
+Two-repo change, but tightly coupled by an identical wire contract, so it is sequenced rather than fanned out. Land the additive wire field + server populate (`warp-server`) and the worker field + backend application (`neodev-agent-worker`) as two PRs; because the field is optional both can merge in either order without breaking dispatch (PRODUCT 12). Within `neodev-agent-worker` the Docker and Kubernetes backend edits touch separate files and could be split across local sub-agents on separate worktree branches (`oz/runner-shape-docker`, `oz/runner-shape-k8s`), but the wire/`TaskParams` change they both depend on is small and shared, so the coordination overhead outweighs the wall-clock savings — implement sequentially in one branch per repo.
 
 ## Risks and mitigations
 

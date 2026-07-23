@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reference cancel command for the oz-agent-worker "command" backend.
+"""Reference cancel command for the neodev-agent-worker "command" backend.
 
 Invoked best-effort when a dispatched task is cancelled. The worker sets
 ``OZ_RUN_ID`` and ``OZ_EXECUTION_ID`` in the environment; this script POSTs them

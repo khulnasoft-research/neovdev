@@ -1,6 +1,6 @@
 # Context
 
-Kubernetes self-hosted workers run as a long-lived `oz-agent-worker` Deployment while each Neodev run executes as a Kubernetes Job. This is the right execution boundary for clusters that use Karpenter, but the current worker shutdown path still treats the worker process as the owner of active task lifecycles.
+Kubernetes self-hosted workers run as a long-lived `neodev-agent-worker` Deployment while each Neodev run executes as a Kubernetes Job. This is the right execution boundary for clusters that use Karpenter, but the current worker shutdown path still treats the worker process as the owner of active task lifecycles.
 Relevant code:
 
 - `internal/worker/worker.go:58` stores active task cancel functions in `Worker.activeTasks`.
@@ -10,7 +10,7 @@ Relevant code:
 - `internal/worker/kubernetes.go:285` deletes Jobs in a defer when the task context is cancelled or cleanup is enabled.
 - `internal/worker/kubernetes.go:399` deletes all Jobs labeled for the worker during Kubernetes backend shutdown.
 - `internal/worker/backend.go:38` defines the backend interface used by the shared worker lifecycle.
-- `charts/oz-agent-worker/templates/deployment.yaml:15` deploys the worker as a single-replica Deployment for a given worker ID.
+- `charts/neodev-agent-worker/templates/deployment.yaml:15` deploys the worker as a single-replica Deployment for a given worker ID.
   With this behavior, a normal Kubernetes pod termination caused by Karpenter consolidation sends SIGTERM to the worker, the worker cancels active task contexts, and the Kubernetes backend deletes the task Jobs. The task pod may have been perfectly healthy, but the worker relocation kills the run anyway.
 
 # Proposed changes
@@ -85,7 +85,7 @@ Unit tests:
   Validation commands:
 - `go test ./internal/worker`
 - `go test ./...` if focused tests pass and runtime is acceptable.
-- `helm template` against `charts/oz-agent-worker` with required image tag and worker ID to confirm the new chart value renders.
+- `helm template` against `charts/neodev-agent-worker` with required image tag and worker ID to confirm the new chart value renders.
 
 # Parallelization
 

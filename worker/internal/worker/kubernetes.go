@@ -27,7 +27,7 @@ import (
 const (
 	defaultKubernetesNamespace       = "default"
 	defaultWorkspaceMountPath        = "/workspace"
-	defaultSetupEnvironmentFile      = "/workspace/.oz-env"
+	defaultSetupEnvironmentFile      = "/workspace/.neodev-env"
 	watchSafetyInterval              = 30 * time.Second
 	defaultUnschedulableFailureDelay = 30 * time.Second
 	startupPreflightPollInterval     = 500 * time.Millisecond
@@ -38,12 +38,12 @@ const (
 	defaultJobTTLSecondsAfterFinish  = int32(24 * 60 * 60)
 	startupPreflightImageVolumeName  = "preflight-image"
 	startupPreflightImageMountPath   = "/preflight-image"
-	kubernetesWorkerIDLabel          = "oz-worker-id"
-	kubernetesWorkerHashLabel        = "oz-worker-hash"
-	kubernetesTaskIDLabel            = "oz-task-id"
-	kubernetesTaskHashLabel          = "oz-task-hash"
-	kubernetesExecutionIDLabel       = "oz-execution-id"
-	kubernetesExecutionHashLabel     = "oz-execution-hash"
+	kubernetesWorkerIDLabel          = "neodev-worker-id"
+	kubernetesWorkerHashLabel        = "neodev-worker-hash"
+	kubernetesTaskIDLabel            = "neodev-task-id"
+	kubernetesTaskHashLabel          = "neodev-task-hash"
+	kubernetesExecutionIDLabel       = "neodev-execution-id"
+	kubernetesExecutionHashLabel     = "neodev-execution-hash"
 
 	// maxLogBytes caps the amount of container log data read into memory per
 	// container to avoid OOM when a task produces excessive output.
@@ -248,7 +248,7 @@ func (b *KubernetesBackend) ExecuteTask(ctx context.Context, params *TaskParams)
 			"/bin/sh",
 			"-c",
 			kubernetesTaskWrapperScript(),
-			"oz-task",
+			"neodev-task",
 		},
 		Args:         params.BaseArgs,
 		Env:          mainEnvVars,
@@ -740,7 +740,7 @@ func (b *KubernetesBackend) startupPreflightJob() *batchv1.Job {
 	}
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      fmt.Sprintf("oz-preflight-%s-%d", kubernetesLabelHash(b.config.WorkerID), time.Now().UnixNano()),
+			Name:      fmt.Sprintf("neodev-preflight-%s-%d", kubernetesLabelHash(b.config.WorkerID), time.Now().UnixNano()),
 			Namespace: b.config.Namespace,
 		},
 		Spec: batchv1.JobSpec{
@@ -1085,9 +1085,9 @@ func copyStringMap(values map[string]string) map[string]string {
 // 63-character limit for the job-name label the controller stamps on Pods.
 const taskJobExecIDSuffixLen = 8
 
-// kubernetesTaskJobName builds the task Job name as oz-task-<run>-exec-<exec-suffix>.
+// kubernetesTaskJobName builds the task Job name as neodev-task-<run>-exec-<exec-suffix>.
 // The Job controller appends a random suffix when it creates the task Pod, so the Pod
-// name becomes oz-task-<run>-exec-<exec-suffix>-<random>. The full run ID is embedded so
+// name becomes neodev-task-<run>-exec-<exec-suffix>-<random>. The full run ID is embedded so
 // Jobs and Pods stay greppable by run, while a short execution-ID suffix keeps the name
 // unique across re-executions of the same run. The run fragment is truncated only as a
 // defensive fallback so the name stays within the 63-character limit; a standard
@@ -1098,7 +1098,7 @@ func kubernetesTaskJobName(runID, executionID string) string {
 		execFragment = "exec"
 	}
 
-	const prefix, sep = "oz-task-", "-exec-"
+	const prefix, sep = "neodev-task-", "-exec-"
 	maxRunLen := 63 - len(prefix) - len(sep) - len(execFragment)
 	if maxRunLen < 0 {
 		maxRunLen = 0

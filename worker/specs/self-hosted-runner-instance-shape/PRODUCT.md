@@ -2,7 +2,7 @@
 
 ## Summary
 
-A runner's instance shape (`{ vcpus, memory_gb }`) — already a first-class field on the `Runner` data model and resolved server-side — must actually size the compute that a self-hosted `oz-agent-worker` provisions for a run. Today the worker receives and applies the runner's Docker image but ignores the instance shape, so a self-hosted run is never sized to the runner's requested SKU. This closes that gap: the resolved shape is transmitted over the dispatch WebSocket and applied by each containerized backend (Docker container resource limits, Kubernetes pod resource requests/limits). The direct backend has no container boundary and is intentionally unaffected.
+A runner's instance shape (`{ vcpus, memory_gb }`) — already a first-class field on the `Runner` data model and resolved server-side — must actually size the compute that a self-hosted `neodev-agent-worker` provisions for a run. Today the worker receives and applies the runner's Docker image but ignores the instance shape, so a self-hosted run is never sized to the runner's requested SKU. This closes that gap: the resolved shape is transmitted over the dispatch WebSocket and applied by each containerized backend (Docker container resource limits, Kubernetes pod resource requests/limits). The direct backend has no container boundary and is intentionally unaffected.
 
 ## Problem
 

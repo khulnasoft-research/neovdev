@@ -92,30 +92,30 @@ jobs:
           # workflow input `version` > workflow input `docker_tag` > commit SHA.
           VERSION: ${{ inputs.version != '' && inputs.version || (inputs.docker_tag != '' && inputs.docker_tag || github.sha) }}
         run: |
-          binary="oz-agent-worker"
+          binary="neodev-agent-worker"
           if [ "$GOOS" = "windows" ]; then
-            binary="oz-agent-worker.exe"
+            binary="neodev-agent-worker.exe"
           fi
           go build -ldflags="-X main.Version=${VERSION}" -o "$binary" .
 
       - name: Archive
         run: |
-          prefix="oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}"
+          prefix="neodev-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}"
           if [ "${{ matrix.goos }}" = "windows" ]; then
-            zip "${prefix}.zip" oz-agent-worker.exe
+            zip "${prefix}.zip" neodev-agent-worker.exe
           else
-            tar czf "${prefix}.tar.gz" oz-agent-worker
-            tar cJf "${prefix}.tar.xz" oz-agent-worker
+            tar czf "${prefix}.tar.gz" neodev-agent-worker
+            tar cJf "${prefix}.tar.xz" neodev-agent-worker
           fi
 
       - name: Upload artifact
         uses: namespace-actions/upload-artifact@v1
         with:
-          name: oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: neodev-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}
           path: |
-            oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
-            oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.xz
-            oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+            neodev-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+            neodev-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.xz
+            neodev-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.zip
 
   docker:
     name: Build and push Docker image
@@ -164,10 +164,10 @@ jobs:
             {
               echo 'tags<<EOF'
               echo "khulnasoft/neodev:${DOCKER_TAG}"
-              echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/oz-agent-worker:${DOCKER_TAG}"
+              echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/neodev-agent-worker:${DOCKER_TAG}"
               if [ "$PUBLISH_LATEST" = "true" ]; then
                 echo "khulnasoft/neodev:latest"
-                echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/oz-agent-worker:latest"
+                echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/neodev-agent-worker:latest"
               fi
               echo 'EOF'
               echo "primary=khulnasoft/neodev:${DOCKER_TAG}"

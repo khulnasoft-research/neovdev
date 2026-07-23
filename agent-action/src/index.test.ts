@@ -93,7 +93,7 @@ beforeEach(() => {
   coreMocks.isDebug.mockReturnValue(false);
 
   execMocks.exec.mockResolvedValue(0);
-  toolCacheMocks.find.mockReturnValue("/tmp/oz-cache");
+  toolCacheMocks.find.mockReturnValue("/tmp/neodev-cache");
 });
 
 describe("parseRunIdFromOutput", () => {
@@ -439,7 +439,7 @@ describe("reportShutdown", () => {
     await index.reportShutdown();
 
     expect(execMocks.getExecOutput).toHaveBeenCalledWith(
-      "oz-preview",
+      "neodev-preview",
       ["harness-support", "--run-id", "run-clean", "report-shutdown"],
       expect.objectContaining({
         ignoreReturnCode: true,

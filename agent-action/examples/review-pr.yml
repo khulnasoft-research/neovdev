@@ -5,7 +5,7 @@
 #   - Runs automatically when a Pull Request first becomes reviewable:
 #     - A non-draft Pull Request is opened.
 #     - An existing draft Pull Request is marked ready for review.
-#   - Comment `/oz-review` on the Pull Request to request another review.
+#   - Comment `/neodev-review` on the Pull Request to request another review.
 #
 # Description:
 #   - Analyzes the PR diff and provides code review feedback.
@@ -20,7 +20,7 @@
 #   - A general summary comment if applicable.
 #
 # When to use:
-#   - Use this to get immediate feedback on code changes before human review, then run `/oz-review`
+#   - Use this to get immediate feedback on code changes before human review, then run `/neodev-review`
 #     again after addressing feedback or adding commits.
 # ======================================================================================
 name: Auto PR Review
@@ -38,7 +38,7 @@ jobs:
       (
         github.event_name == 'issue_comment' &&
         github.event.issue.pull_request &&
-        github.event.comment.body == '/oz-review' &&
+        github.event.comment.body == '/neodev-review' &&
         github.actor != 'github-actions[bot]'
       )
     runs-on: ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
               const previousOzReview = [...reviews].reverse().find(
                 (review) =>
                   typeof review.body === 'string' &&
-                  review.body.includes('<!-- oz-agent-review -->') &&
+                  review.body.includes('<!-- neodev-agent-review -->') &&
                   typeof review.commit_id === 'string' &&
                   review.commit_id.length > 0
               );
@@ -235,7 +235,7 @@ jobs:
             const { owner, repo } = context.repo;
             const prNumber = Number('${{ steps.review_context.outputs.pr_number }}');
             const reviewedHeadSha = '${{ steps.checkout_pr.outputs.reviewed_head_sha }}';
-            const reviewMarker = '<!-- oz-agent-review -->';
+            const reviewMarker = '<!-- neodev-agent-review -->';
 
             try {
               if (!fs.existsSync('review.json')) {

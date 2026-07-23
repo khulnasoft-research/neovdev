@@ -40,7 +40,7 @@ jobs:
         uses: namespace-actions/download-artifact@v1
         with:
           # Only download release artifacts, not Docker image metadata.
-          pattern: oz-agent-worker-*
+          pattern: neodev-agent-worker-*
           path: artifacts
 
       - name: Create release
