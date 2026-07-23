@@ -5,7 +5,7 @@ description: A simple test skill that validates the GitHub Action can load skill
 
 # Test Skill
 
-This is a test skill used to validate that the Oz Agent GitHub Action can successfully load and
+This is a test skill used to validate that the Neodev Agent GitHub Action can successfully load and
 execute skills from the repository.
 
 ## Purpose

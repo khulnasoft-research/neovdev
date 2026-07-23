@@ -20,7 +20,7 @@ It reads the ``DispatchPayload`` (JSON) on stdin and:
      to the server (base_args already carries --task-id / --server-root-url), so
      the worker does not finalize the task.
 
-This mirrors how the `direct` backend executes the host oz binary, but routed
+This mirrors how the `direct` backend executes the host neodev binary, but routed
 through the command backend, so it ignores docker_image / sidecars.
 
 Required environment:
@@ -90,7 +90,7 @@ def main():
     run_log_path = os.path.join(log_dir, f"oz-run-{run_id}.log")
 
     # The command backend contract requires the runtime to report completion by
-    # running `oz harness-support report-shutdown` with the run ID once the CLI
+    # running `neodev harness-support report-shutdown` with the run ID once the CLI
     # exits. Chain the run and the report inside one detached shell so this
     # dispatch command can still return immediately (fire-and-forget).
     run_cmd = " ".join(shlex.quote(arg) for arg in [oz_bin, *base_args])
@@ -118,7 +118,7 @@ def main():
             start_new_session=True,
         )
     except OSError as exc:
-        sys.stderr.write(f"failed to launch oz run: {exc}\n")
+        sys.stderr.write(f"failed to launch neodev run: {exc}\n")
         return 1
     finally:
         run_log.close()

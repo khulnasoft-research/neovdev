@@ -8,14 +8,14 @@ import (
 	"neodev-worker/internal/types"
 )
 
-// TaskAugmentOptions contains settings translated into oz CLI flags for every task.
+// TaskAugmentOptions contains settings translated into neodev CLI flags for every task.
 // Add new CLI overrides here rather than as extra parameters.
 type TaskAugmentOptions struct {
-	// IdleOnComplete is passed to --idle-on-complete. Empty string uses the oz CLI default
+	// IdleOnComplete is passed to --idle-on-complete. Empty string uses the neodev CLI default
 	// (45m). Use "0s" to exit immediately after the conversation finishes.
 	// Task-level config.idle_timeout_minutes takes precedence when set.
 	IdleOnComplete string
-	// AdditionalOzArgs are server-resolved supplemental oz CLI arguments.
+	// AdditionalOzArgs are server-resolved supplemental neodev CLI arguments.
 	AdditionalOzArgs []string
 }
 
@@ -27,7 +27,7 @@ func AugmentArgsForTask(task *types.Task, args []string, opts TaskAugmentOptions
 	}
 
 	if task.AgentConfigSnapshot != nil {
-		// Only emit --model for Oz runs; for third-party harnesses, the client
+		// Only emit --model for Neodev runs; for third-party harnesses, the client
 		// resolves the model from the task snapshot's harness config.
 		if task.AgentConfigSnapshot.Harness.IsOz() && task.AgentConfigSnapshot.ModelID != nil {
 			if modelID := strings.TrimSpace(*task.AgentConfigSnapshot.ModelID); modelID != "" {
@@ -118,7 +118,7 @@ func AugmentArgsForTask(task *types.Task, args []string, opts TaskAugmentOptions
 	args = append(args, opts.AdditionalOzArgs...)
 
 	// Keep the agent alive after task completion to allow follow-ups.
-	// Priority: task config idle_timeout_minutes > worker IdleOnComplete > oz CLI default (45m).
+	// Priority: task config idle_timeout_minutes > worker IdleOnComplete > neodev CLI default (45m).
 	idleOnComplete, hasIdleOnCompleteValue := resolveIdleOnComplete(task, opts)
 	if !hasIdleOnCompleteValue {
 		args = append(args, "--idle-on-complete")

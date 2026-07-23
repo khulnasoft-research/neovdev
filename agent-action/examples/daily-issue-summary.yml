@@ -81,7 +81,7 @@ jobs:
               issueText += `Summary: ${bodySnippet}\n\n`;
             }
 
-            const prompt = `You are an expert product manager and the Oz Agent.
+            const prompt = `You are an expert product manager and the Neodev Agent.
             Your task is to summarize the GitHub issues opened in this repository within the last 24 hours for a daily Slack update.
 
             **Issues List**:
@@ -108,7 +108,7 @@ jobs:
 
             core.setOutput('prompt', prompt);
 
-      - name: Run Oz Agent
+      - name: Run Neodev Agent
         if: steps.fetch_issues.outputs.has_issues == 'true'
         uses: khulnasoft/neodev@v1
         env:

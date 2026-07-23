@@ -16,7 +16,7 @@ Review the current pull request and write the output to `review.json`.
 - The workflow provides the PR description in `pr_description.txt`.
 - The workflow provides existing PR comments (if any) in `pr_comments.txt`.
 - On re-review runs, the workflow may also provide `pr_incremental_diff.txt`, containing changes
-  since the most recent Oz review.
+  since the most recent Neodev review.
 - When `pr_incremental_diff.txt` exists, use it to prioritize newly introduced or materially changed
   concerns, while using `pr_diff.txt` for valid current inline comment locations.
 - Focus on files and lines changed by this PR.

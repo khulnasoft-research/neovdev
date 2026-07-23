@@ -1,4 +1,4 @@
-# Contributing to Oz Skills
+# Contributing to Neodev Skills
 
 Thanks for your interest in contributing! We welcome new skills that help agents work more effectively.
 

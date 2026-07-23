@@ -849,7 +849,7 @@ func TestPrepareTaskParamsAdditionalOzArgs(t *testing.T) {
 		return false
 	}
 
-	t.Run("forwards server supplemental oz args", func(t *testing.T) {
+	t.Run("forwards server supplemental neodev args", func(t *testing.T) {
 		w := newWorker()
 		params := w.prepareTaskParams(&types.TaskAssignmentMessage{
 			TaskID:           "task-skip",
@@ -860,7 +860,7 @@ func TestPrepareTaskParamsAdditionalOzArgs(t *testing.T) {
 			t.Fatalf("expected --skip-initial-turn in args, got %v", params.BaseArgs)
 		}
 	})
-	t.Run("does not add omitted supplemental oz args", func(t *testing.T) {
+	t.Run("does not add omitted supplemental neodev args", func(t *testing.T) {
 		w := newWorker()
 		params := w.prepareTaskParams(&types.TaskAssignmentMessage{
 			TaskID: "task-no-skip",

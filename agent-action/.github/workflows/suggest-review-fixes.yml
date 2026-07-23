@@ -7,12 +7,12 @@ on:
   workflow_call:
     inputs:
       profile:
-        description: Optional Oz Agent profile name to use for Oz Agent.
+        description: Optional Neodev Agent profile name to use for Neodev Agent.
         required: false
         type: string
         default: ""
       model:
-        description: Optional Warp model ID to use for Oz Agent.
+        description: Optional Warp model ID to use for Neodev Agent.
         required: false
         type: string
         default: ""
@@ -29,12 +29,12 @@ on:
         type: string
         default: ""
       skill:
-        description: Optional Oz skill identifier to use as the base prompt for the agent.
+        description: Optional Neodev skill identifier to use as the base prompt for the agent.
         required: false
         type: string
         default: ""
       cloud:
-        description: Run the agent as a cloud agent using `oz agent run-cloud`.
+        description: Run the agent as a cloud agent using `neodev agent run-cloud`.
         required: false
         type: boolean
         default: false
@@ -50,7 +50,7 @@ on:
         default: ""
     secrets:
       WARP_API_KEY:
-        description: Oz API key used by the Oz Agent.
+        description: Neodev API key used by the Neodev Agent.
         required: true
 jobs:
   suggest_review_fixes:
@@ -137,7 +137,7 @@ jobs:
             If no comments are simple enough, output: {}
             `;
             core.setOutput('prompt', prompt);
-      - name: Run Oz Agent
+      - name: Run Neodev Agent
         uses: khulnasoft/neodev@v1
         with:
           warp_api_key: ${{ secrets.WARP_API_KEY }}

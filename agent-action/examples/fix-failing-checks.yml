@@ -82,7 +82,7 @@ jobs:
             const runId = '${{ github.event.workflow_run.id }}';
             const summaryFile = `output_summary_${runId}.md`;
 
-            const prompt = `You are an expert software engineer and the Oz Agent.
+            const prompt = `You are an expert software engineer and the Neodev Agent.
             You are tasked with fixing a CI failure in the repository '${repoName}' on branch '${branchName}'.
 
             **Context**:
@@ -126,7 +126,7 @@ jobs:
 
             core.setOutput('prompt', prompt);
 
-      - name: Run Oz Agent
+      - name: Run Neodev Agent
         uses: khulnasoft/neodev@v1
         env:
           GH_TOKEN: ${{ github.token }}
@@ -148,7 +148,7 @@ jobs:
 
           # Check for changes
           if [[ -z $(git status --porcelain) ]]; then
-            echo "No changes made by Oz Agent."
+            echo "No changes made by Neodev Agent."
             exit 0
           fi
 
@@ -165,7 +165,7 @@ jobs:
           fi
 
           FIX_BRANCH="oz-agent-fix/run-$RUN_ID"
-          git config user.name "Oz Agent"
+          git config user.name "Neodev Agent"
           git config user.email "agent@warp.dev"
 
           git checkout -b "$FIX_BRANCH"

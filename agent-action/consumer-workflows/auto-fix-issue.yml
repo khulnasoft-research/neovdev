@@ -19,7 +19,7 @@
 #   - If no fix is found: The Agent comments on the issue explaining why.
 #
 # When to use:
-#   - Use this to delegate bug fixes, small features, or chore tasks to the Oz Agent.
+#   - Use this to delegate bug fixes, small features, or chore tasks to the Neodev Agent.
 # ======================================================================================
 name: Auto Fix Issue
 on:

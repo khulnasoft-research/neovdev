@@ -3,7 +3,7 @@
 # ======================================================================================
 # Usage:
 #   - Triggers when a Pull Request Review is submitted.
-#   - Reads the review comments and uses the Oz Agent to suggest fixes.
+#   - Reads the review comments and uses the Neodev Agent to suggest fixes.
 #
 # Setup:
 #   - Ensure WARP_API_KEY is set in Repository Secrets.
@@ -107,7 +107,7 @@ jobs:
             `;
             core.setOutput('prompt', prompt);
 
-      - name: Run Oz Agent
+      - name: Run Neodev Agent
         uses: khulnasoft/neodev@v1
         with:
           warp_api_key: ${{ secrets.WARP_API_KEY }}

@@ -5,7 +5,7 @@ It reads the task ``DispatchPayload`` (JSON) on stdin, transforms it into a
 hypothetical runtime's REST API shape, and POSTs it to ``OZ_DISPATCH_URL``.
 
 Use it as a template for delegating task execution to a self-hosted runtime that
-is already configured to run oz agents on demand. The part you customize is
+is already configured to run neodev agents on demand. The part you customize is
 ``transform()`` — adapt it to your runtime's request schema. Everything else
 (reading stdin, auth, timeouts, exit-code contract) can stay as-is.
 
@@ -51,7 +51,7 @@ def transform(payload):
             "run_id": payload["run_id"],
             "execution_id": payload.get("execution_id", ""),
             "image": payload.get("docker_image", ""),
-            # base_args is the `oz agent run ...` argv the runtime should exec.
+            # base_args is the `neodev agent run ...` argv the runtime should exec.
             "command": payload.get("base_args", []),
             "env": payload.get("env", {}),
             "mounts": [

@@ -315,7 +315,7 @@ describe("runAgent", () => {
     const callArgs = execMocks.getExecOutput.mock.calls[0][1] as string[];
     expect(callArgs).not.toContain("--host");
     expect(coreMocks.warning).toHaveBeenCalledWith(
-      "`host` is not supported for local agent runs (`oz agent run`) and will be ignored.",
+      "`host` is not supported for local agent runs (`neodev agent run`) and will be ignored.",
     );
   });
 
@@ -333,7 +333,7 @@ describe("runAgent", () => {
     expect(callArgs).not.toContain("--environment");
     expect(callArgs).not.toContain("--no-environment");
     expect(coreMocks.warning).toHaveBeenCalledWith(
-      "`environment` is not supported for local agent runs (`oz agent run`) and will be ignored.",
+      "`environment` is not supported for local agent runs (`neodev agent run`) and will be ignored.",
     );
   });
 
@@ -422,7 +422,7 @@ describe("reportShutdown", () => {
 
     expect(execMocks.getExecOutput).not.toHaveBeenCalled();
     expect(coreMocks.info).toHaveBeenCalledWith(
-      "No Oz run ID was captured; skipping shutdown report.",
+      "No Neodev run ID was captured; skipping shutdown report.",
     );
   });
 

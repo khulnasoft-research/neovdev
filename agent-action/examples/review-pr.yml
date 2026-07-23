@@ -157,7 +157,7 @@ jobs:
             const descriptionPath = path.resolve('pr_description.txt');
             fs.writeFileSync(descriptionPath, pr.body || 'No description provided.', 'utf8');
             const incrementalReviewContext = fs.existsSync(incrementalDiffPath)
-              ? `Changes since the most recent Oz review: Read \`${incrementalDiffPath}\`
+              ? `Changes since the most recent Neodev review: Read \`${incrementalDiffPath}\`
             For this re-review, prioritize new or materially changed concerns from that diff, while using the full annotated PR diff for valid current inline comment locations.`
               : '';
 
@@ -216,7 +216,7 @@ jobs:
 
             core.setOutput('prompt', prompt);
 
-      - name: Run Oz Agent Review
+      - name: Run Neodev Agent Review
         uses: khulnasoft/neodev@v1
         env:
           GH_TOKEN: ${{ github.token }}
@@ -381,7 +381,7 @@ jobs:
                 pull_number: prNumber,
                 commit_id: reviewedHeadSha,
                 event: 'COMMENT',
-                body: `${hasSummary ? summary : 'Automated review by Oz Agent'}\n\n${reviewMarker}`,
+                body: `${hasSummary ? summary : 'Automated review by Neodev Agent'}\n\n${reviewMarker}`,
               };
 
               if (comments.length > 0) {

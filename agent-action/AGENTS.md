@@ -4,7 +4,7 @@ This file provides guidance to agents when working with code in this repository.
 
 ## Code Architecture
 
-This repository contains a GitHub Action that runs the Oz Agent.
+This repository contains a GitHub Action that runs the Neodev Agent.
 
 - **Type**: Node.js action (targeting `node24` runtime).
 - **Entry Point**: `src/index.js`.
@@ -12,7 +12,7 @@ This repository contains a GitHub Action that runs the Oz Agent.
 - **Logic**:
 - 1.  Parses inputs from `action.yml`.
 - 2.  Installs the `oz` package (supports Linux/Ubuntu via `.deb`).
-- 3.  Executes `oz agent run` with the provided prompt/parameters.
+- 3.  Executes `neodev agent run` with the provided prompt/parameters.
 - 4.  Sets the `agent_output` output.
 
 ## Development

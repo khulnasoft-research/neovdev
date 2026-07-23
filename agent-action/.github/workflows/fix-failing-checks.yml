@@ -7,12 +7,12 @@ on:
   workflow_call:
     inputs:
       profile:
-        description: Optional Oz Agent profile name to use for Oz Agent.
+        description: Optional Neodev Agent profile name to use for Neodev Agent.
         required: false
         type: string
         default: ""
       model:
-        description: Optional Warp model ID to use for Oz Agent.
+        description: Optional Warp model ID to use for Neodev Agent.
         required: false
         type: string
         default: ""
@@ -29,12 +29,12 @@ on:
         type: string
         default: ""
       skill:
-        description: Optional Oz skill identifier to use as the base prompt for the agent.
+        description: Optional Neodev skill identifier to use as the base prompt for the agent.
         required: false
         type: string
         default: ""
       cloud:
-        description: Run the agent as a cloud agent using `oz agent run-cloud`.
+        description: Run the agent as a cloud agent using `neodev agent run-cloud`.
         required: false
         type: boolean
         default: false
@@ -50,7 +50,7 @@ on:
         default: ""
     secrets:
       WARP_API_KEY:
-        description: Oz API key used by the Oz Agent.
+        description: Neodev API key used by the Neodev Agent.
         required: true
 jobs:
   fix_failure:
@@ -106,7 +106,7 @@ jobs:
             const runId = '${{ github.event.workflow_run.id }}';
             const summaryFile = `output_summary_${runId}.md`;
 
-            const prompt = `You are an expert software engineer and the Oz Agent.
+            const prompt = `You are an expert software engineer and the Neodev Agent.
             You are tasked with fixing a CI failure in the repository '${repoName}' on branch '${branchName}'.
 
             **Context**:
@@ -149,7 +149,7 @@ jobs:
             `;
 
             core.setOutput('prompt', prompt);
-      - name: Run Oz Agent
+      - name: Run Neodev Agent
         uses: khulnasoft/neodev@v1
         env:
           GH_TOKEN: ${{ github.token }}
@@ -177,7 +177,7 @@ jobs:
 
           # Check for changes
           if [[ -z $(git status --porcelain) ]]; then
-            echo "No changes made by Oz Agent."
+            echo "No changes made by Neodev Agent."
             exit 0
           fi
 
@@ -194,7 +194,7 @@ jobs:
           fi
 
           FIX_BRANCH="oz-agent-fix/run-$RUN_ID"
-          git config user.name "Oz Agent"
+          git config user.name "Neodev Agent"
           git config user.email "agent@warp.dev"
 
           git checkout -b "$FIX_BRANCH"

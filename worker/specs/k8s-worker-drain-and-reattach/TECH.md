@@ -1,6 +1,6 @@
 # Context
 
-Kubernetes self-hosted workers run as a long-lived `oz-agent-worker` Deployment while each Oz run executes as a Kubernetes Job. This is the right execution boundary for clusters that use Karpenter, but the current worker shutdown path still treats the worker process as the owner of active task lifecycles.
+Kubernetes self-hosted workers run as a long-lived `oz-agent-worker` Deployment while each Neodev run executes as a Kubernetes Job. This is the right execution boundary for clusters that use Karpenter, but the current worker shutdown path still treats the worker process as the owner of active task lifecycles.
 Relevant code:
 
 - `internal/worker/worker.go:58` stores active task cancel functions in `Worker.activeTasks`.
@@ -69,7 +69,7 @@ Zero loss for task-pod eviction would require:
 
 - Durable workspace storage, such as a per-task PVC or snapshot/checkpoint mechanism, rather than only pod-local `emptyDir`.
 - Agent/session checkpointing so the replacement pod can resume from a durable conversation/run state without replaying unsafe side effects.
-- A retry/resume protocol between worker, control plane, and Oz CLI that distinguishes “worker observer moved” from “task process died but can be resumed.”
+- A retry/resume protocol between worker, control plane, and Neodev CLI that distinguishes “worker observer moved” from “task process died but can be resumed.”
 - Task pod disruption policy knobs, such as a PDB or Karpenter `do-not-disrupt`/expiry guidance on task pods only, to reduce eviction frequency while preserving node rotation.
 - Clear customer-facing semantics for what is guaranteed: worker-pod relocation can be lossless; task-pod eviction is resumable only after durable workspace/session support lands.
   Estimated effort: at least 2-4 weeks for a production-ready resumable path, and potentially more depending on how much durable PTY/session/workspace support already exists in Oz. Until then, the safest product behavior is to preserve Jobs across worker relocation and report task-pod eviction as retryable/interrupted with a specific reason.

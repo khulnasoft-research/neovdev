@@ -7,12 +7,12 @@ on:
   workflow_call:
     inputs:
       profile:
-        description: Optional Oz Agent profile name to use for Oz Agent.
+        description: Optional Neodev Agent profile name to use for Neodev Agent.
         required: false
         type: string
         default: ""
       model:
-        description: Optional Warp model ID to use for Oz Agent.
+        description: Optional Warp model ID to use for Neodev Agent.
         required: false
         type: string
         default: ""
@@ -29,12 +29,12 @@ on:
         type: string
         default: ""
       skill:
-        description: Optional Oz skill identifier to use as the base prompt for the agent.
+        description: Optional Neodev skill identifier to use as the base prompt for the agent.
         required: false
         type: string
         default: ""
       cloud:
-        description: Run the agent as a cloud agent using `oz agent run-cloud`.
+        description: Run the agent as a cloud agent using `neodev agent run-cloud`.
         required: false
         type: boolean
         default: false
@@ -50,7 +50,7 @@ on:
         default: ""
     secrets:
       WARP_API_KEY:
-        description: Oz API key used by the Oz Agent.
+        description: Neodev API key used by the Neodev Agent.
         required: true
 jobs:
   review_pr:
@@ -176,7 +176,7 @@ jobs:
             const descriptionPath = path.resolve('pr_description.txt');
             fs.writeFileSync(descriptionPath, pr.body || 'No description provided.', 'utf8');
             const incrementalReviewContext = fs.existsSync(incrementalDiffPath)
-              ? `Changes since the most recent Oz review: Read \`${incrementalDiffPath}\`
+              ? `Changes since the most recent Neodev review: Read \`${incrementalDiffPath}\`
             For this re-review, prioritize new or materially changed concerns from that diff, while using the full annotated PR diff for valid current inline comment locations.`
               : '';
 
@@ -234,7 +234,7 @@ jobs:
             Use the review skill instructions as the base behavior. Apply them to this PR only.`;
 
             core.setOutput('prompt', prompt);
-      - name: Run Oz Agent Review
+      - name: Run Neodev Agent Review
         uses: khulnasoft/neodev@v1
         env:
           GH_TOKEN: ${{ github.token }}
@@ -404,7 +404,7 @@ jobs:
                 pull_number: prNumber,
                 commit_id: reviewedHeadSha,
                 event: 'COMMENT',
-                body: `${hasSummary ? summary : 'Automated review by Oz Agent'}\n\n${reviewMarker}`,
+                body: `${hasSummary ? summary : 'Automated review by Neodev Agent'}\n\n${reviewMarker}`,
               };
 
               if (comments.length > 0) {

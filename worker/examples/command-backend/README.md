@@ -25,7 +25,7 @@ def transform(payload):
             "run_id": payload["run_id"],
             "execution_id": payload.get("execution_id", ""),
             "image": payload.get("docker_image", ""),
-            "command": payload.get("base_args", []),   # the `oz agent run ...` argv
+            "command": payload.get("base_args", []),   # the `neodev agent run ...` argv
             "env": payload.get("env", {}),
             "mounts": [                                  # mount_path -> path
                 {"image": s.get("image", ""), "path": s.get("mount_path", ""),
@@ -84,7 +84,7 @@ backend:
 
 The non-secret identifiers `OZ_RUN_ID`, `OZ_EXECUTION_ID`, `OZ_WORKER_BACKEND`, `OZ_SERVER_ROOT_URL`, and `OZ_DOCKER_IMAGE` are also set in the script's environment. Secrets appear only in the stdin payload.
 
-Your runtime should launch the agent with `base_args` inside an environment built from `docker_image` + `sidecars`, injecting `env`. Because `base_args` already includes `--task-id` and `--server-root-url`, the agent reports its own progress and terminal state to Warp — the worker does not. Once the CLI exits, your runtime must report completion by running `oz harness-support --run-id <run_id> report-shutdown` (see the [command backend docs](../../README.md#command)). Keep the exit-code contract: exit `0` only when the task is durably accepted for execution.
+Your runtime should launch the agent with `base_args` inside an environment built from `docker_image` + `sidecars`, injecting `env`. Because `base_args` already includes `--task-id` and `--server-root-url`, the agent reports its own progress and terminal state to Warp — the worker does not. Once the CLI exits, your runtime must report completion by running `neodev harness-support --run-id <run_id> report-shutdown` (see the [command backend docs](../../README.md#command)). Keep the exit-code contract: exit `0` only when the task is durably accepted for execution.
 
 ## Local end-to-end testing
 
@@ -98,7 +98,7 @@ Required/optional environment for this script:
 The easiest way to run the full stack is `warp-server`'s `script/oz-local`, which boots the servers and the worker for you. Once it supports the command backend, run:
 
 ```bash
-# from warp-server, with WARP_API_KEY exported and a local oz bundle built
+# from warp-server, with WARP_API_KEY exported and a local neodev bundle built
 ./script/oz-local --worker-backend command --oz-path <path-to-oz-binary>
 ```
 

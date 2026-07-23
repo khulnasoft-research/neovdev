@@ -82,7 +82,7 @@ interface RunAgentOptions {
   skipInstall?: boolean;
 }
 
-// Run Oz agent.
+// Run Neodev agent.
 export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
   core.saveState(MAIN_STARTED_STATE, "true");
   const channel = core.getInput("oz_channel");
@@ -118,7 +118,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
       args.push("--host", host);
     } else {
       core.warning(
-        "`host` is not supported for local agent runs (`oz agent run`) and will be ignored.",
+        "`host` is not supported for local agent runs (`neodev agent run`) and will be ignored.",
       );
     }
   }
@@ -136,12 +136,12 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
   } else {
     if (environment) {
       core.warning(
-        "`environment` is not supported for local agent runs (`oz agent run`) and will be ignored.",
+        "`environment` is not supported for local agent runs (`neodev agent run`) and will be ignored.",
       );
     }
     if (computerUse) {
       core.warning(
-        "`computer_use` is only supported for cloud agent runs (`oz agent run-cloud`) and will be ignored.",
+        "`computer_use` is only supported for cloud agent runs (`neodev agent run-cloud`) and will be ignored.",
       );
     }
   }
@@ -169,15 +169,15 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
     args.push("--mcp", mcp);
   }
 
-  // `--cwd`, `--profile`, and `--share` are only accepted by `oz agent run`.
-  // `oz agent run-cloud` rejects them as unexpected arguments, so gate them on
+  // `--cwd`, `--profile`, and `--share` are only accepted by `neodev agent run`.
+  // `neodev agent run-cloud` rejects them as unexpected arguments, so gate them on
   // `!cloud` and warn when a caller sets one for a cloud run so the dropped
   // input is discoverable instead of silently ignored.
   const cwd = core.getInput("cwd");
   if (cwd) {
     if (cloud) {
       core.warning(
-        "`cwd` is not supported for cloud agent runs (`oz agent run-cloud`) and will be ignored.",
+        "`cwd` is not supported for cloud agent runs (`neodev agent run-cloud`) and will be ignored.",
       );
     } else {
       args.push("--cwd", cwd);
@@ -188,7 +188,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
   if (profile) {
     if (cloud) {
       core.warning(
-        "`profile` is not supported for cloud agent runs (`oz agent run-cloud`) and will be ignored.",
+        "`profile` is not supported for cloud agent runs (`neodev agent run-cloud`) and will be ignored.",
       );
     } else {
       args.push("--profile", profile);
@@ -206,7 +206,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
   if (shareRecipients.length > 0) {
     if (cloud) {
       core.warning(
-        "`share` is not supported for cloud agent runs (`oz agent run-cloud`) and will be ignored.",
+        "`share` is not supported for cloud agent runs (`neodev agent run-cloud`) and will be ignored.",
       );
     } else {
       for (const recipient of shareRecipients) {
@@ -215,7 +215,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
     }
   }
 
-  // In debug mode, show Oz logs on stderr.
+  // In debug mode, show Neodev logs on stderr.
   if (core.isDebug()) {
     args.push("--debug");
   }
@@ -242,7 +242,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
       },
     });
   } catch (error) {
-    // Show Oz logs for troubleshooting.
+    // Show Neodev logs for troubleshooting.
     await logOzLogFile(channel);
     throw error;
   }
@@ -260,7 +260,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
 export async function reportShutdown(): Promise<void> {
   const runId = core.getState(RUN_ID_STATE);
   if (!runId) {
-    core.info("No Oz run ID was captured; skipping shutdown report.");
+    core.info("No Neodev run ID was captured; skipping shutdown report.");
     return;
   }
 
@@ -305,7 +305,7 @@ export async function run(): Promise<void> {
   }
 }
 
-// Install the Oz CLI, using the specified channel and version.
+// Install the Neodev CLI, using the specified channel and version.
 async function installOz(channel: string, version: string): Promise<void> {
   await core.group("Installing Oz", async () => {
     const ozDeb = await downloadOzDeb(channel, version);
@@ -315,7 +315,7 @@ async function installOz(channel: string, version: string): Promise<void> {
   });
 }
 
-// Download the .deb file for the Oz CLI. If the version is `latest`, this will resolve the
+// Download the .deb file for the Neodev CLI. If the version is `latest`, this will resolve the
 // latest version on `channel`.
 async function downloadOzDeb(channel: string, version: string): Promise<string> {
   if (process.platform !== "linux") {
@@ -384,12 +384,12 @@ async function downloadOzDeb(channel: string, version: string): Promise<string> 
   return path.join(cachedDeb, "oz.deb");
 }
 
-// Dump the Oz log file contents if it exists.
+// Dump the Neodev log file contents if it exists.
 async function logOzLogFile(channel: string): Promise<void> {
   const stateDir = process.env.XDG_STATE_DIR || path.join(os.homedir(), ".local", "state");
   const channelSuffix = channel === "stable" ? "" : `-${channel}`;
   const logFileName = channel === "stable" ? "warp.log" : `warp_${channel}.log`;
-  // Note: older versions of Oz may write logs to the parent directory (without the 'oz/' subdirectory),
+  // Note: older versions of Neodev may write logs to the parent directory (without the 'oz/' subdirectory),
   // so this path may not exist if the action is run with a pinned older version of Oz.
   const warpLogPath = path.join(stateDir, `warp-terminal${channelSuffix}`, "oz", logFileName);
 

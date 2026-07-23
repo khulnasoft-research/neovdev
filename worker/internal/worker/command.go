@@ -41,8 +41,8 @@ type CommandBackendConfig struct {
 // CommandBackend hands task execution to an operator-configured command, which
 // dispatches the task to a remote runtime over any transport. Execution is
 // fire-and-forget: a successful dispatch returns ExecuteOutcomeSpawned, and
-// the remote oz agent reports terminal state to warp-server itself by running
-// oz harness-support report-shutdown.
+// the remote neodev agent reports terminal state to warp-server itself by running
+// neodev harness-support report-shutdown.
 type CommandBackend struct {
 	config CommandBackendConfig
 }

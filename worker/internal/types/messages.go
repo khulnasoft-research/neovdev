@@ -113,7 +113,7 @@ type Harness struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// IsOz returns true when the harness is the built-in Oz harness (nil, empty,
+// IsNeodev returns true when the harness is the built-in Neodev harness (nil, empty,
 // or explicitly "oz"). Third-party harnesses (claude, codex, gemini, …) carry
 // their own model on the harness config, so the top-level model_id should not
 // be forwarded to them as --model.

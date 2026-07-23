@@ -46,10 +46,10 @@ type Config struct {
 	// (e.g. command), a slot is held only for the brief dispatch and the limit
 	// effectively does not bound the number of remote tasks running at once.
 	MaxConcurrentTasks int
-	// IdleOnComplete is passed to the oz CLI's --idle-on-complete flag for every task.
-	// Empty string means use the oz CLI default (45m). Use "0s" to disable idle.
+	// IdleOnComplete is passed to the neodev CLI's --idle-on-complete flag for every task.
+	// Empty string means use the neodev CLI default (45m). Use "0s" to disable idle.
 	IdleOnComplete string
-	// SessionSharingServerURL, when non-empty, is forwarded to the oz CLI via --session-sharing-server-url.
+	// SessionSharingServerURL, when non-empty, is forwarded to the neodev CLI via --session-sharing-server-url.
 	SessionSharingServerURL string
 
 	// Backend-specific configs. Only the one matching BackendType should be set.

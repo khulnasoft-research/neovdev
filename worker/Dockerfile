@@ -21,8 +21,8 @@ FROM alpine:3.22
 
 # Install ca-certificates for HTTPS connections and create a non-root runtime user
 RUN apk --no-cache add ca-certificates \
-    && addgroup -S oz \
-    && adduser -S -D -u 10001 -G oz oz
+    && addgroup -S neodev \
+    && adduser -S -D -u 10001 -G neodev oz
 
 WORKDIR /app
 

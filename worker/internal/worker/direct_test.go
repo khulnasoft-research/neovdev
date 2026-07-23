@@ -94,7 +94,7 @@ func TestDirectBackendSetupCommandDoesNotReadHostGlobalGitConfig(t *testing.T) {
 
 	ozPath := filepath.Join(testDir, "oz")
 	if err := os.WriteFile(ozPath, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
-		t.Fatalf("failed to write fake oz script: %v", err)
+		t.Fatalf("failed to write fake neodev script: %v", err)
 	}
 
 	workspaceRoot := filepath.Join(testDir, "workspaces")
@@ -145,7 +145,7 @@ func TestDirectBackendSetupCommandReceivesIsolatedGitConfig(t *testing.T) {
 	cfgCapture := filepath.Join(testDir, "setup_git_config_global.txt")
 	ozPath := filepath.Join(testDir, "oz")
 	if err := os.WriteFile(ozPath, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
-		t.Fatalf("failed to write fake oz script: %v", err)
+		t.Fatalf("failed to write fake neodev script: %v", err)
 	}
 
 	workspaceRoot := filepath.Join(testDir, "workspaces")
@@ -197,7 +197,7 @@ printf '%s' "$GIT_CONFIG_GLOBAL" > "$MAIN_CFG_CAPTURE"
 git config --global user.email main@example.com
 `
 	if err := os.WriteFile(ozPath, []byte(script), 0o755); err != nil {
-		t.Fatalf("failed to write fake oz script: %v", err)
+		t.Fatalf("failed to write fake neodev script: %v", err)
 	}
 
 	workspaceRoot := filepath.Join(testDir, "workspaces")
@@ -226,7 +226,7 @@ git config --global user.email main@example.com
 	}
 	data, err := os.ReadFile(wantCfg)
 	if err != nil {
-		t.Fatalf("isolated git config was not written by main oz process: %v", err)
+		t.Fatalf("isolated git config was not written by main neodev process: %v", err)
 	}
 	if !strings.Contains(string(data), "main@example.com") {
 		t.Fatalf("isolated git config missing main user.email:\\n%s", data)
@@ -254,7 +254,7 @@ set -eu
 git ls-remote "$TEST_REWRITE_URL"
 `
 	if err := os.WriteFile(ozPath, []byte(script), 0o755); err != nil {
-		t.Fatalf("failed to write fake oz script: %v", err)
+		t.Fatalf("failed to write fake neodev script: %v", err)
 	}
 
 	workspaceRoot := filepath.Join(testDir, "workspaces")
@@ -272,7 +272,7 @@ git ls-remote "$TEST_REWRITE_URL"
 		t.Fatalf("failed to create direct backend: %v", err)
 	}
 	if result := backend.ExecuteTask(context.Background(), &TaskParams{TaskID: "task-smoke"}); result.Error != nil {
-		t.Fatalf("expected main oz git command to use setup-seeded isolated git config: %v", result.Error)
+		t.Fatalf("expected main neodev git command to use setup-seeded isolated git config: %v", result.Error)
 	}
 
 	wantCfg := filepath.Join(workspaceRoot, "task-smoke", ".gitconfig")
@@ -306,7 +306,7 @@ printf '%s' "$GIT_CONFIG_GLOBAL" > "$OZ_CFG_CAPTURE"
 git config --global --add url."https://x-access-token:tok@github.com/".insteadOf "ssh://git@github.com/"
 `
 	if err := os.WriteFile(ozPath, []byte(script), 0o755); err != nil {
-		t.Fatalf("failed to write fake oz script: %v", err)
+		t.Fatalf("failed to write fake neodev script: %v", err)
 	}
 
 	workspaceRoot := filepath.Join(testDir, "workspaces")
@@ -359,7 +359,7 @@ func TestDirectBackendRejectsUnsafeTaskID(t *testing.T) {
 	testDir := t.TempDir()
 	ozPath := filepath.Join(testDir, "oz")
 	if err := os.WriteFile(ozPath, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
-		t.Fatalf("failed to write fake oz script: %v", err)
+		t.Fatalf("failed to write fake neodev script: %v", err)
 	}
 
 	workspaceRoot := filepath.Join(testDir, "workspaces")

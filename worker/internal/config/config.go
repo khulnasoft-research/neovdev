@@ -17,9 +17,9 @@ type FileConfig struct {
 	WorkerID           string `yaml:"worker_id"`
 	Cleanup            *bool  `yaml:"cleanup"`
 	MaxConcurrentTasks *int   `yaml:"max_concurrent_tasks"`
-	// IdleOnComplete controls how long the oz CLI process stays alive after a task's
+	// IdleOnComplete controls how long the neodev CLI process stays alive after a task's
 	// conversation finishes, to allow follow-up interactions via the shared session.
-	// Uses humantime format (e.g. "45m", "10m", "0s"). When nil, the oz CLI default
+	// Uses humantime format (e.g. "45m", "10m", "0s"). When nil, the neodev CLI default
 	// of 45 minutes is used.
 	// TODO: Remove idle_on_complete from worker config/schema after task-level
 	// config.idle_timeout_minutes is fully rolled out and legacy worker-level

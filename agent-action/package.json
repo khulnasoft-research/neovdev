@@ -2,7 +2,7 @@
   "name": "oz-cli-action",
   "version": "0.0.1",
   "private": true,
-  "description": "Run the Oz agent in a GitHub workflow",
+  "description": "Run the Neodev agent in a GitHub workflow",
   "keywords": [
     "actions"
   ],

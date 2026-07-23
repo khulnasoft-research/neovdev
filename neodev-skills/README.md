@@ -1,4 +1,4 @@
-# Oz Skills
+# Neodev Skills
 
 A curated collection of reusable [Agent Skills](https://agentskills.io) for Warp AI agents and Oz.
 
@@ -31,4 +31,4 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 ## Learn More
 
 - [Agent Skills Specification](https://agentskills.io)
-- [Oz Skills Documentation](https://docs.warp.dev/agent-platform/cloud-agents/skills-as-agents)
+- [Neodev Skills Documentation](https://docs.warp.dev/agent-platform/cloud-agents/skills-as-agents)

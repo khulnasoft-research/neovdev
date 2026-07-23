@@ -7,12 +7,12 @@ on:
   workflow_call:
     inputs:
       profile:
-        description: Optional Oz Agent profile name to use for Oz Agent.
+        description: Optional Neodev Agent profile name to use for Neodev Agent.
         required: false
         type: string
         default: ""
       model:
-        description: Optional Warp model ID to use for Oz Agent.
+        description: Optional Warp model ID to use for Neodev Agent.
         required: false
         type: string
         default: ""
@@ -29,12 +29,12 @@ on:
         type: string
         default: ""
       skill:
-        description: Optional Oz skill identifier to use as the base prompt for the agent.
+        description: Optional Neodev skill identifier to use as the base prompt for the agent.
         required: false
         type: string
         default: ""
       cloud:
-        description: Run the agent as a cloud agent using `oz agent run-cloud`.
+        description: Run the agent as a cloud agent using `neodev agent run-cloud`.
         required: false
         type: boolean
         default: false
@@ -50,7 +50,7 @@ on:
         default: ""
     secrets:
       WARP_API_KEY:
-        description: Oz API key used by the Oz Agent.
+        description: Neodev API key used by the Neodev Agent.
         required: true
       SLACK_WEBHOOK_URL:
         description: Slack webhook URL used to post the daily issue summary.
@@ -110,7 +110,7 @@ jobs:
               issueText += `Summary: ${bodySnippet}\n\n`;
             }
 
-            const prompt = `You are an expert product manager and the Oz Agent.
+            const prompt = `You are an expert product manager and the Neodev Agent.
             Your task is to summarize the GitHub issues opened in this repository within the last 24 hours for a daily Slack update.
 
             **Issues List**:
@@ -136,7 +136,7 @@ jobs:
             `;
 
             core.setOutput('prompt', prompt);
-      - name: Run Oz Agent
+      - name: Run Neodev Agent
         if: steps.fetch_issues.outputs.has_issues == 'true'
         uses: khulnasoft/neodev@v1
         env:

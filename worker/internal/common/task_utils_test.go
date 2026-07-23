@@ -40,7 +40,7 @@ func TestAugmentArgsForTask_IdleOnCompletePrecedence(t *testing.T) {
 			expected: []string{"agent", "run", "--idle-on-complete", "30m"},
 		},
 		{
-			name: "uses oz cli default when neither task nor worker timeout is set",
+			name: "uses neodev cli default when neither task nor worker timeout is set",
 			task: &types.Task{
 				AgentConfigSnapshot: &types.AmbientAgentConfig{},
 			},
@@ -264,7 +264,7 @@ func TestAugmentArgsForTask_IdleOnCompletePrecedence(t *testing.T) {
 			},
 		},
 		{
-			name: "appends supplemental oz args before idle timeout",
+			name: "appends supplemental neodev args before idle timeout",
 			task: &types.Task{
 				AgentConfigSnapshot: &types.AmbientAgentConfig{},
 			},
@@ -272,7 +272,7 @@ func TestAugmentArgsForTask_IdleOnCompletePrecedence(t *testing.T) {
 			expected: []string{"agent", "run", "--skip-initial-turn", "--idle-on-complete"},
 		},
 		{
-			name: "does not emit supplemental oz args when none are provided",
+			name: "does not emit supplemental neodev args when none are provided",
 			task: &types.Task{
 				AgentConfigSnapshot: &types.AmbientAgentConfig{},
 			},
@@ -280,10 +280,10 @@ func TestAugmentArgsForTask_IdleOnCompletePrecedence(t *testing.T) {
 			expected: []string{"agent", "run", "--idle-on-complete"},
 		},
 		{
-			// The top-level model_id targets the Oz harness. Third-party harnesses
+			// The top-level model_id targets the Neodev harness. Third-party harnesses
 			// resolve their model from the task snapshot's harness config, so leaking
-			// the Oz model id via --model would cause them to reject the run.
-			name: "does not forward Oz top-level model_id to a third-party harness",
+			// the Neodev model id via --model would cause them to reject the run.
+			name: "does not forward Neodev top-level model_id to a third-party harness",
 			task: &types.Task{
 				AgentConfigSnapshot: &types.AmbientAgentConfig{
 					ModelID: strPtr("claude-4-8-opus-high"),

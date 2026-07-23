@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_warp_test:
-    name: Test running the Oz agent
+    name: Test running the Neodev agent
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -29,7 +29,7 @@ jobs:
             exit 1
           fi
 
-      - name: Run Oz with skill from repository
+      - name: Run Neodev with skill from repository
         uses: ./.
         id: oz-skill
         with:

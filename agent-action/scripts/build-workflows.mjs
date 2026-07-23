@@ -16,12 +16,12 @@ const repoRoot = path.resolve(__dirname, "..");
  */
 const defaultReusableWorkflowInputs = {
   profile: {
-    description: "Optional Oz Agent profile name to use for Oz Agent.",
+    description: "Optional Neodev Agent profile name to use for Neodev Agent.",
     required: false,
     default: "",
   },
   model: {
-    description: "Optional Warp model ID to use for Oz Agent.",
+    description: "Optional Warp model ID to use for Neodev Agent.",
     required: false,
     default: "",
   },
@@ -37,12 +37,12 @@ const defaultReusableWorkflowInputs = {
     default: "",
   },
   skill: {
-    description: "Optional Oz skill identifier to use as the base prompt for the agent.",
+    description: "Optional Neodev skill identifier to use as the base prompt for the agent.",
     required: false,
     default: "",
   },
   cloud: {
-    description: "Run the agent as a cloud agent using `oz agent run-cloud`.",
+    description: "Run the agent as a cloud agent using `neodev agent run-cloud`.",
     required: false,
     type: "boolean",
     default: false,
@@ -71,7 +71,7 @@ const scenarios = [
       inputs: defaultReusableWorkflowInputs,
       secrets: {
         WARP_API_KEY: {
-          description: "Oz API key used by the Oz Agent.",
+          description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
       },
@@ -88,7 +88,7 @@ const scenarios = [
       inputs: defaultReusableWorkflowInputs,
       secrets: {
         WARP_API_KEY: {
-          description: "Oz API key used by the Oz Agent.",
+          description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
       },
@@ -105,7 +105,7 @@ const scenarios = [
       inputs: defaultReusableWorkflowInputs,
       secrets: {
         WARP_API_KEY: {
-          description: "Oz API key used by the Oz Agent.",
+          description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
       },
@@ -122,7 +122,7 @@ const scenarios = [
       inputs: defaultReusableWorkflowInputs,
       secrets: {
         WARP_API_KEY: {
-          description: "Oz API key used by the Oz Agent.",
+          description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
         SLACK_WEBHOOK_URL: {
@@ -143,7 +143,7 @@ const scenarios = [
       inputs: defaultReusableWorkflowInputs,
       secrets: {
         WARP_API_KEY: {
-          description: "Oz API key used by the Oz Agent.",
+          description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
       },
@@ -160,7 +160,7 @@ const scenarios = [
       inputs: defaultReusableWorkflowInputs,
       secrets: {
         WARP_API_KEY: {
-          description: "Oz API key used by the Oz Agent.",
+          description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
       },
@@ -320,7 +320,7 @@ async function generateReusableWorkflow(scenario, exampleYaml) {
   // Clone all jobs from the example
   const jobsClone = deepClone(exampleObj.jobs);
 
-  // Allow overriding selected Oz Agent inputs via workflow_call inputs.
+  // Allow overriding selected Neodev Agent inputs via workflow_call inputs.
   const workflowCallInputs = scenario.reusableWorkflow.inputs;
   for (const job of Object.values(jobsClone)) {
     updateOzAgentActionInputs(job, workflowCallInputs);

@@ -13,7 +13,7 @@ const DispatchPayloadVersion = 1
 
 // DispatchPayload is the stable, versioned JSON contract handed to an operator's
 // dispatch command (on stdin) by the command backend. It contains everything a
-// remote runtime needs to launch the oz agent for a task. Secrets (e.g. GitHub
+// remote runtime needs to launch the neodev agent for a task. Secrets (e.g. GitHub
 // tokens) travel only inside Env here, never via the dispatch subprocess's own
 // environment or argv.
 type DispatchPayload struct {
