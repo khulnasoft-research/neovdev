@@ -623,7 +623,7 @@ func TestPrepareTaskParamsCodingCLISidecarOverride(t *testing.T) {
 			Task:         harnessTask(strPtr("claude")),
 			SidecarImage: "docker.io/khulnasoft/cognix:latest",
 			AdditionalSidecars: []types.SidecarMount{
-				{Image: "docker.io/warpdotdev/claude-cli:latest", MountPath: "/mnt/claude-cli-sidecar", ReadWrite: true},
+				{Image: "docker.io/khulnasoft/cognix-cli:latest", MountPath: "/mnt/claude-cli-sidecar", ReadWrite: true},
 			},
 		})
 
