@@ -228,7 +228,7 @@ function checkLinks(rootDir) {
       if (!isRel && !isSite) continue; // external, mailto, #anchor, bare /ovo/* runtime route, etc.
       target = target.split("#")[0].split("?")[0];
       if (!target) continue; // pure in-page anchor
-      const resolvedUrl = new URL(target, `https://ovo.dev${sourceUrl}`).pathname
+      const resolvedUrl = new URL(target, `https://khulnasoft.com${sourceUrl}`).pathname
         .replace(/\/$/, "")
         .replace(/\.mdx?$/, "");
       if (resolvedUrl === "/docs") continue; // docs root / index

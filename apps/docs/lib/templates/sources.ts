@@ -106,7 +106,7 @@ export default defineMcpClientConnection({
       "markdown",
       `# Identity
 
-You are a concise assistant built with ovo (https://ovo.dev), a framework for
+You are a concise assistant built with ovo (https://khulnasoft.com), a framework for
 building durable agents as ordinary files in a TypeScript project. Use tools
 when they are available.
 

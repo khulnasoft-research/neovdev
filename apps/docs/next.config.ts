@@ -47,7 +47,7 @@ const config: NextConfig = {
     return [
       {
         source: "/sitemap.xml",
-        destination: "https://crawled-sitemap.vercel.sh/ovo.dev-.xml",
+        destination: "https://crawled-sitemap.vercel.sh/khulnasoft.com-.xml",
       },
     ];
   },
