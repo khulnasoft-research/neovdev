@@ -124,7 +124,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      image: "warpdotdev/oz-agent-worker@${{ steps.push.outputs.digest }}"
+      image: "khulnasoft/neodev@${{ steps.push.outputs.digest }}"
       tagged_image: ${{ steps.image-tags.outputs.primary }}
     steps:
       - name: Check out repository
@@ -139,7 +139,7 @@ jobs:
         with:
           project_id: astral-field-294621
           workload_identity_provider: projects/643991131484/locations/global/workloadIdentityPools/github-actions/providers/warp-terraform
-          request_reason: Mirror warpdotdev/oz-agent-worker:${{ inputs.docker_tag }} to Artifact Registry
+          request_reason: Mirror khulnasoft/neodev:${{ inputs.docker_tag }} to Artifact Registry
 
       - name: Log in to Artifact Registry
         if: inputs.docker_tag != ''
@@ -163,19 +163,19 @@ jobs:
           if [ -n "$DOCKER_TAG" ]; then
             {
               echo 'tags<<EOF'
-              echo "warpdotdev/oz-agent-worker:${DOCKER_TAG}"
+              echo "khulnasoft/neodev:${DOCKER_TAG}"
               echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/oz-agent-worker:${DOCKER_TAG}"
               if [ "$PUBLISH_LATEST" = "true" ]; then
-                echo "warpdotdev/oz-agent-worker:latest"
+                echo "khulnasoft/neodev:latest"
                 echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/oz-agent-worker:latest"
               fi
               echo 'EOF'
-              echo "primary=warpdotdev/oz-agent-worker:${DOCKER_TAG}"
+              echo "primary=khulnasoft/neodev:${DOCKER_TAG}"
             } >> "$GITHUB_OUTPUT"
           else
             {
-              echo "tags=warpdotdev/oz-agent-worker:${GITHUB_SHA}"
-              echo "primary=warpdotdev/oz-agent-worker:${GITHUB_SHA}"
+              echo "tags=khulnasoft/neodev:${GITHUB_SHA}"
+              echo "primary=khulnasoft/neodev:${GITHUB_SHA}"
             } >> "$GITHUB_OUTPUT"
           fi
 
