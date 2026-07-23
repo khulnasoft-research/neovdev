@@ -1,0 +1,54 @@
+{
+  "agentId": "weather-agent",
+  "agentRoot": "/vercel/share/v0-project/apps/fixtures/weather-agent/agent",
+  "appRoot": "/vercel/share/v0-project/apps/fixtures/weather-agent",
+  "channels": [],
+  "connections": [],
+  "diagnosticsSummary": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "extensions": [],
+  "resolvedExtensions": [],
+  "hooks": [],
+  "instructions": [
+    {
+      "definition": {
+        "markdown": "You are a weather-focused assistant. Be concise, accurate, and explicit about when you are using the local weather tool.\n"
+      },
+      "sourceKind": "markdown",
+      "logicalPath": "instructions.md",
+      "sourceId": "instructions.md"
+    }
+  ],
+  "lib": [],
+  "kind": "ovo-agent-discovery-manifest",
+  "sandbox": null,
+  "sandboxWorkspaces": [],
+  "schedules": [],
+  "skills": [
+    {
+      "definition": {
+        "description": "Use the weather tool before answering forecast or temperature questions.",
+        "markdown": "When the user asks about weather, temperature, or forecast conditions, call the `get_weather` tool before answering.\n"
+      },
+      "sourceKind": "markdown",
+      "logicalPath": "skills/get-weather.md",
+      "sourceId": "skills/get-weather.md"
+    }
+  ],
+  "tools": [
+    {
+      "sourceKind": "module",
+      "logicalPath": "tools/get_weather.ts",
+      "sourceId": "tools/get_weather.ts"
+    }
+  ],
+  "version": 12,
+  "subagents": [],
+  "configModule": {
+    "sourceKind": "module",
+    "logicalPath": "agent.ts",
+    "sourceId": "agent.ts"
+  }
+}

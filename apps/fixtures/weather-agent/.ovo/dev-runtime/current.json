@@ -1,0 +1,7 @@
+{
+  "appRoot": "/vercel/share/v0-project/apps/fixtures/weather-agent",
+  "kind": "ovo-dev-runtime-artifacts-pointer",
+  "runtimeAppRoot": "/vercel/share/v0-project/apps/fixtures/weather-agent/.ovo/dev-runtime/snapshots/mrxjroxf-f2cf2a60-7dbf-44da-9a22-2baa902d3e53/source/apps/fixtures/weather-agent",
+  "snapshotRoot": "/vercel/share/v0-project/apps/fixtures/weather-agent/.ovo/dev-runtime/snapshots/mrxjroxf-f2cf2a60-7dbf-44da-9a22-2baa902d3e53",
+  "version": 2
+}
