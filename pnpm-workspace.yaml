@@ -3,6 +3,7 @@ packages:
   - apps/*/*
   - e2e/fixtures/*
   - packages/*
+  - agent-action/*
 
 allowBuilds:
   "@mongodb-js/zstd": true
