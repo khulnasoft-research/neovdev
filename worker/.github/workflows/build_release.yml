@@ -1,0 +1,205 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        description: 'Docker image tag (leave empty to skip Docker push)'
+        required: false
+        default: ''
+        type: string
+      publish_latest:
+        description: 'Also tag the Docker image as latest when docker_tag is provided'
+        required: false
+        default: false
+        type: boolean
+      version:
+        description: 'Build version stamped into the binary via -ldflags="-X main.Version=...". Defaults to docker_tag, then to the commit SHA.'
+        required: false
+        default: ''
+        type: string
+  workflow_call:
+    inputs:
+      docker_tag:
+        description: 'Docker image tag (leave empty to skip Docker push)'
+        required: false
+        default: ''
+        type: string
+      publish_latest:
+        description: 'Also tag the Docker image as latest when docker_tag is provided'
+        required: false
+        default: false
+        type: boolean
+      version:
+        description: 'Build version stamped into the binary via -ldflags="-X main.Version=...". Defaults to docker_tag, then to the commit SHA.'
+        required: false
+        default: ''
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: false
+      DOCKERHUB_TOKEN:
+        required: false
+    outputs:
+      image:
+        description: 'Full Docker image reference'
+        value: ${{ jobs.docker.outputs.image }}
+      tagged_image:
+        description: 'Primary tagged Docker image reference'
+        value: ${{ jobs.docker.outputs.tagged_image }}
+
+jobs:
+  build:
+    name: "Build ${{ matrix.goos }} ${{ matrix.goarch }}"
+    runs-on: namespace-profile-ubuntu-small
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: arm64
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+          # Use the Namespace Go cache
+          cache: false
+    
+      - name: Set up build cache
+        uses: namespacelabs/nscloud-cache-action@v1
+        with:
+          cache: go
+
+      - name: Build
+        env:
+          CGO_ENABLED: '0'
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          # Resolve the version stamped into the binary. Precedence:
+          # workflow input `version` > workflow input `docker_tag` > commit SHA.
+          VERSION: ${{ inputs.version != '' && inputs.version || (inputs.docker_tag != '' && inputs.docker_tag || github.sha) }}
+        run: |
+          binary="oz-agent-worker"
+          if [ "$GOOS" = "windows" ]; then
+            binary="oz-agent-worker.exe"
+          fi
+          go build -ldflags="-X main.Version=${VERSION}" -o "$binary" .
+
+      - name: Archive
+        run: |
+          prefix="oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}"
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            zip "${prefix}.zip" oz-agent-worker.exe
+          else
+            tar czf "${prefix}.tar.gz" oz-agent-worker
+            tar cJf "${prefix}.tar.xz" oz-agent-worker
+          fi
+
+      - name: Upload artifact
+        uses: namespace-actions/upload-artifact@v1
+        with:
+          name: oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+            oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.xz
+            oz-agent-worker-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+
+  docker:
+    name: Build and push Docker image
+    runs-on: namespace-profile-ubuntu-small
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      image: "warpdotdev/oz-agent-worker@${{ steps.push.outputs.digest }}"
+      tagged_image: ${{ steps.image-tags.outputs.primary }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Authenticate to GCP
+        # Only authenticate when we are actually pushing (docker_tag set). The
+        # no-push local-build path skips Artifact Registry entirely.
+        if: inputs.docker_tag != ''
+        id: gcp_auth
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: astral-field-294621
+          workload_identity_provider: projects/643991131484/locations/global/workloadIdentityPools/github-actions/providers/warp-terraform
+          request_reason: Mirror warpdotdev/oz-agent-worker:${{ inputs.docker_tag }} to Artifact Registry
+
+      - name: Log in to Artifact Registry
+        if: inputs.docker_tag != ''
+        uses: docker/login-action@v4
+        with:
+          registry: us-east4-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.gcp_auth.outputs.auth_token }}
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Resolve Docker image tags
+        id: image-tags
+        env:
+          DOCKER_TAG: ${{ inputs.docker_tag }}
+          PUBLISH_LATEST: ${{ inputs.publish_latest }}
+        run: |
+          if [ -n "$DOCKER_TAG" ]; then
+            {
+              echo 'tags<<EOF'
+              echo "warpdotdev/oz-agent-worker:${DOCKER_TAG}"
+              echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/oz-agent-worker:${DOCKER_TAG}"
+              if [ "$PUBLISH_LATEST" = "true" ]; then
+                echo "warpdotdev/oz-agent-worker:latest"
+                echo "us-east4-docker.pkg.dev/astral-field-294621/warp-public-images/oz-agent-worker:latest"
+              fi
+              echo 'EOF'
+              echo "primary=warpdotdev/oz-agent-worker:${DOCKER_TAG}"
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "tags=warpdotdev/oz-agent-worker:${GITHUB_SHA}"
+              echo "primary=warpdotdev/oz-agent-worker:${GITHUB_SHA}"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push image
+        id: push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          provenance: mode=max
+          sbom: true
+          # Only push tagged images. When not pushing, we need to provide a fallback output
+          # as multi-platform images can't be loaded into the local Docker store by default.
+          # See https://docs.docker.com/reference/cli/docker/buildx/build/#docker
+          outputs: ${{ inputs.docker_tag != '' && 'type=registry' || 'type=local,dest=built-images' }}
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.image-tags.outputs.tags }}
+          # Forward the resolved version to the Dockerfile so the binary baked
+          # into the image carries the same main.Version as the standalone
+          # release artifacts.
+          build-args: |
+            VERSION=${{ inputs.version != '' && inputs.version || (inputs.docker_tag != '' && inputs.docker_tag || github.sha) }}
+          labels: |
+            dev.warp.worker-commit=${{ github.sha }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ inputs.version != '' && inputs.version || (inputs.docker_tag != '' && inputs.docker_tag || github.sha) }}
