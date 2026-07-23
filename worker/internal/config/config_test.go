@@ -597,7 +597,7 @@ func TestLoadKubernetesSidecarImage(t *testing.T) {
 worker_id: "k8s-worker"
 backend:
   kubernetes:
-    sidecar_image: "my-registry.io/warpdotdev/warp-agent:latest"
+    sidecar_image: "my-registry.io/khulnasoft/cognix:latest"
 `)
 		cfg, err := Load(path)
 		if err != nil {
@@ -606,8 +606,8 @@ backend:
 		if cfg.Backend.Kubernetes == nil {
 			t.Fatal("expected kubernetes backend to be set")
 		}
-		if cfg.Backend.Kubernetes.SidecarImage != "my-registry.io/warpdotdev/warp-agent:latest" {
-			t.Errorf("sidecar_image = %q, want %q", cfg.Backend.Kubernetes.SidecarImage, "my-registry.io/warpdotdev/warp-agent:latest")
+		if cfg.Backend.Kubernetes.SidecarImage != "my-registry.io/khulnasoft/cognix:latest" {
+			t.Errorf("sidecar_image = %q, want %q", cfg.Backend.Kubernetes.SidecarImage, "my-registry.io/khulnasoft/cognix:latest")
 		}
 	})
 

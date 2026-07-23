@@ -9,7 +9,7 @@ import (
 
 func TestNewDispatchPayload(t *testing.T) {
 	task := &types.Task{ID: "task-1", Title: "do the thing"}
-	sidecars := []types.SidecarMount{{Image: "warpdotdev/warp-agent:latest", MountPath: "/agent"}}
+	sidecars := []types.SidecarMount{{Image: "khulnasoft/cognix:latest", MountPath: "/agent"}}
 	params := &TaskParams{
 		TaskID:      "task-1",
 		ExecutionID: "exec-1",

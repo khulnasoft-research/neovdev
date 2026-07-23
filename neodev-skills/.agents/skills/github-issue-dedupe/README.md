@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run duplicate detection agent
-        uses: warpdotdev/warp-agent-action@v1
+        uses: khulnasoft/neodev@v1
         with:
           warp_api_key: ${{ secrets.WARP_API_KEY }}
           profile: ${{ vars.WARP_AGENT_PROFILE || '' }}

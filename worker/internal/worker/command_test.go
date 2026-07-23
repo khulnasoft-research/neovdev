@@ -22,7 +22,7 @@ func testTaskParams() *TaskParams {
 		DockerImage: "ubuntu:22.04",
 		BaseArgs:    []string{"agent", "run", "--task-id", "task-1"},
 		EnvVars:     []string{"SUPER_SECRET_TOKEN=hunter2"},
-		Sidecars:    []types.SidecarMount{{Image: "warpdotdev/warp-agent:latest", MountPath: "/agent"}},
+		Sidecars:    []types.SidecarMount{{Image: "khulnasoft/cognix:latest", MountPath: "/agent"}},
 	}
 }
 

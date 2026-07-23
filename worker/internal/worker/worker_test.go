@@ -539,17 +539,17 @@ func TestPrepareTaskParamsSidecarImageOverride(t *testing.T) {
 	}
 
 	t.Run("config sidecar_image overrides server-provided image", func(t *testing.T) {
-		w := newWorker("my-registry.io/warpdotdev/warp-agent:latest")
+		w := newWorker("my-registry.io/khulnasoft/cognix:latest")
 		params := w.prepareTaskParams(&types.TaskAssignmentMessage{
 			TaskID:       "task-1",
 			Task:         &types.Task{ID: "task-1"},
-			SidecarImage: "docker.io/warpdotdev/warp-agent:latest",
+			SidecarImage: "docker.io/khulnasoft/cognix:latest",
 		})
 		if len(params.Sidecars) == 0 {
 			t.Fatal("expected at least one sidecar")
 		}
-		if params.Sidecars[0].Image != "my-registry.io/warpdotdev/warp-agent:latest" {
-			t.Errorf("sidecar image = %q, want %q", params.Sidecars[0].Image, "my-registry.io/warpdotdev/warp-agent:latest")
+		if params.Sidecars[0].Image != "my-registry.io/khulnasoft/cognix:latest" {
+			t.Errorf("sidecar image = %q, want %q", params.Sidecars[0].Image, "my-registry.io/khulnasoft/cognix:latest")
 		}
 	})
 
@@ -558,18 +558,18 @@ func TestPrepareTaskParamsSidecarImageOverride(t *testing.T) {
 		params := w.prepareTaskParams(&types.TaskAssignmentMessage{
 			TaskID:       "task-1",
 			Task:         &types.Task{ID: "task-1"},
-			SidecarImage: "docker.io/warpdotdev/warp-agent:latest",
+			SidecarImage: "docker.io/khulnasoft/cognix:latest",
 		})
 		if len(params.Sidecars) == 0 {
 			t.Fatal("expected at least one sidecar")
 		}
-		if params.Sidecars[0].Image != "docker.io/warpdotdev/warp-agent:latest" {
-			t.Errorf("sidecar image = %q, want %q", params.Sidecars[0].Image, "docker.io/warpdotdev/warp-agent:latest")
+		if params.Sidecars[0].Image != "docker.io/khulnasoft/cognix:latest" {
+			t.Errorf("sidecar image = %q, want %q", params.Sidecars[0].Image, "docker.io/khulnasoft/cognix:latest")
 		}
 	})
 
 	t.Run("no sidecar when server provides empty sidecar image", func(t *testing.T) {
-		w := newWorker("my-registry.io/warpdotdev/warp-agent:latest")
+		w := newWorker("my-registry.io/khulnasoft/cognix:latest")
 		params := w.prepareTaskParams(&types.TaskAssignmentMessage{
 			TaskID:       "task-1",
 			Task:         &types.Task{ID: "task-1"},
@@ -621,7 +621,7 @@ func TestPrepareTaskParamsCodingCLISidecarOverride(t *testing.T) {
 		params := w.prepareTaskParams(&types.TaskAssignmentMessage{
 			TaskID:       "task-1",
 			Task:         harnessTask(strPtr("claude")),
-			SidecarImage: "docker.io/warpdotdev/warp-agent:latest",
+			SidecarImage: "docker.io/khulnasoft/cognix:latest",
 			AdditionalSidecars: []types.SidecarMount{
 				{Image: "docker.io/warpdotdev/claude-cli:latest", MountPath: "/mnt/claude-cli-sidecar", ReadWrite: true},
 			},
@@ -643,8 +643,8 @@ func TestPrepareTaskParamsCodingCLISidecarOverride(t *testing.T) {
 			t.Fatalf("sidecar count = %d, want 2: %+v", len(params.Sidecars), params.Sidecars)
 		}
 		// The warp-agent sidecar at /agent must be untouched.
-		if agent, ok := findSidecar(params.Sidecars, "/agent"); !ok || agent.Image != "docker.io/warpdotdev/warp-agent:latest" {
-			t.Errorf("agent sidecar = %+v, want image docker.io/warpdotdev/warp-agent:latest", agent)
+		if agent, ok := findSidecar(params.Sidecars, "/agent"); !ok || agent.Image != "docker.io/khulnasoft/cognix:latest" {
+			t.Errorf("agent sidecar = %+v, want image docker.io/khulnasoft/cognix:latest", agent)
 		}
 	})
 

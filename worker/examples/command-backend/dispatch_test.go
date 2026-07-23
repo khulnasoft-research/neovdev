@@ -23,7 +23,7 @@ const samplePayload = `{
   "docker_image": "ubuntu:22.04",
   "base_args": ["agent", "run", "--task-id", "task-1"],
   "env": {"GITHUB_ACCESS_TOKEN": "secret-token"},
-  "sidecars": [{"image": "warpdotdev/warp-agent:latest", "mount_path": "/agent", "read_write": false}],
+  "sidecars": [{"image": "khulnasoft/cognix:latest", "mount_path": "/agent", "read_write": false}],
   "task": {"id": "task-1", "title": "do the thing", "task_definition": {"prompt": "go"}}
 }`
 
