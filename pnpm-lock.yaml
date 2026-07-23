@@ -146,12 +146,12 @@ importers:
       '@vercel/analytics':
         specifier: 2.0.1
         version: 2.0.1(b2fa548b39c79d73c8bd63da1a19696f)
-      '@vercel/eve-catalog':
-        specifier: workspace:*
-        version: link:../../packages/eve-catalog
       '@vercel/geistdocs':
         specifier: 1.15.2
         version: 1.15.2(@svta/cml-cta@1.0.1(@svta/cml-structured-field-values@1.0.1(@svta/cml-utils@1.0.1))(@svta/cml-utils@1.0.1))(@svta/cml-structured-field-values@1.0.1(@svta/cml-utils@1.0.1))(@svta/cml-utils@1.0.1)(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(micromark-util-types@2.0.2)(micromark@4.0.2(supports-color@10.2.2))(next@16.3.0-preview.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(supports-color@10.2.2)(tailwindcss@4.3.0)(unified@11.0.5)(vite@7.3.3(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.49.0)(tsx@4.21.0)(yaml@2.9.0))
+      '@vercel/ovo-catalog':
+        specifier: workspace:*
+        version: link:../../packages/ovo-catalog
       '@vercel/speed-insights':
         specifier: 2.0.0
         version: 2.0.0(b2fa548b39c79d73c8bd63da1a19696f)
@@ -312,9 +312,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -328,9 +328,9 @@ importers:
 
   apps/fixtures/weather-agent:
     dependencies:
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -342,19 +342,19 @@ importers:
         version: 0.41.2
       '@vercel/connect':
         specifier: 'catalog:'
-        version: 0.4.2(@ai-sdk/mcp@2.0.16(zod@4.4.3))(@auth/core@0.41.2)(@chat-adapter/slack@4.34.0(ai@7.0.34(zod@4.4.3))(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(zod@4.4.3))(ai@7.0.34(zod@4.4.3))(eve@packages+eve)
+        version: 0.4.2(@ai-sdk/mcp@2.0.16(zod@4.4.3))(@auth/core@0.41.2)(@chat-adapter/slack@4.34.0(ai@7.0.34(zod@4.4.3))(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(zod@4.4.3))(ai@7.0.34(zod@4.4.3))
       '@vercel/oidc':
         specifier: 3.8.0
         version: 3.8.0
       ai:
         specifier: 'catalog:'
         version: 7.0.34(zod@4.4.3)
-      eve:
-        specifier: workspace:*
-        version: link:../../../packages/eve
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      ovo:
+        specifier: workspace:*
+        version: link:../../../packages/ovo
       react:
         specifier: 'catalog:'
         version: 19.2.6
@@ -395,12 +395,12 @@ importers:
       ai:
         specifier: 'catalog:'
         version: 7.0.34(zod@4.4.3)
-      eve:
-        specifier: workspace:*
-        version: link:../../../packages/eve
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      ovo:
+        specifier: workspace:*
+        version: link:../../../packages/ovo
       react:
         specifier: 'catalog:'
         version: 19.2.6
@@ -429,12 +429,12 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.0
         version: 4.3.0(vite@8.1.5(@types/node@25.9.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.21.0)(yaml@2.9.0))
-      eve:
-        specifier: workspace:*
-        version: link:../../../packages/eve
       nuxt:
         specifier: ^4.0.0
         version: 4.4.6(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.0(supports-color@10.2.2)))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.0(supports-color@10.2.2)))(@parcel/watcher@2.5.6)(@types/node@25.9.1)(@vercel/blob@2.4.0)(@vercel/functions@3.7.5(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.1))(@vue/compiler-sfc@3.5.39)(cac@6.7.14)(commander@14.0.3)(db0@0.3.4)(esbuild@0.28.1)(eslint@10.4.0(jiti@2.7.0)(supports-color@10.2.2))(ioredis@5.11.1(supports-color@10.2.2))(lightningcss@1.32.0)(magicast@0.5.3)(optionator@0.9.4)(oxlint@1.73.0)(rolldown@1.1.5)(rollup-plugin-visualizer@7.0.1(rolldown@1.1.5)(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.22)(supports-color@10.2.2)(terser@5.49.0)(tsx@4.21.0)(typescript@6.0.3)(vite@8.1.5(@types/node@25.9.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.21.0)(yaml@2.9.0))(vue-tsc@3.3.6(typescript@6.0.3))(yaml@2.9.0)
+      ovo:
+        specifier: workspace:*
+        version: link:../../../packages/ovo
       vue:
         specifier: ^3.5.0
         version: 3.5.35(typescript@6.0.3)
@@ -463,9 +463,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.0
         version: 4.3.0(vite@8.1.5(@types/node@25.9.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.21.0)(yaml@2.9.0))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       svelte:
         specifier: ^5.0.0
         version: 5.56.1(@typescript-eslint/types@8.59.4)
@@ -521,9 +521,6 @@ importers:
       cmdk:
         specifier: 1.1.1
         version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      eve:
-        specifier: workspace:*
-        version: link:../../../packages/eve
       lucide-react:
         specifier: 1.16.0
         version: 1.16.0(react@19.2.6)
@@ -536,6 +533,9 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.3.0-preview.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      ovo:
+        specifier: workspace:*
+        version: link:../../../packages/ovo
       radix-ui:
         specifier: 1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -588,9 +588,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -613,9 +613,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -641,9 +641,9 @@ importers:
       ai:
         specifier: 'catalog:'
         version: 7.0.34(zod@4.4.3)
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -666,9 +666,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -682,9 +682,9 @@ importers:
 
   e2e/fixtures/agent-model:
     dependencies:
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -704,9 +704,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -723,9 +723,9 @@ importers:
       '@ai-sdk/anthropic':
         specifier: 'catalog:'
         version: 4.0.18(zod@4.4.3)
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -748,9 +748,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -773,9 +773,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -795,9 +795,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -820,9 +820,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -836,9 +836,9 @@ importers:
 
   e2e/fixtures/agent-subagents-hitl:
     dependencies:
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -852,21 +852,21 @@ importers:
 
   e2e/fixtures/agent-tools:
     dependencies:
-      '@eve-e2e/dynamic-import-dependency':
-        specifier: file:./fixtures/dynamic-import-dependency
-        version: file:e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency
       '@opentelemetry/core':
         specifier: 2.6.1
         version: 2.6.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-trace-base':
         specifier: 2.6.1
         version: 2.6.1(@opentelemetry/api@1.9.1)
+      '@ovo-e2e/dynamic-import-dependency':
+        specifier: file:./fixtures/dynamic-import-dependency
+        version: file:e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -889,9 +889,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -914,9 +914,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -939,9 +939,9 @@ importers:
       '@vercel/otel':
         specifier: 2.1.3
         version: 2.1.3(@opentelemetry/api-logs@0.214.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.214.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.214.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.6.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.6.1(@opentelemetry/api@1.9.1))
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -967,9 +967,9 @@ importers:
       ai:
         specifier: 'catalog:'
         version: 7.0.34(zod@4.4.3)
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -980,15 +980,15 @@ importers:
 
   e2e/fixtures/dist-extensions:
     dependencies:
-      eve:
-        specifier: workspace:*
-        version: link:../../../packages/eve
       gadget-extension:
         specifier: file:../gadget-extension
-        version: file:e2e/fixtures/gadget-extension(eve@packages+eve)
+        version: file:e2e/fixtures/gadget-extension(ovo@packages+ovo)
       gizmo-extension:
         specifier: file:../gizmo-extension
-        version: file:e2e/fixtures/gizmo-extension(eve@packages+eve)
+        version: file:e2e/fixtures/gizmo-extension(ovo@packages+ovo)
+      ovo:
+        specifier: workspace:*
+        version: link:../../../packages/ovo
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -999,15 +999,15 @@ importers:
 
   e2e/fixtures/extensions:
     dependencies:
-      eve:
-        specifier: workspace:*
-        version: link:../../../packages/eve
       gizmo-extension:
         specifier: workspace:*
         version: link:../gizmo-extension
       js-only-extension:
         specifier: workspace:*
         version: link:../js-only-extension
+      ovo:
+        specifier: workspace:*
+        version: link:../../../packages/ovo
       toolkit-extension:
         specifier: workspace:*
         version: link:../toolkit-extension
@@ -1034,9 +1034,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.9.1
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1050,9 +1050,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.9.1
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1066,9 +1066,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.9.1
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1082,14 +1082,14 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.9.1
-      eve:
+      ovo:
         specifier: workspace:*
-        version: link:../../../packages/eve
+        version: link:../../../packages/ovo
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
 
-  packages/eve:
+  packages/ovo:
     dependencies:
       '@opentelemetry/api':
         specifier: ^1.0.0
@@ -1155,12 +1155,12 @@ importers:
       '@vercel/detect-agent':
         specifier: 1.2.3
         version: 1.2.3
-      '@vercel/eve-catalog':
-        specifier: workspace:*
-        version: link:../eve-catalog
       '@vercel/oidc':
         specifier: 3.8.0
         version: 3.8.0
+      '@vercel/ovo-catalog':
+        specifier: workspace:*
+        version: link:../ovo-catalog
       '@vercel/sandbox':
         specifier: 'catalog:'
         version: 2.8.0
@@ -1270,7 +1270,7 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(zod@4.4.3)
 
-  packages/eve-catalog:
+  packages/ovo-catalog:
     devDependencies:
       vitest:
         specifier: 'catalog:'
@@ -2554,9 +2554,6 @@ packages:
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eve-e2e/dynamic-import-dependency@file:e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency':
-    resolution: {directory: e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency, type: directory}
-
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
@@ -3246,6 +3243,9 @@ packages:
   '@orama/tokenizers@3.1.18':
     resolution: {integrity: sha512-Ra4dFddWZ7hCGPAehnd/6QZjlzQvczYSt1y1Fq4HteJqRu2yvfR6fXvxiUnKi+HIgJYPxKhebJEjvJdF8LYQWg==}
     engines: {node: '>= 20.0.0'}
+
+  '@ovo-e2e/dynamic-import-dependency@file:e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency':
+    resolution: {directory: e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency, type: directory}
 
   '@oxc-minify/binding-android-arm-eabi@0.131.0':
     resolution: {integrity: sha512-yLa7y9jjJgUeUUMm6AtjmBIQzK1YU5sYcNJnVVtr6WtoWu5SpuNDZ8u6cl/dhn0g/oQgVlf+E+8WJfsExt8R+Q==}
@@ -9664,7 +9664,7 @@ packages:
   gadget-extension@file:e2e/fixtures/gadget-extension:
     resolution: {directory: e2e/fixtures/gadget-extension, type: directory}
     peerDependencies:
-      eve: '*'
+      ovo: '*'
 
   generator-function@2.0.1:
     resolution: {integrity: sha512-SFdFmIJi+ybC0vjlHN0ZGVGHc3lgE0DxPAT0djjVg+kjOnSqclqmj0KQ7ykTOLP6YxoqOvuAODGdcHJn+43q3g==}
@@ -9745,7 +9745,7 @@ packages:
   gizmo-extension@file:e2e/fixtures/gizmo-extension:
     resolution: {directory: e2e/fixtures/gizmo-extension, type: directory}
     peerDependencies:
-      eve: '*'
+      ovo: '*'
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -14949,8 +14949,6 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@eve-e2e/dynamic-import-dependency@file:e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency': {}
-
   '@fastify/busboy@2.1.1': {}
 
   '@floating-ui/core@1.7.5':
@@ -16002,6 +16000,8 @@ snapshots:
   '@orama/tokenizers@3.1.18':
     dependencies:
       '@orama/orama': 3.1.18
+
+  '@ovo-e2e/dynamic-import-dependency@file:e2e/fixtures/agent-tools/fixtures/dynamic-import-dependency': {}
 
   '@oxc-minify/binding-android-arm-eabi@0.131.0':
     optional: true
@@ -19605,7 +19605,7 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/connect@0.4.2(@ai-sdk/mcp@2.0.16(zod@4.4.3))(@auth/core@0.41.2)(@chat-adapter/slack@4.34.0(ai@7.0.34(zod@4.4.3))(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(zod@4.4.3))(ai@7.0.34(zod@4.4.3))(eve@packages+eve)':
+  '@vercel/connect@0.4.2(@ai-sdk/mcp@2.0.16(zod@4.4.3))(@auth/core@0.41.2)(@chat-adapter/slack@4.34.0(ai@7.0.34(zod@4.4.3))(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(zod@4.4.3))(ai@7.0.34(zod@4.4.3))':
     dependencies:
       '@vercel/oidc': 3.8.0
     optionalDependencies:
@@ -19613,7 +19613,6 @@ snapshots:
       '@auth/core': 0.41.2
       '@chat-adapter/slack': 4.34.0(ai@7.0.34(zod@4.4.3))(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(zod@4.4.3)
       ai: 7.0.34(zod@4.4.3)
-      eve: link:packages/eve
 
   '@vercel/detect-agent@1.2.3': {}
 
@@ -22700,9 +22699,9 @@ snapshots:
 
   fzf@0.5.2: {}
 
-  gadget-extension@file:e2e/fixtures/gadget-extension(eve@packages+eve):
+  gadget-extension@file:e2e/fixtures/gadget-extension(ovo@packages+ovo):
     dependencies:
-      eve: link:packages/eve
+      ovo: link:packages/ovo
       slugify: 1.6.6
       zod: 4.4.3
 
@@ -22775,9 +22774,9 @@ snapshots:
 
   github-slugger@2.0.0: {}
 
-  gizmo-extension@file:e2e/fixtures/gizmo-extension(eve@packages+eve):
+  gizmo-extension@file:e2e/fixtures/gizmo-extension(ovo@packages+ovo):
     dependencies:
-      eve: link:packages/eve
+      ovo: link:packages/ovo
       zod: 4.4.3
 
   glob-parent@5.1.2:

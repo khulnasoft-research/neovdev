@@ -32,43 +32,43 @@ export interface TemplateEntry {
 
 export const templateEntries: TemplateEntry[] = [
   {
-    slug: "eve-chat-template",
+    slug: "ovo-chat-template",
     title: "Chat",
     setupPrompt:
-      "Set up the eve chat template in my current workspace using https://github.com/vercel-labs/eve-chat-template/tree/main as the source. Copy the project files, install its dependencies, and follow the repository README to configure it. Preserve the existing project if the workspace is not empty, and tell me about any required environment variables or manual setup steps.",
+      "Set up the ovo chat template in my current workspace using https://github.com/vercel-labs/ovo-chat-template/tree/main as the source. Copy the project files, install its dependencies, and follow the repository README to configure it. Preserve the existing project if the workspace is not empty, and tell me about any required environment variables or manual setup steps.",
     description:
-      "A persisted Next.js chat template for eve, built with shadcn/ui, Tailwind CSS, Streamdown, Better Auth, Drizzle, Neon, and Upstash Redis.",
-    sourceHref: "https://github.com/vercel-labs/eve-chat-template/tree/main",
+      "A persisted Next.js chat template for ovo, built with shadcn/ui, Tailwind CSS, Streamdown, Better Auth, Drizzle, Neon, and Upstash Redis.",
+    sourceHref: "https://github.com/vercel-labs/ovo-chat-template/tree/main",
     sourceRevision: "f7c164ac8901e5400f6e4ef00eead67ee71cd5d4",
     category: "Chat",
     model: "anthropic/claude-sonnet-5",
     integrations: ["Web chat", "Slack", "Linear", "Notion", "Sentry"],
     source: "Vercel Templates",
-    files: templateSourceFiles["eve-chat-template"],
+    files: templateSourceFiles["ovo-chat-template"],
   },
   {
-    slug: "eve-slack-agent",
+    slug: "ovo-slack-agent",
     title: "Slack",
     setupPrompt:
-      "Set up the eve Slack agent template in my current workspace using https://github.com/vercel-labs/eve-slack-agent-template/tree/main as the source. Copy the project files, install its dependencies, and follow the repository README to configure it. Preserve the existing project if the workspace is not empty, and tell me about any required environment variables or manual setup steps.",
+      "Set up the ovo Slack agent template in my current workspace using https://github.com/vercel-labs/ovo-slack-agent-template/tree/main as the source. Copy the project files, install its dependencies, and follow the repository README to configure it. Preserve the existing project if the workspace is not empty, and tell me about any required environment variables or manual setup steps.",
     description:
       "A Slack agent template with webhook handling, Vercel Connect, a starter agent, and an example tool ready to deploy on Vercel.",
-    sourceHref: "https://github.com/vercel-labs/eve-slack-agent-template/tree/main",
+    sourceHref: "https://github.com/vercel-labs/ovo-slack-agent-template/tree/main",
     sourceRevision: "bb35e1fb0159926c625d356d0b43ad618e11b44c",
     category: "Collaboration",
     model: "anthropic/claude-sonnet-5",
     integrations: ["Slack"],
     source: "Vercel Templates",
-    files: templateSourceFiles["eve-slack-agent"],
+    files: templateSourceFiles["ovo-slack-agent"],
   },
   {
     slug: "weather-agent-fixture",
     title: "Weather",
     setupPrompt:
-      "Set up the eve weather agent in my current workspace using https://github.com/vercel/eve/tree/main/apps/fixtures/weather-agent as the source. Copy that fixture into a standalone project, install its dependencies, and make any minimal changes needed to run it outside the eve monorepo. Preserve the existing project if the workspace is not empty, and tell me about any required environment variables or manual setup steps.",
+      "Set up the ovo weather agent in my current workspace using https://github.com/vercel/ovo/tree/main/apps/fixtures/weather-agent as the source. Copy that fixture into a standalone project, install its dependencies, and make any minimal changes needed to run it outside the ovo monorepo. Preserve the existing project if the workspace is not empty, and tell me about any required environment variables or manual setup steps.",
     description:
-      "A small representative eve app with agent config, instructions, a typed weather tool, and a markdown skill.",
-    sourceHref: "https://github.com/vercel/eve/tree/main/apps/fixtures/weather-agent",
+      "A small representative ovo app with agent config, instructions, a typed weather tool, and a markdown skill.",
+    sourceHref: "https://github.com/vercel/ovo/tree/main/apps/fixtures/weather-agent",
     sourceRevision: "71d57185233d2bd9ff31fe0cd21915df7afa6e2e",
     category: "Example",
     model: "anthropic/claude-sonnet-5",

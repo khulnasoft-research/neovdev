@@ -1,5 +1,5 @@
-import { defineAgent } from "eve";
-import { mockModel } from "eve/evals";
+import { defineAgent } from "ovo";
+import { mockModel } from "ovo/evals";
 
 export default defineAgent({
   model: mockModel(

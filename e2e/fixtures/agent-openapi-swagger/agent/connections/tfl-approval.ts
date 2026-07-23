@@ -1,5 +1,5 @@
-import { defineOpenAPIConnection } from "eve/connections";
-import { always } from "eve/tools/approval";
+import { defineOpenAPIConnection } from "ovo/connections";
+import { always } from "ovo/tools/approval";
 
 export default defineOpenAPIConnection({
   approval: always(),

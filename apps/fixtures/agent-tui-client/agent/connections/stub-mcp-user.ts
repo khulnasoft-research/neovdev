@@ -6,12 +6,12 @@ import {
   defineInteractiveAuthorization,
   defineMcpClientConnection,
   type McpClientConnectionDefinition,
-} from "eve/connections";
+} from "ovo/connections";
 
 /**
  * Smoke-test fixture: a user-principal MCP client connection that
  * drives a real OAuth 2.1 + PKCE flow against an external IdP. Used
- * by `packages/eve/test/tui-client/tui-connection-auth-user.ts` to prove the
+ * by `packages/ovo/test/tui-client/tui-connection-auth-user.ts` to prove the
  * `authorization.*` lifecycle end-to-end through the live
  * runtime, with an actual token exchange.
  *
@@ -38,8 +38,8 @@ import {
 const url = process.env.EVE_TEST_MCP_STUB_URL ?? "http://127.0.0.1:0/mcp";
 const userAuthEnabled = process.env.EVE_TEST_MCP_STUB_USER_AUTH === "1";
 
-const CLIENT_ID = "eve-smoke-client";
-const CLIENT_SECRET = "eve-smoke-secret";
+const CLIENT_ID = "ovo-smoke-client";
+const CLIENT_SECRET = "ovo-smoke-secret";
 
 type OAuthState = {
   readonly [key: string]: string;
@@ -61,7 +61,7 @@ const pendingTokenExchanges = new Map<string, Promise<string>>();
 /**
  * Module-level cache of `principalId → access_token`. The runtime's
  * built-in cache is per-step (see
- * `packages/eve/src/runtime/connections/authorization-tokens.ts:7-9`),
+ * `packages/ovo/src/runtime/connections/authorization-tokens.ts:7-9`),
  * so cross-step reuse is the connection author's responsibility, in
  * production via a refresh-token grant or upstream provider cache. For
  * the smoke we just hold the token in memory keyed by the resolved

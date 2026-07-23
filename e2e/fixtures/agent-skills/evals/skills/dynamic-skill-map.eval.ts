@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const DYNAMIC_MULTI_ALPHA_TOKEN = "dynamic-multi-alpha-Q8V3";
 

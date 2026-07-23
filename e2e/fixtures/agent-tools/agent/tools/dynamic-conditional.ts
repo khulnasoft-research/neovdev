@@ -1,5 +1,5 @@
-import { defineDynamic, defineTool } from "eve/tools";
-import { defineState } from "eve/context";
+import { defineDynamic, defineTool } from "ovo/tools";
+import { defineState } from "ovo/context";
 
 const invocationCount = defineState("dynamic-conditional.invocations", () => 0);
 

@@ -1,10 +1,10 @@
-import { defineEval } from "eve/evals";
-import { satisfies } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { satisfies } from "ovo/evals/expect";
 
 const TOOL_NAME = "wait-for-cancellation";
 
 /**
- * Cancel an in-flight turn over the eve HTTP channel.
+ * Cancel an in-flight turn over the ovo HTTP channel.
  *
  * Flow: start a turn that hangs mid-tool, request cooperative cancellation,
  * and assert the turn settles as `turn.cancelled` followed by
@@ -13,7 +13,7 @@ const TOOL_NAME = "wait-for-cancellation";
  * `no_active_turn` outcome.
  */
 export default defineEval({
-  description: "Cancel an in-flight turn over the eve HTTP cancel route.",
+  description: "Cancel an in-flight turn over the ovo HTTP cancel route.",
   timeoutMs: 240_000,
 
   async test(t) {

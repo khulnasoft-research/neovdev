@@ -1,5 +1,5 @@
 ---
-issue: https://github.com/vercel/eve/issues/982
+issue: https://github.com/vercel/ovo/issues/982
 status: proposed
 last_updated: "2026-07-20"
 ---
@@ -63,6 +63,6 @@ With `apps/fixtures/agent-tui-client` on `openai/gpt-5.6-luna` +
 `reasoning: "medium"` (the pre-`8c161c54` fixture):
 
 ```sh
-cd packages/eve && pnpm run build:js
+cd packages/ovo && pnpm run build:js
 PORT=3210 node test/tui-client/tui-connection-auth-user.ts
 ```

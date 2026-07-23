@@ -1,4 +1,4 @@
-import { defineDynamic, defineSkill } from "eve/skills";
+import { defineDynamic, defineSkill } from "ovo/skills";
 
 // A map-producing dynamic skill resolver. Its bare key `incident` must compose
 // under the mount namespace as `toolkit__incident` once mounted — not the bare

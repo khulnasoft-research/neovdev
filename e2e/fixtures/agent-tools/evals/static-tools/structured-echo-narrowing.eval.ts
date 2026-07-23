@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // The action.result must carry the structured object (not a JSON
 // string), and the fixture's tool-result-narrowing hook matches it via

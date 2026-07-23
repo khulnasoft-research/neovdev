@@ -1,5 +1,5 @@
-import { defineState } from "eve/context";
-import { defineTool } from "eve/tools";
+import { defineState } from "ovo/context";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 const completionMarker = "REPOSITORY_INSPECTION_COMPLETE";

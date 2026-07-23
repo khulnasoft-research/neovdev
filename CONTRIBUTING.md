@@ -1,4 +1,4 @@
-# Contributing to eve
+# Contributing to ovo
 
 Thanks for your interest in contributing! This guide covers everything you need to get the repo running locally and land a change.
 
@@ -26,21 +26,21 @@ commits need both.
 ## Getting started
 
 ```bash
-git clone https://github.com/vercel/eve.git
-cd eve
+git clone https://github.com/vercel/ovo.git
+cd ovo
 pnpm install
 pnpm build
 ```
 
 The repo is a pnpm workspace orchestrated with [Turborepo](https://turborepo.com):
 
-- [`packages/eve`](./packages/eve) — the framework and `eve` CLI
-- [`packages/eve-scaffold`](./packages/eve-scaffold) / [`packages/eve-catalog`](./packages/eve-catalog) — internal (unpublished) scaffolding libraries
+- [`packages/ovo`](./packages/ovo) — the framework and `ovo` CLI
+- [`packages/ovo-scaffold`](./packages/ovo-scaffold) / [`packages/ovo-catalog`](./packages/ovo-catalog) — internal (unpublished) scaffolding libraries
 - [`apps/fixtures`](./apps/fixtures) — shared agent fixtures used by e2e tests, TUI smoke tests, local dev, and bundle analysis
 - [`apps/frameworks`](./apps/frameworks) — framework integration apps for Next.js, Nuxt, and SvelteKit
 - [`apps/templates`](./apps/templates) — source apps for generated templates
 - [`docs`](./docs) — the published documentation content
-- [`e2e/`](./e2e) — fixture-owned `eve eval` end-to-end tests
+- [`e2e/`](./e2e) — fixture-owned `ovo eval` end-to-end tests
 
 ## Development
 
@@ -48,7 +48,7 @@ The repo is a pnpm workspace orchestrated with [Turborepo](https://turborepo.com
 pnpm dev
 ```
 
-This runs the `eve` package build in watch mode alongside the [`apps/fixtures/weather-agent`](./apps/fixtures/weather-agent) fixture on an OS-assigned available localhost port. The fixture prints the selected URL at startup.
+This runs the `ovo` package build in watch mode alongside the [`apps/fixtures/weather-agent`](./apps/fixtures/weather-agent) fixture on an OS-assigned available localhost port. The fixture prints the selected URL at startup.
 
 ## Testing
 
@@ -57,7 +57,7 @@ pnpm test               # unit + integration
 pnpm test:unit          # unit tests
 pnpm test:integration   # integration tests
 pnpm test:scenario      # scenario tests (requires pnpm build first)
-pnpm test:e2e           # fixture-owned eve eval suites
+pnpm test:e2e           # fixture-owned ovo eval suites
 pnpm test:tui           # TUI smoke scripts (not e2e)
 ```
 
@@ -65,7 +65,7 @@ E2E tests are fixture-owned evals. Run them from the fixture directory:
 
 ```bash
 cd e2e/fixtures/agent-basic-runtime
-pnpm exec eve eval --strict
+pnpm exec ovo eval --strict
 ```
 
 The fixture agents and judges run against real models (`openai/gpt-5.5`), so
@@ -77,7 +77,7 @@ deployment URL. All fixture deployments link to the same Vercel project id; the
 shared project's Preview env must provide those same model-provider
 credentials.
 
-Do not commit fixture trees under `packages/eve/test/fixtures/` — scenario app content is defined inline as `ScenarioAppDescriptor` objects under `packages/eve/src/internal/testing/scenario-apps/` (CI enforces this).
+Do not commit fixture trees under `packages/ovo/test/fixtures/` — scenario app content is defined inline as `ScenarioAppDescriptor` objects under `packages/ovo/src/internal/testing/scenario-apps/` (CI enforces this).
 
 ## Linting and formatting
 
@@ -95,7 +95,7 @@ All of these run in CI, so running them locally before pushing saves a round tri
 ### Extension capability contracts
 
 The extension capabilities in
-[`extension-compatibility.ts`](./packages/eve/src/compiler/extension-compatibility.ts)
+[`extension-compatibility.ts`](./packages/ovo/src/compiler/extension-compatibility.ts)
 have immutable API reports keyed by epoch. If an extension-facing type or
 signature changes, CI fails with the affected capability. Classify whether the
 new consumer retains the previous epoch while bumping it automatically:
@@ -106,7 +106,7 @@ pnpm update:extension-contracts --update hook
 
 The command bumps changes it can prove structurally backward compatible,
 retains the previous epoch, and scaffolds the required fixture under
-`packages/eve/extension-contracts/compatibility/`. Replace the scaffold with a
+`packages/ovo/extension-contracts/compatibility/`. Replace the scaffold with a
 representative example of the retained authoring contract, then rerun
 `pnpm update:extension-contracts` to generate the new epoch report. If the
 change cannot be classified automatically, pass `--retain` after verifying
@@ -124,7 +124,7 @@ behavior changes still need focused compatibility tests.
 
 ## Documentation
 
-User-facing docs live in [`docs/`](./docs) and are published with the `eve` npm package and rendered by the docs site in [`apps/docs`](./apps/docs). If your change alters public behavior, update the relevant doc in the same PR and run `pnpm docs:check`.
+User-facing docs live in [`docs/`](./docs) and are published with the `ovo` npm package and rendered by the docs site in [`apps/docs`](./apps/docs). If your change alters public behavior, update the relevant doc in the same PR and run `pnpm docs:check`.
 
 ## Before opening a pull request
 
@@ -137,7 +137,7 @@ For changes to public APIs, agent behavior, compiler/runtime internals,
 dependencies, generated artifacts, fixture contracts, or any non-trivial
 implementation detail, wait for discussion on the issue before investing in the
 implementation. The goal is to agree that the problem is real and that the
-proposed direction fits eve before review shifts to code. Bug fixes should link
+proposed direction fits ovo before review shifts to code. Bug fixes should link
 to an issue with a reproduction or failing test case so the problem remains
 tracked even if a specific fix is not accepted.
 
@@ -147,8 +147,8 @@ To avoid PRs that are unlikely to be reviewed or merged:
   generated-output refreshes unless a maintainer asked for them.
 - Do not bundle unrelated fixes or refactors into one PR. Split them so each PR
   has one reviewable purpose.
-- Do not add runtime dependencies without prior agreement. Prefer eve-owned
-  wrappers, vendored code, or generated artifacts, and remember that the `eve`
+- Do not add runtime dependencies without prior agreement. Prefer ovo-owned
+  wrappers, vendored code, or generated artifacts, and remember that the `ovo`
   package should keep runtime dependencies minimal.
 - Do not change public behavior based only on a hypothetical use case. Include a
   concrete user story, reproduction, fixture, or test that shows the need.
@@ -161,7 +161,7 @@ To avoid PRs that are unlikely to be reviewed or merged:
 2. Link the issue where the change was discussed and agreed on.
 3. Make your change, including tests and docs where relevant.
 4. Sign off every commit with `git commit -s`.
-5. If the change affects the published `eve` package, add a changeset:
+5. If the change affects the published `ovo` package, add a changeset:
 
    ```bash
    pnpm changeset
@@ -210,7 +210,7 @@ valid sign-off.
 
 ## Reporting bugs and requesting features
 
-Please use the [issue templates](https://github.com/vercel/eve/issues/new/choose). For security issues, **do not open a public issue** — follow [SECURITY.md](./SECURITY.md) instead.
+Please use the [issue templates](https://github.com/vercel/ovo/issues/new/choose). For security issues, **do not open a public issue** — follow [SECURITY.md](./SECURITY.md) instead.
 
 ## Code of conduct
 
@@ -218,6 +218,6 @@ This project follows the [Code of Conduct](./CODE_OF_CONDUCT.md). By participati
 
 ## License
 
-`eve` is licensed under the [Apache License 2.0](./LICENSE). By contributing,
+`ovo` is licensed under the [Apache License 2.0](./LICENSE). By contributing,
 you agree that your contributions will be licensed under that same license
 (inbound = outbound).

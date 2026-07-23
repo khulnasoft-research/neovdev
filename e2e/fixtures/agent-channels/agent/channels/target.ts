@@ -1,4 +1,4 @@
-import { defineChannel, POST } from "eve/channels";
+import { defineChannel, POST } from "ovo/channels";
 
 /**
  * Receive-only target channel for the cross-channel handoff smoke

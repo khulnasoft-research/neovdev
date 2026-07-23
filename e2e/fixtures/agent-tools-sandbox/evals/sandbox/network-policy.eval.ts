@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // Distinguishes a real egress block from curl simply being absent: a blocked
 // request fails with a resolution/connection error, never "command not found".

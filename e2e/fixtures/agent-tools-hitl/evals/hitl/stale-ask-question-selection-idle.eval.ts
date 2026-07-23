@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 /**
  * The plain stale path: a follow-up message resolves the ask_question

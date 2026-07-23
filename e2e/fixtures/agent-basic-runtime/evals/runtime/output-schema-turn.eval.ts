@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 import { z } from "zod";
 
 const StructuredOutput = z.object({ count: z.number().int(), title: z.string() });

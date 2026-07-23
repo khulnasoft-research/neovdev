@@ -8,7 +8,7 @@ const extractorRequire = createRequire(require.resolve("@microsoft/api-extractor
 const ts = extractorRequire("typescript");
 
 export const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
-export const EVE_ROOT = join(REPO_ROOT, "packages/eve");
+export const EVE_ROOT = join(REPO_ROOT, "packages/ovo");
 export const COMPATIBILITY_SOURCE = join(EVE_ROOT, "src/compiler/extension-compatibility.ts");
 export const CONTRACT_ROOT = join(EVE_ROOT, "extension-contracts");
 export const ENTRYPOINT_ROOT = join(CONTRACT_ROOT, "entrypoints");
@@ -198,7 +198,7 @@ export function bumpCapabilityConfiguration(source, capability, decision) {
 export function retainedCompatibilityFixture(capability, version) {
   return `/**
  * Replace this scaffold with a representative ${capability} epoch ${version}
- * authoring example that must continue to compile against the current eve API.
+ * authoring example that must continue to compile against the current ovo API.
  * ${COMPATIBILITY_FIXTURE_PLACEHOLDER}
  */
 export {};

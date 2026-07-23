@@ -1,4 +1,4 @@
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 /**
@@ -16,7 +16,7 @@ export default defineTool({
   approval: ({ session }) => {
     const auth = session.auth.current;
     return auth?.authenticator === "app" &&
-      auth.principalId === "eve:app" &&
+      auth.principalId === "ovo:app" &&
       auth.principalType === "runtime"
       ? "not-applicable"
       : "user-approval";

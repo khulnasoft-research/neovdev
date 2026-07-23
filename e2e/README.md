@@ -1,6 +1,6 @@
 # e2e
 
-End-to-end coverage is fixture-owned `eve eval` runs. The suite only runs
+End-to-end coverage is fixture-owned `ovo eval` runs. The suite only runs
 fixture eval files from the fixture directory.
 
 ## Local
@@ -9,7 +9,7 @@ Run evals from the fixture directory:
 
 ```sh
 cd e2e/fixtures/agent-basic-runtime
-EVE_E2E_MODEL="openai/gpt-5.6-sol" pnpm exec eve eval --strict
+EVE_E2E_MODEL="openai/gpt-5.6-sol" pnpm exec ovo eval --strict
 ```
 
 Every retained e2e eval is deterministic and self-contained. Coverage that
@@ -50,10 +50,10 @@ vc link --yes --project "$VERCEL_PROJECT_ID"
 vc env pull --yes --environment=preview
 VERCEL=1 VERCEL_ENV=preview VERCEL_TARGET_ENV=preview \
   VERCEL_PROJECT_ID="$VERCEL_PROJECT_ID" \
-  pnpm exec eve build
+  pnpm exec ovo build
 DEPLOYMENT_URL="$(vc deploy --prebuilt --yes --target=preview \
   --env "EVE_E2E_MODEL=$EVE_E2E_MODEL" | tail -n 1)"
-npx eve eval --strict --url "$DEPLOYMENT_URL"
+npx ovo eval --strict --url "$DEPLOYMENT_URL"
 ```
 
 Do not set `VERCEL_TEAM_ID` at build: sandbox template keys must derive
@@ -70,16 +70,16 @@ a new deployment, its turns stay pinned to the deployment that created it
 sessions adopt the new deployment — a skill added by the redeploy loads there.
 The pinned-turn assertion is a deliberate tripwire: it must be flipped when
 turn dispatch gains preview latest-routing
-(https://github.com/vercel/eve/issues/582).
+(https://github.com/vercel/ovo/issues/582).
 
 The eval redeploys from inside its test body: it mutates the agent source,
-runs `eve build` + `vc deploy`, and repoints a run-scoped Vercel alias at
-each new deployment, polling `/eve/v1/info` until the alias serves it.
+runs `ovo build` + `vc deploy`, and repoints a run-scoped Vercel alias at
+each new deployment, polling `/ovo/v1/info` until the alias serves it.
 Because immutable deployment URLs never change what they serve, the eval
 must run against the alias — the `e2e-vercel` workflow sets
 `EVE_E2E_REDEPLOY_ALIAS`, aliases the deployment, and runs `--tag redeploy`
-evals as a second `eve eval` invocation after the main suite. Without the
-alias env (local matrix, plain `eve eval --strict`) the eval skips.
+evals as a second `ovo eval` invocation after the main suite. Without the
+alias env (local matrix, plain `ovo eval --strict`) the eval skips.
 
 Most fixture agents and their configured judges use `EVE_E2E_MODEL`, defaulting
 to `openai/gpt-5.6-sol` for local runs. CI sets it from the model matrix, so
@@ -91,7 +91,7 @@ that path. It uses the matrix model when it is an Anthropic model and otherwise
 falls back to `anthropic/claude-opus-4.8`. The instance points at the AI
 Gateway's Anthropic-compatible Messages endpoint so it uses the same
 `AI_GATEWAY_API_KEY` credential as every other fixture.
-`agent-workflow-stress` uses eve's `mockModel` fixture helper so its 100-turn
+`agent-workflow-stress` uses ovo's `mockModel` fixture helper so its 100-turn
 runs stay fast and deterministic. Its concurrent and sequential evals cover
 high-volume session execution and repeated session resumption respectively.
 
@@ -104,7 +104,7 @@ should stay out of the e2e matrix unless they intentionally own evals.
 When adding e2e coverage:
 
 - Put the eval in the fixture app's `evals/` directory.
-- Keep it runnable with only `eve eval --strict`.
+- Keep it runnable with only `ovo eval --strict`.
 - Keep it deterministic: no external service startup or injected env
   requirements (beyond model-provider credentials).
 - If the behavior cannot fit that shape yet, leave it out and rebuild it later
@@ -112,7 +112,7 @@ When adding e2e coverage:
 
 ## CI
 
-`.github/workflows/e2e-local.yml` builds the eve package once per matrix leg,
+`.github/workflows/e2e-local.yml` builds the ovo package once per matrix leg,
 then runs one fixture directory. Its matrix crosses every discovered fixture
 with these model entries:
 
@@ -129,9 +129,9 @@ models become required automatically.
 Each leg exports the selected id as `EVE_E2E_MODEL` before it runs:
 
 ```sh
-pnpm --filter eve run build
+pnpm --filter ovo run build
 cd "$FIXTURE_DIR"
-EVE_E2E_MODEL="$MODEL" pnpm exec eve eval --strict --junit "$JUNIT_PATH"
+EVE_E2E_MODEL="$MODEL" pnpm exec ovo eval --strict --junit "$JUNIT_PATH"
 ```
 
 Always build with the full `build` script (not `build:js`); only the full
@@ -141,11 +141,11 @@ build stamps the package version into `dist`.
 Vercel project id, builds Vercel output locally, deploys that output, and runs:
 
 ```sh
-pnpm exec eve build
+pnpm exec ovo build
 DEPLOYMENT_URL="$(vc deploy --prebuilt --yes --target=preview \
   --env "EVE_E2E_MODEL=$EVE_E2E_MODEL" | tail -n 1)"
-npx eve eval --strict --url "$DEPLOYMENT_URL" --junit "$JUNIT_PATH"
+npx ovo eval --strict --url "$DEPLOYMENT_URL" --junit "$JUNIT_PATH"
 ```
 
 TUI smoke scripts are not e2e. They live under
-`packages/eve/test/tui-client` and run through `pnpm test:tui`.
+`packages/ovo/test/tui-client` and run through `pnpm test:tui`.

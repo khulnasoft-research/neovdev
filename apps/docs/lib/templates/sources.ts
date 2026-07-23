@@ -7,11 +7,11 @@ const file = (
 ): TemplateFile => ({ contents, language, relativePath });
 
 export const templateSourceFiles: Record<string, TemplateFile[]> = {
-  "eve-chat-template": [
+  "ovo-chat-template": [
     file(
       "agent/agent.ts",
       "typescript",
-      `import { defineAgent } from "eve";
+      `import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: "anthropic/claude-sonnet-5",
@@ -19,11 +19,11 @@ export default defineAgent({
 `,
     ),
     file(
-      "agent/channels/eve.ts",
+      "agent/channels/ovo.ts",
       "typescript",
-      `import { eveChannel } from "eve/channels/eve";
-import { localDev, vercelOidc } from "eve/channels/auth";
-import { betterAuthEveAuth } from "@/lib/eve-auth";
+      `import { eveChannel } from "ovo/channels/ovo";
+import { localDev, vercelOidc } from "ovo/channels/auth";
+import { betterAuthEveAuth } from "@/lib/ovo-auth";
 
 export default eveChannel({
   auth: [betterAuthEveAuth, localDev(), vercelOidc()],
@@ -34,13 +34,13 @@ export default eveChannel({
     file(
       "agent/channels/slack.ts",
       "typescript",
-      `import { connectSlackCredentials } from "@vercel/connect/eve";
-import { slackChannel } from "eve/channels/slack";
+      `import { connectSlackCredentials } from "@vercel/connect/ovo";
+import { slackChannel } from "ovo/channels/slack";
 
 // SLACK_CONNECTOR is the UID returned by \`vercel connect create slack\`.
 // For local setup, create a connector with:
-// \`vercel connect create slack --name eve-chat-template --triggers\`.
-const slackConnector = process.env.SLACK_CONNECTOR ?? "slack/eve-chat-template";
+// \`vercel connect create slack --name ovo-chat-template --triggers\`.
+const slackConnector = process.env.SLACK_CONNECTOR ?? "slack/ovo-chat-template";
 
 export default slackChannel({
   credentials: connectSlackCredentials(slackConnector),
@@ -51,8 +51,8 @@ export default slackChannel({
     file(
       "agent/connections/linear.ts",
       "typescript",
-      `import { connect } from "@vercel/connect/eve";
-import { defineMcpClientConnection } from "eve/connections";
+      `import { connect } from "@vercel/connect/ovo";
+import { defineMcpClientConnection } from "ovo/connections";
 
 // LINEAR_CONNECTOR is the UID returned by Vercel Connect. For local setup,
 // create a connector with \`vercel connect create https://mcp.linear.app/mcp --name linear\`.
@@ -69,8 +69,8 @@ export default defineMcpClientConnection({
     file(
       "agent/connections/notion.ts",
       "typescript",
-      `import { connect } from "@vercel/connect/eve";
-import { defineMcpClientConnection } from "eve/connections";
+      `import { connect } from "@vercel/connect/ovo";
+import { defineMcpClientConnection } from "ovo/connections";
 
 // NOTION_CONNECTOR is provisioned by the "Deploy with Vercel" flow. For local
 // setup, create a connector with \`vercel connect create mcp.notion.com --name notion\`.
@@ -86,8 +86,8 @@ export default defineMcpClientConnection({
     file(
       "agent/connections/sentry.ts",
       "typescript",
-      `import { connect } from "@vercel/connect/eve";
-import { defineMcpClientConnection } from "eve/connections";
+      `import { connect } from "@vercel/connect/ovo";
+import { defineMcpClientConnection } from "ovo/connections";
 
 // SENTRY_CONNECTOR is the UID returned by Vercel Connect. For local setup,
 // create a connector with \`vercel connect create https://mcp.sentry.dev/mcp --name sentry\`.
@@ -106,11 +106,11 @@ export default defineMcpClientConnection({
       "markdown",
       `# Identity
 
-You are a concise assistant built with eve (https://eve.dev), a framework for
+You are a concise assistant built with ovo (https://ovo.dev), a framework for
 building durable agents as ordinary files in a TypeScript project. Use tools
 when they are available.
 
-When users ask what eve is or what this agent is built on, explain that eve
+When users ask what ovo is or what this agent is built on, explain that ovo
 lets developers create agents that can run locally or on Vercel, serve chat and
 HTTP interfaces, call tools and connections, stream progress, pause for human
 input, and resume durable sessions across turns. Keep the explanation concise
@@ -142,7 +142,7 @@ When planning a trip:
     file(
       "agent/tools/get_weather.ts",
       "typescript",
-      `import { defineTool } from "eve/tools";
+      `import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 // The runtime tool name comes from the filename, so the model sees this as
@@ -157,11 +157,11 @@ export default defineTool({
 `,
     ),
   ],
-  "eve-slack-agent": [
+  "ovo-slack-agent": [
     file(
       "agent/agent.ts",
       "typescript",
-      `import { defineAgent } from "eve";
+      `import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: "anthropic/claude-sonnet-5",
@@ -171,8 +171,8 @@ export default defineAgent({
     file(
       "agent/channels/slack.ts",
       "typescript",
-      `import { connectSlackCredentials } from "@vercel/connect/eve";
-import { slackChannel } from "eve/channels/slack";
+      `import { connectSlackCredentials } from "@vercel/connect/ovo";
+import { slackChannel } from "ovo/channels/slack";
 
 // SLACK_CONNECTOR is provisioned by the "Deploy with Vercel" button. To set it
 // up yourself, create a connector with \`vercel connect create slack --triggers\`
@@ -213,7 +213,7 @@ When planning a trip:
     file(
       "agent/tools/get_weather.ts",
       "typescript",
-      `import { defineTool } from "eve/tools";
+      `import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 // The runtime tool name comes from the filename, so the model sees this as
@@ -232,7 +232,7 @@ export default defineTool({
     file(
       "agent/agent.ts",
       "typescript",
-      `import { defineAgent } from "eve";
+      `import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: "anthropic/claude-sonnet-5",
@@ -266,8 +266,8 @@ When the user asks about weather, temperature, or forecast conditions, call the 
     file(
       "agent/tools/get_weather.ts",
       "typescript",
-      `import { defineTool } from "eve/tools";
-import { never } from "eve/tools/approval";
+      `import { defineTool } from "ovo/tools";
+import { never } from "ovo/tools/approval";
 import { z } from "zod";
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));

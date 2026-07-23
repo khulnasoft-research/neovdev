@@ -1,8 +1,8 @@
-import { defineEval } from "eve/evals";
-import { equals } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { equals } from "ovo/evals/expect";
 
 // @ts-ignore TS6059: this eval intentionally exercises the workspace source implementation.
-import { coalesceDeliverPayloads } from "../../../../../packages/eve/src/execution/deliver-payloads.js";
+import { coalesceDeliverPayloads } from "../../../../../packages/ovo/src/execution/deliver-payloads.js";
 
 export default defineEval({
   description: "Delivery batching smoke: queued messages and context coalesce in arrival order.",

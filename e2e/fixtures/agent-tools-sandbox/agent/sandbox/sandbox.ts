@@ -1,5 +1,5 @@
-import { defaultBackend, defineSandbox } from "eve/sandbox";
-import { vercel } from "eve/sandbox/vercel";
+import { defaultBackend, defineSandbox } from "ovo/sandbox";
+import { vercel } from "ovo/sandbox/vercel";
 
 /**
  * Sandbox lifecycle fixture exercising the surfaces an agent author relies
@@ -7,7 +7,7 @@ import { vercel } from "eve/sandbox/vercel";
  * end-to-end through a real backend.
  *
  * - `bootstrap` runs once per sandbox template. It writes a known marker
- *   file into the workspace AND installs a custom CLI (`eve-greet`) onto the
+ *   file into the workspace AND installs a custom CLI (`ovo-greet`) onto the
  *   PATH, the way an author would provision tooling every later session
  *   inherits. The CLI is a Python script, so it also proves the base image's
  *   real Python runtime executes bootstrap-authored code.
@@ -18,7 +18,7 @@ import { vercel } from "eve/sandbox/vercel";
  * Backend is left as the framework default so this fixture works both
  * locally (where `defaultBackend()` resolves to `docker()`) and on Vercel
  * deployments (where it resolves to `vercel()`). Both run the published
- * `ghcr.io/vercel/eve:latest` base image, which ships Python, Node, and git;
+ * `ghcr.io/vercel/ovo:latest` base image, which ships Python, Node, and git;
  * the bootstrap below assumes that real-binary environment and is not meant
  * to run against the dependency-free `just-bash` fallback.
  *
@@ -37,16 +37,16 @@ export const SANDBOX_MARKER_TOKEN = "sandbox-bootstrap-ok-J3Q";
  * global prefix bin, chowned to `vercel-sandbox`), so the same install works
  * whether bootstrap runs as root (Docker) or as `vercel-sandbox` (Vercel).
  */
-export const SANDBOX_CLI_PATH = "/usr/local/bin/eve-greet";
-export const SANDBOX_CLI_TOKEN = "eve-greet-cli-ok-R7M";
+export const SANDBOX_CLI_PATH = "/usr/local/bin/ovo-greet";
+export const SANDBOX_CLI_TOKEN = "ovo-greet-cli-ok-R7M";
 
 /** Per-session marker written by `onSession` (live session, not the template). */
 export const SANDBOX_SESSION_MARKER_PATH = "/workspace/session-marker.txt";
 export const SANDBOX_SESSION_MARKER_TOKEN = "sandbox-onsession-ok-X5T";
 
 const FANOUT_SERVER_PORT = 43_100;
-const FANOUT_SERVER_PATH = "/workspace/eve-fanout-server.py";
-const FANOUT_SERVER_LOG_PATH = "/workspace/eve-fanout-server.log";
+const FANOUT_SERVER_PATH = "/workspace/ovo-fanout-server.py";
+const FANOUT_SERVER_LOG_PATH = "/workspace/ovo-fanout-server.log";
 const FANOUT_BARRIER_SIZE = 10;
 const FANOUT_BARRIER_TIMEOUT_SECONDS = 15;
 

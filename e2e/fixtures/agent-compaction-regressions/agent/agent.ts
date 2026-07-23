@@ -1,5 +1,5 @@
-import { defineAgent } from "eve";
-import { mockModel, type MockModelRequest } from "eve/evals";
+import { defineAgent } from "ovo";
+import { mockModel, type MockModelRequest } from "ovo/evals";
 
 import {
   COMPACTION_CHECKPOINT_TEXT,

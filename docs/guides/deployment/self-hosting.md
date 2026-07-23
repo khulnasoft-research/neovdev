@@ -1,20 +1,20 @@
 ---
-title: "Self-host eve"
-description: "Run an eve agent as a Node service with your own workflow storage, sandbox backend, and routing."
+title: "Self-host ovo"
+description: "Run an ovo agent as a Node service with your own workflow storage, sandbox backend, and routing."
 ---
 
-Self-host eve when you operate a Node service, container platform, or reverse proxy. You run eve’s Nitro server and choose the infrastructure that stores workflows and executes sandbox sessions.
+Self-host ovo when you operate a Node service, container platform, or reverse proxy. You run ovo’s Nitro server and choose the infrastructure that stores workflows and executes sandbox sessions.
 
 ## Build and start the Node service
 
 Build the agent, then start the generated server:
 
 ```bash
-eve build
-PORT=3000 eve start --host 0.0.0.0
+ovo build
+PORT=3000 ovo start --host 0.0.0.0
 ```
 
-The build writes the Nitro server under `.output/`. `eve start` serves that output and accepts either `PORT` or the `--port` flag.
+The build writes the Nitro server under `.output/`. `ovo start` serves that output and accepts either `PORT` or the `--port` flag.
 
 Run this process under the same process manager or container platform you use for other Node web services. Configure Transport Layer Security (TLS), scaling, restarts, and log collection in that platform.
 
@@ -26,23 +26,23 @@ Don’t rely on `vercelOidc()` as the only production authenticator outside Verc
 
 ## Persist workflow state
 
-The default local Workflow world stores run state under `.eve/.workflow-data`. Mount that directory on persistent storage so runs survive process and container replacement.
+The default local Workflow world stores run state under `.ovo/.workflow-data`. Mount that directory on persistent storage so runs survive process and container replacement.
 
 You can instead select an installed Workflow world package in the root `agent.ts`:
 
 ```typescript
-import { defineAgent } from "eve";
+import { defineAgent } from "ovo";
 
 export default defineAgent({
   experimental: {
     workflow: {
-      world: "@acme/eve-workflow-world",
+      world: "@acme/ovo-workflow-world",
     },
   },
 });
 ```
 
-The package must export a default factory or `createWorld()` function. Read credentials and host options from runtime environment variables. Install a world built against the same `@workflow/*` line as your eve release. The current line is `5.0.0-beta`, and the runtime rejects incompatible protocol versions.
+The package must export a default factory or `createWorld()` function. Read credentials and host options from runtime environment variables. Install a world built against the same `@workflow/*` line as your ovo release. The current line is `5.0.0-beta`, and the runtime rejects incompatible protocol versions.
 
 See [Workflow Worlds](https://workflow-sdk.dev/worlds) for the underlying Workflow software development kit (SDK) abstraction.
 
@@ -56,27 +56,27 @@ Don’t select `vercel()` unless the self-hosted process should create hosted Ve
 
 Forward both runtime route prefixes through your reverse proxy or ingress:
 
-- `/eve/` serves health, sessions, streams, channels, tools, and subagents
+- `/ovo/` serves health, sessions, streams, channels, tools, and subagents
 - `/.well-known/workflow/` receives workflow callbacks
 
-A proxy restricted to `/eve/` lets a session start, but the run stalls when its callback can’t reach eve. Preserve both prefixes without rewriting their paths.
+A proxy restricted to `/ovo/` lets a session start, but the run stalls when its callback can’t reach ovo. Preserve both prefixes without rewriting their paths.
 
 ## Run schedules
 
-The standard `eve build && eve start` path starts Nitro’s schedule runner. If you adapt the output to a custom HTTP-only host or preset, run Nitro scheduled tasks or invoke the same work from your scheduler.
+The standard `ovo build && ovo start` path starts Nitro’s schedule runner. If you adapt the output to a custom HTTP-only host or preset, run Nitro scheduled tasks or invoke the same work from your scheduler.
 
 ## Verify the service
 
 Check the health route after your proxy and authentication configuration are active:
 
 ```bash
-curl https://your_agent.example.com/eve/v1/health
+curl https://your_agent.example.com/ovo/v1/health
 ```
 
 Then connect the development TUI and complete a real turn:
 
 ```bash
-eve dev https://your_agent.example.com
+ovo dev https://your_agent.example.com
 ```
 
 ## Continue configuring production

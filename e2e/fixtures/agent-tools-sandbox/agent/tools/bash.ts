@@ -1,5 +1,5 @@
-import { defineTool, defineBashTool } from "eve/tools";
-import { never } from "eve/tools/approval";
+import { defineTool, defineBashTool } from "ovo/tools";
+import { never } from "ovo/tools/approval";
 
 /**
  * Bash tool exposed to the model for the sandbox-bootstrap smoke

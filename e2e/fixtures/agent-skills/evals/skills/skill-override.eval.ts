@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const HOUSE_RULES_OVERRIDE_TOKEN = "house-rules-dynamic-ok-M5T8";
 

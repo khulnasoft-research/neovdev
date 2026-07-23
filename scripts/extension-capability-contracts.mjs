@@ -198,8 +198,8 @@ async function main() {
     }
     process.stdout.write(
       decision.retain
-        ? `[eve:extension-contracts] ${request.capability} is structurally backward compatible; retaining epoch ${bumped.previousVersion} and bumping to ${bumped.version}.\n`
-        : `[eve:extension-contracts] dropping ${request.capability} epoch ${bumped.previousVersion} and bumping to ${bumped.version}.\n`,
+        ? `[ovo:extension-contracts] ${request.capability} is structurally backward compatible; retaining epoch ${bumped.previousVersion} and bumping to ${bumped.version}.\n`
+        : `[ovo:extension-contracts] dropping ${request.capability} epoch ${bumped.previousVersion} and bumping to ${bumped.version}.\n`,
     );
   }
 
@@ -221,7 +221,7 @@ async function run() {
   }
   if (issues.length > 0) {
     process.stderr.write(
-      `[eve:extension-contracts] FAIL: ${issues.length} capability contract issue${issues.length === 1 ? "" : "s"}.\n\n`,
+      `[ovo:extension-contracts] FAIL: ${issues.length} capability contract issue${issues.length === 1 ? "" : "s"}.\n\n`,
     );
     for (const issue of issues) {
       process.stderr.write(`  ${issue.file}\n    ${issue.message}\n`);
@@ -229,7 +229,7 @@ async function run() {
     process.exitCode = 1;
     return;
   }
-  process.stdout.write("[eve:extension-contracts] updated current capability metadata.\n");
+  process.stdout.write("[ovo:extension-contracts] updated current capability metadata.\n");
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

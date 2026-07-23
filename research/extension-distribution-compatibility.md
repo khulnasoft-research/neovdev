@@ -8,19 +8,19 @@ status: proposed
 
 ## Summary
 
-eve extensions should publish a built, agent-shaped distribution tree while the consuming
-application's eve remains responsible for discovery, validation, normalization, namespacing, and
+ovo extensions should publish a built, agent-shaped distribution tree while the consuming
+application's ovo remains responsible for discovery, validation, normalization, namespacing, and
 final bundling. The npm package need not contain the author's original TypeScript, but it does not
-ship eve-internal compiled definitions either. This is a **source-backed execution contract with a
+ship ovo-internal compiled definitions either. This is a **source-backed execution contract with a
 dist-only publication contract**.
 
-Compatibility is independent of eve's package version. `eve extension build` generates a small
+Compatibility is independent of ovo's package version. `ovo extension build` generates a small
 manifest containing only the extension capabilities the package uses and the contract version it
 requires for each one. A skills contract change therefore cannot invalidate a tools-only
-extension. npm provides the consumer's singleton eve through a required wildcard peer; eve itself
+extension. npm provides the consumer's singleton ovo through a required wildcard peer; ovo itself
 performs compatibility validation from the generated manifest.
 
-Local workspace extensions use the same dist tree as published packages. `eve dev` watches their
+Local workspace extensions use the same dist tree as published packages. `ovo dev` watches their
 real source roots, rebuilds affected extension dist trees transactionally, then reuses the existing
 agent-generation reload path. Development therefore exercises the package that will be published
 without requiring a second source-resolution mode.
@@ -34,7 +34,7 @@ An extension has distinct authoring and distribution roots:
   "name": "@acme/crm",
   "type": "module",
   "files": ["dist"],
-  "eve": {
+  "ovo": {
     "extension": {
       "source": "./extension",
       "dist": "./dist/extension",
@@ -51,16 +51,16 @@ An extension has distinct authoring and distribution roots:
     },
   },
   "peerDependencies": {
-    "eve": "*",
+    "ovo": "*",
   },
   "devDependencies": {
-    "eve": "^0.24.6",
+    "ovo": "^0.24.6",
   },
 }
 ```
 
 `source` is build input and is not published by default. `dist` is the only tree a consuming app
-mounts. `eve extension build` owns the managed exports and emits:
+mounts. `ovo extension build` owns the managed exports and emits:
 
 ```text
 dist/
@@ -82,27 +82,27 @@ copied without changing their semantics. Generated entrypoints re-export modules
 tree so the mount, consumer overrides, and compiled agent share the same module identities. Publish
 artifacts do not embed source maps containing the author's source text.
 
-The consuming eve walks `dist`, loads its public definitions through the consumer's `eve/*`
+The consuming ovo walks `dist`, loads its public definitions through the consumer's `ovo/*`
 exports, and produces the consuming agent's internal compiled manifest. Internal types such as
 `CompiledToolDefinition` are never a package-level extension ABI.
 
 ## Dependency semantics
 
-`eve` is a required peer with the wildcard range. The peer exists to make package managers resolve
-extension imports against the application's singleton eve; it does not express extension
-compatibility. `peerDependenciesMeta.eve.optional` is deliberately absent because an extension
-cannot operate without eve. The application should declare eve directly, while the extension's
+`ovo` is a required peer with the wildcard range. The peer exists to make package managers resolve
+extension imports against the application's singleton ovo; it does not express extension
+compatibility. `peerDependenciesMeta.ovo.optional` is deliberately absent because an extension
+cannot operate without ovo. The application should declare ovo directly, while the extension's
 concrete dev dependency provides authoring types and build tooling.
 
 Everything the distributed extension imports at execution time belongs in `dependencies`.
 Build-only and test-only packages belong in `devDependencies`. A package that must share the
 consumer's instance may be a peer, and an integration that is genuinely optional may use optional
-peer metadata. An extension must never carry its own runtime `eve` dependency.
+peer metadata. An extension must never carry its own runtime `ovo` dependency.
 
-The wildcard peer keeps npm semver out of capability compatibility for stable eve releases. Strict
-install tests must also cover eve prereleases. If package managers cannot represent the supported
-prerelease policy without warnings, the fallback is to remove the peer and make the eve compiler
-alias extension `eve/*` imports explicitly; marking the peer optional does not solve a present-peer
+The wildcard peer keeps npm semver out of capability compatibility for stable ovo releases. Strict
+install tests must also cover ovo prereleases. If package managers cannot represent the supported
+prerelease policy without warnings, the fallback is to remove the peer and make the ovo compiler
+alias extension `ovo/*` imports explicitly; marking the peer optional does not solve a present-peer
 version mismatch.
 
 ## Generated compatibility manifest
@@ -111,7 +111,7 @@ version mismatch.
 
 ```json
 {
-  "kind": "eve-extension",
+  "kind": "ovo-extension",
   "formatVersion": 1,
   "builtWithEve": "0.24.6",
   "requires": {
@@ -148,7 +148,7 @@ definitions, executable functions, or other compiler output.
 
 ## Capability version semantics
 
-Each eve release declares all capability versions it can consume, not just one current value:
+Each ovo release declares all capability versions it can consume, not just one current value:
 
 ```ts
 const EXTENSION_CAPABILITY_SUPPORT = {
@@ -165,15 +165,15 @@ the required version appears in the consumer's supported set. Unknown capability
 versions fail closed before any extension module executes.
 
 A capability version advances when a newly built extension can require behavior an older consumer
-cannot interpret. A newer eve should retain older versions through an adapter whenever practical.
-If an incompatible change cannot be adapted, the new eve drops the old version from its supported
+cannot interpret. A newer ovo should retain older versions through an adapter whenever practical.
+If an incompatible change cannot be adapted, the new ovo drops the old version from its supported
 set; only extensions using that capability become incompatible. Changes outside extension-facing
 contracts do not alter any capability version.
 
 Examples:
 
 - A skills-only contract change advances `skill`; a tools-only extension remains valid.
-- A new tool feature advances `tool` to 2. A newer eve can support `[1, 2]`, keeping existing tool
+- A new tool feature advances `tool` to 2. A newer ovo can support `[1, 2]`, keeping existing tool
   extensions valid while rejecting tool-v2 extensions on older consumers.
 - A state scoping change advances `state` without affecting extensions that do not call
   `defineState`.
@@ -183,8 +183,8 @@ Compatibility errors name the extension package, capability, required version, s
 and an actionable upgrade or downgrade:
 
 ```text
-Extension "@acme/crm" requires tool contract v2, but this eve supports tool contract v1.
-Upgrade eve or install an extension release that requires tool v1.
+Extension "@acme/crm" requires tool contract v2, but this ovo supports tool contract v1.
+Upgrade ovo or install an extension release that requires tool v1.
 ```
 
 ## Consumer lifecycle
@@ -192,11 +192,11 @@ Upgrade eve or install an extension release that requires tool v1.
 For an installed extension, agent compilation proceeds in this order:
 
 1. Resolve the mount package and its package root without executing the mount.
-2. Read `package.json#eve.extension.dist` and the generated manifest.
+2. Read `package.json#ovo.extension.dist` and the generated manifest.
 3. Validate the manifest format and each required capability.
 4. Discover the agent-shaped dist tree and compose its contributions under the mount namespace.
 5. Evaluate the consumer's mount module to bind extension config.
-6. Normalize extension definitions with the consuming eve and include their modules in the final
+6. Normalize extension definitions with the consuming ovo and include their modules in the final
    agent bundle.
 
 Missing, malformed, or incompatible manifests fail the build before extension code runs. There is
@@ -224,7 +224,7 @@ extension is one whose resolved package root realpaths into the application's wo
 root; detection is based on the filesystem rather than `workspace:` syntax so linked and `file:`
 packages behave consistently.
 
-At `eve dev` startup:
+At `ovo dev` startup:
 
 1. Resolve mounted packages far enough to read their source/dist roots.
 2. Identify local extensions and build them before the initial agent compile.
@@ -256,8 +256,8 @@ dist tree and the currently serving agent generation intact. Changes to an exten
 workspace dependencies still trigger an agent rebuild through the existing transitive workspace
 watch plan; the extension itself only needs rebuilding when its managed source tree changes.
 
-This is an eve development reload rather than browser-style component HMR: the server remains
-available while eve builds and atomically activates a new immutable agent generation. Directly
+This is an ovo development reload rather than browser-style component HMR: the server remains
+available while ovo builds and atomically activates a new immutable agent generation. Directly
 resolving workspace TypeScript through a development-only export condition is intentionally
 avoided because it would give local extensions different entrypoints, barrels, and module identity
 from their published packages.
@@ -266,7 +266,7 @@ from their published packages.
 
 - Published extensions contain the dist tree and generated manifest; original TypeScript is not
   required.
-- The consumer, not the extension author, owns normalization into eve's internal compiled model.
+- The consumer, not the extension author, owns normalization into ovo's internal compiled model.
 - npm peer ranges never decide capability compatibility.
 - Only used capabilities can invalidate an extension.
 - Extension capability validation completes before authored extension code executes.
@@ -285,11 +285,11 @@ manifest described here:
 - Stop stamping `config` and `state` unconditionally.
 - Remove serialized compiled contributions and the compiler schemas they expose.
 - Keep source compilation and namespacing on the existing consumer path.
-- Change the scaffold to distinct source/dist roots, `files: ["dist"]`, and a required wildcard eve
+- Change the scaffold to distinct source/dist roots, `files: ["dist"]`, and a required wildcard ovo
   peer.
-- Replace discovery's `peerDependencies.eve` compatibility check with manifest capability
+- Replace discovery's `peerDependencies.ovo` compatibility check with manifest capability
   validation.
-- Extend `eve dev` to prebuild and transactionally rebuild local mounted extensions.
+- Extend `ovo dev` to prebuild and transactionally rebuild local mounted extensions.
 
 A genuinely pre-normalized extension may be designed later as a separate artifact kind with an
 explicit ABI. It is not a fallback or alternate interpretation of this manifest.
@@ -305,11 +305,11 @@ Use the narrowest test tier for each contract:
 - Scenario: a mounted workspace extension hot-reloads edits, additions, removals, config, skills,
   and assets; failed builds preserve the prior generation; generated dist writes do not loop.
 - Package-manager fixtures: packed extensions install under npm `--strict-peer-deps`, strict pnpm,
-  and Yarn with multiple stable and prerelease eve versions, without acquiring a private eve copy.
+  and Yarn with multiple stable and prerelease ovo versions, without acquiring a private ovo copy.
 - E2E: registry-installed extension fixtures publish dist only and continue to boot, accept a
   request, and execute namespaced tools in CI.
 
-The implementation changes the published `eve` package and requires a patch changeset. Public docs
+The implementation changes the published `ovo` package and requires a patch changeset. Public docs
 must describe the source/dist split, capability diagnostics, required wildcard peer, and automatic
 workspace development behavior.
 

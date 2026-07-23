@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const JS_ONLY_EXTENSION_TOKEN = "js-only-extension-dist-ok-4N7Q";
 

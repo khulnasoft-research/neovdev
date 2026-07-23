@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 export default defineEval({
   description: "Static tools smoke: authored modules and dependencies can use dynamic imports.",

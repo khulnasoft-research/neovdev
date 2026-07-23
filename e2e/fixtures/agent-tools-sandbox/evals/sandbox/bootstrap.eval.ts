@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { BOOTSTRAP_MARKER_PATH, BOOTSTRAP_MARKER_TOKEN } from "./shared";
 

@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const SUBAGENT_TOKEN = "SUBAGENT_TOKEN=echo-marker-9F2X";
 

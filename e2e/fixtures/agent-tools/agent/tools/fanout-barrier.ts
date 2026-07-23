@@ -1,4 +1,4 @@
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 const EXPECTED_CONCURRENT_CALLS = 10;

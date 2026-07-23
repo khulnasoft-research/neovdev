@@ -1,11 +1,11 @@
-# Next.js multi-agent eve demo
+# Next.js multi-agent ovo demo
 
-This app demonstrates `withEve({ agents })` with three independent eve agents
+This app demonstrates `withEve({ agents })` with three independent ovo agents
 mounted into one Next.js app:
 
-- `support` at `/eve/agents/support/eve/v1/*`
-- `billing` at `/eve/agents/billing/eve/v1/*`
-- `research` at `/eve/agents/research/eve/v1/*`
+- `support` at `/ovo/agents/support/ovo/v1/*`
+- `billing` at `/ovo/agents/billing/ovo/v1/*`
+- `research` at `/ovo/agents/research/ovo/v1/*`
 
 Run it locally with:
 

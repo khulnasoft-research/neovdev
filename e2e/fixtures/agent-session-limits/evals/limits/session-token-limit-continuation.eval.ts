@@ -1,5 +1,5 @@
-import { defineEval } from "eve/evals";
-import { equals } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { equals } from "ovo/evals/expect";
 
 /**
  * Session token limits over HTTP: a conversation session that crosses its

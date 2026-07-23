@@ -1,86 +1,86 @@
 ---
 title: "CLI"
-description: "Reference for every eve CLI command: init, info, build, start, dev, logs, link, deploy, eval, channels, and extension."
+description: "Reference for every ovo CLI command: init, info, build, start, dev, logs, link, deploy, eval, channels, and extension."
 ---
 
-The `eve` binary (`bin: eve`) runs from your app root, and every command first loads `.env`/`.env.local` from that root. Running `eve` with no command runs `eve dev`.
+The `ovo` binary (`bin: ovo`) runs from your app root, and every command first loads `.env`/`.env.local` from that root. Running `ovo` with no command runs `ovo dev`.
 
 ## Commands
 
 | Command                       | Description                                                                                                                                           |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `eve init [target]`           | Create a new agent, or add an agent to an existing project                                                                                            |
-| `eve info`                    | Print the resolved application, including discovered tools, skills, subagents, schedules, channels, routes, artifact paths, and discovery diagnostics |
-| `eve build`                   | Compile `.eve/` artifacts and build the host output; prints the output directory                                                                      |
-| `eve start`                   | Serve the built `.output/` app; prints the listening URL                                                                                              |
-| `eve dev`                     | Start the local dev server and open the terminal UI                                                                                                   |
-| `eve dev <url>`               | Connect the UI to an existing server URL (e.g. a remote deployment) instead of booting a local server                                                 |
-| `eve logs [logid]`            | Print an `eve dev` diagnostic log (the most recent when `logid` is omitted)                                                                           |
-| `eve logs ls`                 | List `eve dev` diagnostic logs, most recent first                                                                                                     |
-| `eve link`                    | Link the directory to a Vercel project and pull AI Gateway credentials                                                                                |
-| `eve deploy`                  | Deploy the agent to Vercel production (links first if needed)                                                                                         |
-| `eve eval`                    | Run evals against the local app or a remote target                                                                                                    |
-| `eve channels add [kind]`     | Scaffold a channel interactively, or by kind (`slack` \| `web`)                                                                                       |
-| `eve channels list`           | List user-authored channels                                                                                                                           |
-| `eve extension init [target]` | Create a new extension package                                                                                                                        |
-| `eve extension build`         | Build the current package as an extension                                                                                                             |
+| `ovo init [target]`           | Create a new agent, or add an agent to an existing project                                                                                            |
+| `ovo info`                    | Print the resolved application, including discovered tools, skills, subagents, schedules, channels, routes, artifact paths, and discovery diagnostics |
+| `ovo build`                   | Compile `.ovo/` artifacts and build the host output; prints the output directory                                                                      |
+| `ovo start`                   | Serve the built `.output/` app; prints the listening URL                                                                                              |
+| `ovo dev`                     | Start the local dev server and open the terminal UI                                                                                                   |
+| `ovo dev <url>`               | Connect the UI to an existing server URL (e.g. a remote deployment) instead of booting a local server                                                 |
+| `ovo logs [logid]`            | Print an `ovo dev` diagnostic log (the most recent when `logid` is omitted)                                                                           |
+| `ovo logs ls`                 | List `ovo dev` diagnostic logs, most recent first                                                                                                     |
+| `ovo link`                    | Link the directory to a Vercel project and pull AI Gateway credentials                                                                                |
+| `ovo deploy`                  | Deploy the agent to Vercel production (links first if needed)                                                                                         |
+| `ovo eval`                    | Run evals against the local app or a remote target                                                                                                    |
+| `ovo channels add [kind]`     | Scaffold a channel interactively, or by kind (`slack` \| `web`)                                                                                       |
+| `ovo channels list`           | List user-authored channels                                                                                                                           |
+| `ovo extension init [target]` | Create a new extension package                                                                                                                        |
+| `ovo extension build`         | Build the current package as an extension                                                                                                             |
 
-When `eve build` fails on discovery errors, it prints the full diagnostics report (severity, message, source path) and the diagnostics artifact path.
+When `ovo build` fails on discovery errors, it prints the full diagnostics report (severity, message, source path) and the diagnostics artifact path.
 
-## `eve init`
+## `ovo init`
 
 ```bash
-eve init [target] [--channel-web-nextjs]
+ovo init [target] [--channel-web-nextjs]
 ```
 
 Creates a new agent app or adds an agent to an existing app. Always installs dependencies. New directories also initialize Git.
 
 | Target                                    | What happens                                                                                                                                             |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `eve init my-agent`                       | New agent project in `my-agent/`                                                                                                                         |
-| `eve init .` (or an existing project dir) | Adds `agent/` plus missing `eve`, `ai`, and `zod` deps. Needs a `package.json` and no `agent/` files yet                                                 |
-| `eve init` with no target                 | Same as `eve init .`, except coding agents (Claude Code, Cursor, and similar) get a setup guide instead of scaffolding — they have not chosen a name yet |
+| `ovo init my-agent`                       | New agent project in `my-agent/`                                                                                                                         |
+| `ovo init .` (or an existing project dir) | Adds `agent/` plus missing `ovo`, `ai`, and `zod` deps. Needs a `package.json` and no `agent/` files yet                                                 |
+| `ovo init` with no target                 | Same as `ovo init .`, except coding agents (Claude Code, Cursor, and similar) get a setup guide instead of scaffolding — they have not chosen a name yet |
 
-After scaffolding, a human terminal usually continues into `eve dev` (or a coding-agent REPL if one is on `PATH` and you pick it). Coding-agent launches print the next steps instead of opening the TUI, so the session does not get stuck. Fresh projects use the parent workspace's package manager when there is one; otherwise they use the manager that launched `eve init`.
+After scaffolding, a human terminal usually continues into `ovo dev` (or a coding-agent REPL if one is on `PATH` and you pick it). Coding-agent launches print the next steps instead of opening the TUI, so the session does not get stuck. Fresh projects use the parent workspace's package manager when there is one; otherwise they use the manager that launched `ovo init`.
 
 | Flag                   | Type | Default | Description                                                                                           |
 | ---------------------- | ---- | ------- | ----------------------------------------------------------------------------------------------------- |
-| `--channel-web-nextjs` | flag | off     | Add the Web Chat app (Next.js). Not for existing projects — run `eve channels add web` there instead. |
+| `--channel-web-nextjs` | flag | off     | Add the Web Chat app (Next.js). Not for existing projects — run `ovo channels add web` there instead. |
 
-## `eve extension`
+## `ovo extension`
 
-Commands for reusable [extension](/docs/extensions) packages. An extension declares distinct authoring and distribution roots in `package.json#eve.extension` (for example `"eve": { "extension": { "source": "./extension", "dist": "./dist/extension" } }`).
+Commands for reusable [extension](/docs/extensions) packages. An extension declares distinct authoring and distribution roots in `package.json#ovo.extension` (for example `"ovo": { "extension": { "source": "./extension", "dist": "./dist/extension" } }`).
 
-### `eve extension init`
+### `ovo extension init`
 
 ```bash
-eve extension init [target]
+ovo extension init [target]
 ```
 
-Creates a new extension package, installs dependencies, and initializes Git. Prints next steps instead of starting `eve dev`.
+Creates a new extension package, installs dependencies, and initializes Git. Prints next steps instead of starting `ovo dev`.
 
 | Target                      | What happens                                                  |
 | --------------------------- | ------------------------------------------------------------- |
-| `eve extension init my-crm` | New extension package in `my-crm/`                            |
-| `eve extension init .`      | Scaffold in the current empty directory                       |
+| `ovo extension init my-crm` | New extension package in `my-crm/`                            |
+| `ovo extension init .`      | Scaffold in the current empty directory                       |
 | No target                   | Same as `.` for humans; coding agents get a short setup guide |
 
 Create-only: cannot target an existing project that already has a `package.json`.
 
 See [Extensions](/docs/extensions) for authoring and mount details.
 
-### `eve extension build`
+### `ovo extension build`
 
 ```bash
-eve extension build
+ovo extension build
 ```
 
 Builds the complete agent-shaped extension tree into its configured dist root, emits declarations and compatibility metadata, and fills the package `exports` map. The original TypeScript source is not required in the published package.
 
-## `eve info`
+## `ovo info`
 
 ```bash
-eve info [--json]
+ovo info [--json]
 ```
 
 | Flag     | Type | Default | Description  |
@@ -89,13 +89,13 @@ eve info [--json]
 
 Run this first when something behaves unexpectedly. It confirms a file was discovered, lists the active surface, and surfaces discovery diagnostics, all faster than booting the dev server.
 
-## `eve build`
+## `ovo build`
 
 ```bash
-eve build [--profile <path>] [--skip-sandbox-prewarm]
+ovo build [--profile <path>] [--skip-sandbox-prewarm]
 ```
 
-Compiles and bundles in an invocation-owned directory under `.eve/builds/`, then publishes the completed host output and prints its path. Scratch workspaces are removed after success or failure.
+Compiles and bundles in an invocation-owned directory under `.ovo/builds/`, then publishes the completed host output and prints its path. Scratch workspaces are removed after success or failure.
 
 | Flag                     | Type   | Default | Description                                                                                   |
 | ------------------------ | ------ | ------- | --------------------------------------------------------------------------------------------- |
@@ -105,27 +105,27 @@ Compiles and bundles in an invocation-owned directory under `.eve/builds/`, then
 Use a profile file to establish a repeatable baseline before changing the build pipeline:
 
 ```bash
-eve build --profile .eve/build-profiles/baseline.json
+ovo build --profile .ovo/build-profiles/baseline.json
 ```
 
-The report is attempted only after a successful build. It records total elapsed time, completed phase timings, and final regular-file totals for file count, raw bytes, and the sum of each file compressed with gzip. For Vercel output it also includes a subtotal for every real `.func` directory, so app and flow bundles can be compared separately. The profile path resolves from the app root and should be outside the published output directory; profile collection does not add a file to the deployment. If collection or writing fails, eve emits a warning but keeps the completed build successful.
+The report is attempted only after a successful build. It records total elapsed time, completed phase timings, and final regular-file totals for file count, raw bytes, and the sum of each file compressed with gzip. For Vercel output it also includes a subtotal for every real `.func` directory, so app and flow bundles can be compared separately. The profile path resolves from the app root and should be outside the published output directory; profile collection does not add a file to the deployment. If collection or writing fails, ovo emits a warning but keeps the completed build successful.
 
-Production builds do not write through the stable compiler, host, Nitro, or Workflow files owned by `eve dev`, so builds can run while a local dev server is active. A failed build leaves the last successful `.output/` and agent summary untouched. Concurrent completed builds serialize only the final publication window.
+Production builds do not write through the stable compiler, host, Nitro, or Workflow files owned by `ovo dev`, so builds can run while a local dev server is active. A failed build leaves the last successful `.output/` and agent summary untouched. Concurrent completed builds serialize only the final publication window.
 
-Useful stable artifacts written by inspection and development flows under `.eve/` include:
+Useful stable artifacts written by inspection and development flows under `.ovo/` include:
 
 | Artifact                                       | Description                                          |
 | ---------------------------------------------- | ---------------------------------------------------- |
-| `.eve/discovery/agent-discovery-manifest.json` | What eve found on disk                               |
-| `.eve/discovery/diagnostics.json`              | Authored-shape errors and warnings                   |
-| `.eve/compile/compiled-agent-manifest.json`    | The serialized authored surface eve loads at runtime |
-| `.eve/compile/compile-metadata.json`           | Build-time metadata and paths                        |
-| `.eve/compile/module-map.mjs`                  | Compiled module entrypoints eve imports at runtime   |
+| `.ovo/discovery/agent-discovery-manifest.json` | What ovo found on disk                               |
+| `.ovo/discovery/diagnostics.json`              | Authored-shape errors and warnings                   |
+| `.ovo/compile/compiled-agent-manifest.json`    | The serialized authored surface ovo loads at runtime |
+| `.ovo/compile/compile-metadata.json`           | Build-time metadata and paths                        |
+| `.ovo/compile/module-map.mjs`                  | Compiled module entrypoints ovo imports at runtime   |
 
-## `eve start`
+## `ovo start`
 
 ```bash
-eve start [--host <host>] [--port <port>]
+ovo start [--host <host>] [--port <port>]
 ```
 
 | Flag            | Type   | Default            | Description            |
@@ -135,11 +135,11 @@ eve start [--host <host>] [--port <port>]
 
 Serves the previously built output. Prints the listening URL.
 
-## `eve dev`
+## `ovo dev`
 
 ```bash
-eve dev [options]
-eve dev https://your-app.vercel.app
+ovo dev [options]
+ovo dev https://your-app.vercel.app
 ```
 
 Pass a bare URL and the UI connects to that server instead of booting a local one (same as `--url`), which lets you smoke-test a preview or production deployment. The interactive UI turns off in a non-TTY terminal.
@@ -161,63 +161,63 @@ Pass a bare URL and the UI connects to that server instead of booting a local on
 | `--context-size <tokens>`           | number | none               | Model context window size, shown as a usage percentage                                    |
 | `--logs <mode>`                     | enum   | `stderr`           | Server/agent logs to show: `all` \| `stderr` \| `sandbox` \| `none`                       |
 
-A fresh `eve init` passes `--input /model`. That bare local input starts onboarding: the TUI installs the Vercel CLI if needed, asks you to log in if needed, then opens `/model`. Other input stays editable in the prompt.
+A fresh `ovo init` passes `--input /model`. That bare local input starts onboarding: the TUI installs the Vercel CLI if needed, asks you to log in if needed, then opens `/model`. Other input stays editable in the prompt.
 
-For a URL target protected by HTTP Basic auth, put the credentials in the URL. Eve sends them as a Basic `Authorization` header and strips them from the server URL before connecting:
+For a URL target protected by HTTP Basic auth, put the credentials in the URL. Ovo sends them as a Basic `Authorization` header and strips them from the server URL before connecting:
 
 ```bash
-eve dev https://user:pass@your-app.example.com
+ovo dev https://user:pass@your-app.example.com
 ```
 
 For bearer tokens or custom schemes, pass explicit headers with `-H`.
 
-Local dev records the last ready URL per resolved app root in `.eve/dev-server-state.v1.json`. A second interactive `eve dev` reconnects only when that URL is loopback and healthy; each terminal UI creates a fresh client session while sharing the server process. A stale or malformed record is replaced when eve starts a new server. Passing `--host`, `--port`, or a `PORT` environment value skips reconnection and reports a healthy recorded server instead.
+Local dev records the last ready URL per resolved app root in `.ovo/dev-server-state.v1.json`. A second interactive `ovo dev` reconnects only when that URL is loopback and healthy; each terminal UI creates a fresh client session while sharing the server process. A stale or malformed record is replaced when ovo starts a new server. Passing `--host`, `--port`, or a `PORT` environment value skips reconnection and reports a healthy recorded server instead.
 
-Local dev keeps immutable runtime source snapshots under `.eve/dev-runtime/snapshots/` so in-flight turns hold a consistent code revision while new turns pick up rebuilds. The terminal REPL keeps its logical session across successful rebuilds, so the next turn continues the conversation on the latest generation; use `/new` to start a fresh session. After a generation is superseded, `eve dev` retains it for at least 30 minutes and also retains the five most recently superseded generations, regardless of the configured Workflow World. The active generation is never pruned. Old runtime snapshots and local sandbox templates are pruned in the background. For manual cleanup, stop `eve dev` before deleting `.eve/dev-runtime/snapshots/` or `.eve/sandbox-cache/local/templates/`. A turn that remains unfinished beyond the automatic retention window can no longer resume after its generation is pruned.
+Local dev keeps immutable runtime source snapshots under `.ovo/dev-runtime/snapshots/` so in-flight turns hold a consistent code revision while new turns pick up rebuilds. The terminal REPL keeps its logical session across successful rebuilds, so the next turn continues the conversation on the latest generation; use `/new` to start a fresh session. After a generation is superseded, `ovo dev` retains it for at least 30 minutes and also retains the five most recently superseded generations, regardless of the configured Workflow World. The active generation is never pruned. Old runtime snapshots and local sandbox templates are pruned in the background. For manual cleanup, stop `ovo dev` before deleting `.ovo/dev-runtime/snapshots/` or `.ovo/sandbox-cache/local/templates/`. A turn that remains unfinished beyond the automatic retention window can no longer resume after its generation is pruned.
 
-## `eve logs`
-
-```bash
-eve logs            # print the most recent diagnostic log
-eve logs ls         # list logs, most recent first
-eve logs <logid>    # print a specific log
-eve logs --dump     # prepend the log's environment dump
-eve logs --events   # interleave session events from the local workflow store
-```
-
-Each interactive `eve dev` process writes a private diagnostic log under `.eve/logs/` capturing stderr, stdout (including sandbox and rebuild lines), tool failures, workflow errors, and eve framework log records — regardless of what the transcript shows. The file is JSON Lines — every line is one JSON record with `at` and `source` fields. `eve logs` reads those files back.
-
-A log id is the file name without `.log` (for example `dev-2026-07-15T12-00-00.000Z-123`). `eve logs <logid>` also accepts the file name, the `.eve/logs/...` path printed in the dev transcript, or any unambiguous prefix of the id with or without the `dev-` lead — so `eve logs 2026-07-15` works when a single log matches. An ambiguous prefix fails and lists the candidates.
-
-`eve logs` prints nothing but records — no path banner on either stream — so `eve logs 2>&1 | jq -c .` always parses. Discover ids and file paths with `eve logs ls`; `eve logs ls --json` emits a machine-readable array with `id`, `path`, `startedAt`, and `sizeBytes`.
-
-`eve logs --events` resolves session events (`session.started`, `turn.failed`, message deltas, …) from the local workflow store (`.eve/.workflow-data`) at query time and interleaves them into the output by timestamp as `source: "event"` records — the log file itself never stores them, so nothing is duplicated at capture time. Selection is by the log's time window (its start through the next log's start), so events from concurrently running `eve dev` processes may appear.
-
-Each log has a same-named `.dump` sibling holding environment diagnostics and session stats as one JSON document. `eve logs --dump` (with or without a log id) prepends that document to the JSONL log body; the combined output is a valid JSON value stream (`eve logs --dump | jq -c .`), one self-contained report to attach to an issue. When a log has no dump, the flag is silently a no-op.
-
-## `eve link`
+## `ovo logs`
 
 ```bash
-eve link
+ovo logs            # print the most recent diagnostic log
+ovo logs ls         # list logs, most recent first
+ovo logs <logid>    # print a specific log
+ovo logs --dump     # prepend the log's environment dump
+ovo logs --events   # interleave session events from the local workflow store
 ```
 
-Links the current directory to a Vercel project. After selecting a team, you can create a project named for the agent or link an existing project. The existing-project picker shows recent projects; type a project name and choose **Search for '<name>'** to search the rest of that team's projects. Vercel links the resolved project, eve verifies its project ID, and then pulls the project's environment so an AI Gateway credential (`VERCEL_OIDC_TOKEN` or `AI_GATEWAY_API_KEY`) lands in `.env.local`. Running it again re-links: the pickers always run, and the new choice wins. The command is interactive only; in CI, use `vercel link --project <name> --yes --non-interactive` instead. A running `eve dev` reloads env files automatically, so you don't need to restart after the pull.
+Each interactive `ovo dev` process writes a private diagnostic log under `.ovo/logs/` capturing stderr, stdout (including sandbox and rebuild lines), tool failures, workflow errors, and ovo framework log records — regardless of what the transcript shows. The file is JSON Lines — every line is one JSON record with `at` and `source` fields. `ovo logs` reads those files back.
 
-## `eve deploy`
+A log id is the file name without `.log` (for example `dev-2026-07-15T12-00-00.000Z-123`). `ovo logs <logid>` also accepts the file name, the `.ovo/logs/...` path printed in the dev transcript, or any unambiguous prefix of the id with or without the `dev-` lead — so `ovo logs 2026-07-15` works when a single log matches. An ambiguous prefix fails and lists the candidates.
+
+`ovo logs` prints nothing but records — no path banner on either stream — so `ovo logs 2>&1 | jq -c .` always parses. Discover ids and file paths with `ovo logs ls`; `ovo logs ls --json` emits a machine-readable array with `id`, `path`, `startedAt`, and `sizeBytes`.
+
+`ovo logs --events` resolves session events (`session.started`, `turn.failed`, message deltas, …) from the local workflow store (`.ovo/.workflow-data`) at query time and interleaves them into the output by timestamp as `source: "event"` records — the log file itself never stores them, so nothing is duplicated at capture time. Selection is by the log's time window (its start through the next log's start), so events from concurrently running `ovo dev` processes may appear.
+
+Each log has a same-named `.dump` sibling holding environment diagnostics and session stats as one JSON document. `ovo logs --dump` (with or without a log id) prepends that document to the JSONL log body; the combined output is a valid JSON value stream (`ovo logs --dump | jq -c .`), one self-contained report to attach to an issue. When a log has no dump, the flag is silently a no-op.
+
+## `ovo link`
 
 ```bash
-eve deploy
+ovo link
 ```
 
-Deploys the agent to Vercel production (`vercel deploy --prod`), installing dependencies first and pulling environment variables after. An already-linked project deploys with or without a TTY (non-interactive runs pass the non-interactive `vercel` flags). An unlinked directory walks the `eve link` pickers when a terminal is present, and exits with guidance otherwise.
+Links the current directory to a Vercel project. After selecting a team, you can create a project named for the agent or link an existing project. The existing-project picker shows recent projects; type a project name and choose **Search for '<name>'** to search the rest of that team's projects. Vercel links the resolved project, ovo verifies its project ID, and then pulls the project's environment so an AI Gateway credential (`VERCEL_OIDC_TOKEN` or `AI_GATEWAY_API_KEY`) lands in `.env.local`. Running it again re-links: the pickers always run, and the new choice wins. The command is interactive only; in CI, use `vercel link --project <name> --yes --non-interactive` instead. A running `ovo dev` reloads env files automatically, so you don't need to restart after the pull.
 
-## `eve eval`
+## `ovo deploy`
 
 ```bash
-eve eval [evalId...] [--url <url>] [options]
+ovo deploy
 ```
 
-Runs all discovered evals when no eval ids are given; ids match exactly or by directory prefix (`eve eval weather` runs everything under `evals/weather/`). Exits `0` when every eval passed its checks, `1` when any eval failed (a failed check, an execution error, or a `--strict` threshold miss), `2` on configuration errors.
+Deploys the agent to Vercel production (`vercel deploy --prod`), installing dependencies first and pulling environment variables after. An already-linked project deploys with or without a TTY (non-interactive runs pass the non-interactive `vercel` flags). An unlinked directory walks the `ovo link` pickers when a terminal is present, and exits with guidance otherwise.
+
+## `ovo eval`
+
+```bash
+ovo eval [evalId...] [--url <url>] [options]
+```
+
+Runs all discovered evals when no eval ids are given; ids match exactly or by directory prefix (`ovo eval weather` runs everything under `evals/weather/`). Exits `0` when every eval passed its checks, `1` when any eval failed (a failed check, an execution error, or a `--strict` threshold miss), `2` on configuration errors.
 
 | Flag                    | Type   | Default | Description                                    |
 | ----------------------- | ------ | ------- | ---------------------------------------------- |
@@ -234,10 +234,10 @@ Runs all discovered evals when no eval ids are given; ids match exactly or by di
 
 See [Evals](../evals/overview) for authoring evals.
 
-## `eve channels add`
+## `ovo channels add`
 
 ```bash
-eve channels add [kind] [-f] [-y]
+ovo channels add [kind] [-f] [-y]
 ```
 
 Scaffolds a channel into `agent/channels/`. With no `kind` it prompts interactively; pass a `kind` (`slack` \| `web`) to scaffold one directly.
@@ -247,10 +247,10 @@ Scaffolds a channel into `agent/channels/`. With no `kind` it prompts interactiv
 | `-f, --force` | flag | off     | Overwrite existing channel files                          |
 | `-y, --yes`   | flag | off     | Assume yes for confirmations; requires an explicit `kind` |
 
-## `eve channels list`
+## `ovo channels list`
 
 ```bash
-eve channels list [--json]
+ovo channels list [--json]
 ```
 
 Lists the user-authored channels in the current project.
@@ -262,15 +262,15 @@ Lists the user-authored channels in the current project.
 ## Recommended loop
 
 1. Edit files under `agent/`.
-2. `eve info` to confirm discovery or read diagnostics.
-3. `eve dev` while iterating locally.
-4. `eve build` before shipping.
-5. `eve start` to smoke-test the built output locally.
+2. `ovo info` to confirm discovery or read diagnostics.
+3. `ovo dev` while iterating locally.
+4. `ovo build` before shipping.
+5. `ovo start` to smoke-test the built output locally.
 
 Related: [Project layout](./project-layout) · [instrumentation.ts](../guides/instrumentation).
 
 ## What to read next
 
-- [Project layout](./project-layout): what `eve info` discovers
+- [Project layout](./project-layout): what `ovo info` discovers
 - [instrumentation.ts](../guides/instrumentation): tracing and the error catalog
-- [Deployment](../guides/deployment/overview): `eve build` and `eve start` in production
+- [Deployment](../guides/deployment/overview): `ovo build` and `ovo start` in production

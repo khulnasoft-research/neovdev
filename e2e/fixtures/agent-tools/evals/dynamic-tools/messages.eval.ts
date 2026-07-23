@@ -1,5 +1,5 @@
-import { defineEval } from "eve/evals";
-import { satisfies } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { satisfies } from "ovo/evals/expect";
 
 // The step.started resolver sees the accumulated message history: the
 // second turn's count must exceed the first.

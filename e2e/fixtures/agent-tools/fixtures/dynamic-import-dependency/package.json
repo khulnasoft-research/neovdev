@@ -1,5 +1,5 @@
 {
-  "name": "@eve-e2e/dynamic-import-dependency",
+  "name": "@ovo-e2e/dynamic-import-dependency",
   "version": "0.0.0",
   "private": true,
   "type": "module",

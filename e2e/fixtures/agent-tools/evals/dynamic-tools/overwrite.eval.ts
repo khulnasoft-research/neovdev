@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // session.started and turn.started resolvers merge: the turn-scoped
 // `shared` wins over the session-scoped one, while `session_only`

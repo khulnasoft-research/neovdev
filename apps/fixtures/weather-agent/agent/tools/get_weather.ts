@@ -1,5 +1,5 @@
-import { defineTool } from "eve/tools";
-import { never } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { never } from "ovo/tools/approval";
 import { z } from "zod";
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));

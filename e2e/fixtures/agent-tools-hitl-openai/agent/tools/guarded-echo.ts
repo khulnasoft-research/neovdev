@@ -1,5 +1,5 @@
-import { defineTool } from "eve/tools";
-import { always } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { always } from "ovo/tools/approval";
 import { z } from "zod";
 
 export const GUARDED_ECHO_OPENAI_TOKEN = "guarded-echo-openai-ok-R2D7";

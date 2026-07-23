@@ -13,7 +13,7 @@ on:
       - "e2e/fixtures/agent-tools-sandbox/**"
       - "apps/fixtures/weather-agent/**"
       - "package.json"
-      - "packages/eve/**"
+      - "packages/ovo/**"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "scripts/init-install-report.mjs"
@@ -117,7 +117,7 @@ jobs:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          BASELINE_ROOT="$RUNNER_TEMP/eve-pr-base"
+          BASELINE_ROOT="$RUNNER_TEMP/ovo-pr-base"
           rm -rf "$BASELINE_ROOT"
           git worktree add --detach "$BASELINE_ROOT" "$BASE_SHA"
           echo "root=$BASELINE_ROOT" >> "$GITHUB_OUTPUT"
@@ -128,10 +128,10 @@ jobs:
         working-directory: ${{ steps.baseline.outputs.root }}
         run: pnpm install --frozen-lockfile
 
-      - name: Build eve package on pull request base
+      - name: Build ovo package on pull request base
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' && github.event_name == 'pull_request' }}
         working-directory: ${{ steps.baseline.outputs.root }}
-        run: pnpm --filter eve build
+        run: pnpm --filter ovo build
 
       - name: Resolve weather app on pull request base
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' && github.event_name == 'pull_request' }}
@@ -161,7 +161,7 @@ jobs:
           STEPS_BASELINE_WEATHER_APP_OUTPUTS_FILTER: ${{ steps.baseline_weather_app.outputs.filter }}
         run: >-
           VERCEL=1 pnpm --filter "${STEPS_BASELINE_WEATHER_APP_OUTPUTS_FILTER}" \
-            exec eve build --skip-sandbox-prewarm
+            exec ovo build --skip-sandbox-prewarm
 
       - name: Note skipped pull request base size analysis
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' && github.event_name == 'pull_request' && steps.baseline_build.outcome != 'success' }}
@@ -178,8 +178,8 @@ jobs:
           node ./scripts/nitro-bundle-report.mjs \
             --app "${STEPS_BASELINE_WEATHER_APP_OUTPUTS_PATH}" \
             --app-label apps/fixtures/weather-agent \
-            --package packages/eve \
-            --package-label packages/eve \
+            --package packages/ovo \
+            --package-label packages/ovo \
             --output-json "$BASELINE_REPORT_JSON"
 
       - name: Build sandbox benchmark on pull request base in Vercel mode
@@ -205,10 +205,10 @@ jobs:
             "${token_args[@]}"
 
           profile_args=()
-          if pnpm --filter agent-tools-sandbox exec eve build --help | grep -Fq -- "--profile"; then
+          if pnpm --filter agent-tools-sandbox exec ovo build --help | grep -Fq -- "--profile"; then
             profile_args=(--profile "$BASELINE_SANDBOX_BUILD_PROFILE")
           else
-            echo "Pull request base predates eve build --profile; build timing will report the current build only." >> "$GITHUB_STEP_SUMMARY"
+            echo "Pull request base predates ovo build --profile; build timing will report the current build only." >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Sandbox templates key on VERCEL_PROJECT_ID at build and runtime.
@@ -217,22 +217,22 @@ jobs:
             VERCEL_ENV=preview \
             VERCEL_TARGET_ENV=preview \
             VERCEL_PROJECT_ID="$VERCEL_PROJECT_ID" \
-            pnpm --filter agent-tools-sandbox exec eve build "${profile_args[@]}"
+            pnpm --filter agent-tools-sandbox exec ovo build "${profile_args[@]}"
 
       - name: Note skipped sandbox benchmark base
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' && github.event_name == 'pull_request' && steps.baseline_sandbox_build.outcome != 'success' }}
         run: |
           echo "Pull request base sandbox benchmark failed; build timing will run without a baseline comparison." >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Build eve package
+      - name: Build ovo package
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' }}
-        run: pnpm --filter eve build
+        run: pnpm --filter ovo build
 
       - name: Build weather-agent for size analysis
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' }}
         run: >-
           VERCEL=1 pnpm --filter weather-agent
-          exec eve build --skip-sandbox-prewarm
+          exec ovo build --skip-sandbox-prewarm
 
       - name: Build sandbox benchmark in Vercel mode
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' }}
@@ -259,7 +259,7 @@ jobs:
             VERCEL_ENV=preview \
             VERCEL_TARGET_ENV=preview \
             VERCEL_PROJECT_ID="$VERCEL_PROJECT_ID" \
-            pnpm --filter agent-tools-sandbox exec eve build --profile "$SANDBOX_BUILD_PROFILE"
+            pnpm --filter agent-tools-sandbox exec ovo build --profile "$SANDBOX_BUILD_PROFILE"
 
       - name: Generate bundle report
         if: ${{ steps.mode.outputs.acknowledge_only != 'true' }}
@@ -285,8 +285,8 @@ jobs:
           node ./scripts/nitro-bundle-report.mjs \
             --app apps/fixtures/weather-agent \
             --app-label apps/fixtures/weather-agent \
-            --package packages/eve \
-            --package-label packages/eve \
+            --package packages/ovo \
+            --package-label packages/ovo \
             "${report_args[@]}" \
             --output-json "$BUNDLE_REPORT_JSON" \
             --output-markdown "$BUNDLE_REPORT_MARKDOWN"
@@ -356,7 +356,7 @@ jobs:
           script: |
             const fs = require("node:fs");
 
-            const marker = "<!-- eve-weather-agent-bundle-analysis -->";
+            const marker = "<!-- ovo-weather-agent-bundle-analysis -->";
             const reportBody = fs.readFileSync(process.env.ANALYSIS_REPORT_MARKDOWN, "utf8").trim();
             const body = `${marker}\n${reportBody}`;
 

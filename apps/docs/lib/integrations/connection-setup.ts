@@ -38,8 +38,8 @@ const buildSnippet = (
   const transport = protocol === "mcp" ? spec.mcp : spec.openapi;
 
   const imports = [
-    ...(auth === "apiKey" ? [] : [`import { connect } from "@vercel/connect/eve";`]),
-    `import { ${defineFn} } from "eve/connections";`,
+    ...(auth === "apiKey" ? [] : [`import { connect } from "@vercel/connect/ovo";`]),
+    `import { ${defineFn} } from "ovo/connections";`,
   ];
 
   const fields: string[] = [];
@@ -96,7 +96,7 @@ const authNote = (auth: AuthMode): string => {
     return "Connect authenticates as the agent itself through one shared installation, with no per-user consent.";
   }
   if (auth === "apiKey") {
-    return "Keep the API key in a server-side environment variable. eve sends it directly to the MCP server and does not expose it to the model.";
+    return "Keep the API key in a server-side environment variable. ovo sends it directly to the MCP server and does not expose it to the model.";
   }
   return "Connect exchanges a JWT bearer assertion for a provider token. `principalToSubject` maps each principal to the subject your IdP expects.";
 };
@@ -149,7 +149,7 @@ export const buildConnectionInstall = (integration: Integration): string => {
       : "Connections live under `agent/connections/`. Install the framework:",
     ``,
     "```bash",
-    usesConnect ? "npm install eve@latest @vercel/connect" : "npm install eve@latest",
+    usesConnect ? "npm install ovo@latest @vercel/connect" : "npm install ovo@latest",
     "```",
   ].join("\n");
 };

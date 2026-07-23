@@ -8,7 +8,7 @@
       "env": ["VERCEL"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -28,7 +28,7 @@
         "**/*.d.ts",
         "tsconfig*.json",
         "package.json",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -46,7 +46,7 @@
       "cache": false,
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -60,7 +60,7 @@
       "cache": false,
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -74,7 +74,7 @@
       "cache": false,
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -88,7 +88,7 @@
       "cache": false,
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -102,7 +102,7 @@
       "cache": false,
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
@@ -126,7 +126,7 @@
         "**/*.jsx",
         "tsconfig*.json",
         "package.json",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",

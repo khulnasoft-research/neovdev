@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { METADATA_TOOL, PROMPT, startChannelSession } from "./shared";
 

@@ -1,4 +1,4 @@
-import { defineDynamic, defineTool } from "eve/tools";
+import { defineDynamic, defineTool } from "ovo/tools";
 
 export const OVERRIDE_TOKEN = "dynamic-override-ok-K2P7";
 

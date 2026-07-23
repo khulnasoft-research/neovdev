@@ -25,9 +25,9 @@
       "name": "public-definitions",
       "description": "Public definition requirements.",
       "paths": [
-        "packages/eve/src/public/{conceptName:matches(^[a-z]+$)}s/index.ts",
-        "!packages/eve/src/public/connections",
-        "!packages/eve/src/public/definitions"
+        "packages/ovo/src/public/{conceptName:matches(^[a-z]+$)}s/index.ts",
+        "!packages/ovo/src/public/connections",
+        "!packages/ovo/src/public/definitions"
       ],
       "must": [
         {
@@ -97,7 +97,7 @@
     {
       "name": "public-channel-barrels",
       "description": "Built-in public channel barrels re-export their channel factory and core channel types from the implementation module.",
-      "paths": "packages/eve/src/public/channels/{channelName}/index.ts",
+      "paths": "packages/ovo/src/public/channels/{channelName}/index.ts",
       "must": {
         "export": [
           {
@@ -125,9 +125,9 @@
       "name": "public-sandbox-backends",
       "description": "Public sandbox implementation barrels have matching backend implementation files.",
       "paths": [
-        "packages/eve/src/public/sandbox/{sandboxName}.ts",
-        "!packages/eve/src/public/sandbox/index.ts",
-        "!packages/eve/src/public/sandbox/*-sandbox.ts"
+        "packages/ovo/src/public/sandbox/{sandboxName}.ts",
+        "!packages/ovo/src/public/sandbox/index.ts",
+        "!packages/ovo/src/public/sandbox/*-sandbox.ts"
       ],
       "must": [
         {
@@ -186,8 +186,8 @@
       "name": "eval-loaders",
       "description": "Eval loaders must export their required symbols.",
       "paths": [
-        "packages/eve/src/evals/loaders/{loaderName}.ts",
-        "!packages/eve/src/evals/loaders/index.ts"
+        "packages/ovo/src/evals/loaders/{loaderName}.ts",
+        "!packages/ovo/src/evals/loaders/index.ts"
       ],
       "must": {
         "exportFunctions": [
@@ -202,8 +202,8 @@
       "name": "eval-reporters",
       "description": "Eval reporters must export their required symbols.",
       "paths": [
-        "packages/eve/src/evals/runner/reporters/{reporterName}.ts",
-        "!packages/eve/src/evals/runner/reporters/types.ts"
+        "packages/ovo/src/evals/runner/reporters/{reporterName}.ts",
+        "!packages/ovo/src/evals/runner/reporters/types.ts"
       ],
       "must": [
         {
@@ -287,7 +287,7 @@
         },
         {
           "name": "e2e-eval-config-imports",
-          "description": "E2E eval config files use the public eve/evals config helper.",
+          "description": "E2E eval config files use the public ovo/evals config helper.",
           "for": {
             "files": "evals/evals.config.ts"
           },
@@ -295,14 +295,14 @@
             "import": [
               {
                 "name": "defineEvalConfig",
-                "from": "eve/evals"
+                "from": "ovo/evals"
               }
             ]
           }
         },
         {
           "name": "e2e-eval-imports",
-          "description": "E2E eval files use the public eve/evals authoring helper.",
+          "description": "E2E eval files use the public ovo/evals authoring helper.",
           "for": {
             "files": "evals/**/*.eval.ts"
           },
@@ -310,7 +310,7 @@
             "import": [
               {
                 "name": "defineEval",
-                "from": "eve/evals"
+                "from": "ovo/evals"
               }
             ]
           }

@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { SECOND_CHECKPOINT_MARKER } from "../constants";
 

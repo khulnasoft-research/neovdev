@@ -1,5 +1,5 @@
-import { defineTool } from "eve/tools";
-import { once } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { once } from "ovo/tools/approval";
 import { z } from "zod";
 
 /**

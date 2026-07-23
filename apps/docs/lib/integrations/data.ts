@@ -5,13 +5,13 @@ import {
   connectionEntries,
   connectionProtocols as protocolsForIdentity,
   extensionEntries,
-} from "@vercel/eve-catalog";
+} from "@vercel/ovo-catalog";
 import type { LogoKey } from "./logos";
 
 /**
  * The docs integration gallery layers presentation (logo, keywords, setup
  * markdown, auth modes) on top of the shared identity catalog
- * (`@vercel/eve-catalog`). Identity — slug, name, kind, tagline, and a
+ * (`@vercel/ovo-catalog`). Identity — slug, name, kind, tagline, and a
  * connection's transport + model-facing description — comes from the catalog
  * and is never re-declared here; this module owns only the docs-facing overlay,
  * keyed by slug.
@@ -20,8 +20,8 @@ import type { LogoKey } from "./logos";
 export type IntegrationType = "channel" | "connection" | "extension";
 
 /** Wire protocol and transport identity types are owned by the shared catalog. */
-export type { ConnectionProtocol, McpTransport, OpenApiTransport } from "@vercel/eve-catalog";
-import type { ConnectionProtocol } from "@vercel/eve-catalog";
+export type { ConnectionProtocol, McpTransport, OpenApiTransport } from "@vercel/ovo-catalog";
+import type { ConnectionProtocol } from "@vercel/ovo-catalog";
 
 /**
  * How a connection authenticates. A mode uses either Vercel Connect (`user`,
@@ -124,23 +124,23 @@ const channelPresentations: Record<string, ChannelPresentation> = {
     logo: "slack",
     docsHref: "/docs/channels/slack",
     keywords: ["chat", "messaging", "bot", "webhook"],
-    install: `The eve CLI scaffolds the channel for you. \`eve channels add slack\` writes \`agent/channels/slack.ts\`, adds \`@vercel/connect\`, and runs the Connect setup flow:
+    install: `The ovo CLI scaffolds the channel for you. \`ovo channels add slack\` writes \`agent/channels/slack.ts\`, adds \`@vercel/connect\`, and runs the Connect setup flow:
 
 \`\`\`bash
-eve channels add slack
+ovo channels add slack
 \`\`\`
 
 To wire it up by hand instead, install the framework and the Connect SDK. Slack channels use [Vercel Connect](https://vercel.com/docs/connect) for both the outbound bot token and inbound webhook verification:
 
 \`\`\`bash
-npm install eve@latest @vercel/connect
+npm install ovo@latest @vercel/connect
 \`\`\``,
     quickStart: `Create \`agent/channels/slack.ts\`. The channel name is derived from the filename, so no \`name\` field is needed:
 
 \`\`\`ts
 // agent/channels/slack.ts
-import { slackChannel } from "eve/channels/slack";
-import { connectSlackCredentials } from "@vercel/connect/eve";
+import { slackChannel } from "ovo/channels/slack";
+import { connectSlackCredentials } from "@vercel/connect/ovo";
 
 export default slackChannel({
   credentials: connectSlackCredentials("slack/my-agent"),
@@ -153,7 +153,7 @@ Link the project and pull OIDC env vars so Connect can authenticate locally:
 vercel link
 vercel env pull
 \`\`\``,
-    configure: `Create a Slack Connect client and copy its UID (for example \`slack/my-agent\`), then attach this project as the webhook trigger destination at the route eve serves (\`/eve/v1/slack\`):
+    configure: `Create a Slack Connect client and copy its UID (for example \`slack/my-agent\`), then attach this project as the webhook trigger destination at the route ovo serves (\`/ovo/v1/slack\`):
 
 \`\`\`bash
 vercel connect create slack --triggers
@@ -168,20 +168,20 @@ The channel handles mentions, DMs, typing indicators, delivery, and human-in-the
     install: `Install the framework. The Discord channel ships with it:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
     quickStart: `Create \`agent/channels/discord.ts\`:
 
 \`\`\`ts
 // agent/channels/discord.ts
-import { discordChannel } from "eve/channels/discord";
+import { discordChannel } from "ovo/channels/discord";
 
 export default discordChannel({
   botToken: () => process.env.DISCORD_BOT_TOKEN!,
   publicKey: () => process.env.DISCORD_PUBLIC_KEY!,
 });
 \`\`\``,
-    configure: `Create a Discord application, add a bot, and set the interactions endpoint URL to the route eve serves (\`/eve/v1/discord\`). Provide the bot token and public key through environment variables. See the [Discord channel docs](/docs/channels/discord) for intents and slash-command setup.`,
+    configure: `Create a Discord application, add a bot, and set the interactions endpoint URL to the route ovo serves (\`/ovo/v1/discord\`). Provide the bot token and public key through environment variables. See the [Discord channel docs](/docs/channels/discord) for intents and slash-command setup.`,
   },
   teams: {
     logo: "teams",
@@ -190,20 +190,20 @@ export default discordChannel({
     install: `Install the framework:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
     quickStart: `Create \`agent/channels/teams.ts\`:
 
 \`\`\`ts
 // agent/channels/teams.ts
-import { teamsChannel } from "eve/channels/teams";
+import { teamsChannel } from "ovo/channels/teams";
 
 export default teamsChannel({
   appId: () => process.env.TEAMS_APP_ID!,
   appPassword: () => process.env.TEAMS_APP_PASSWORD!,
 });
 \`\`\``,
-    configure: `Register an Azure Bot, configure the messaging endpoint to eve's route (\`/eve/v1/teams\`), and supply the app ID and password via environment variables. See the [Teams channel docs](/docs/channels/teams) for the full provisioning checklist.`,
+    configure: `Register an Azure Bot, configure the messaging endpoint to ovo's route (\`/ovo/v1/teams\`), and supply the app ID and password via environment variables. See the [Teams channel docs](/docs/channels/teams) for the full provisioning checklist.`,
   },
   telegram: {
     logo: "telegram",
@@ -212,19 +212,19 @@ export default teamsChannel({
     install: `Install the framework:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
     quickStart: `Create \`agent/channels/telegram.ts\`:
 
 \`\`\`ts
 // agent/channels/telegram.ts
-import { telegramChannel } from "eve/channels/telegram";
+import { telegramChannel } from "ovo/channels/telegram";
 
 export default telegramChannel({
   botToken: () => process.env.TELEGRAM_BOT_TOKEN!,
 });
 \`\`\``,
-    configure: `Create a bot with [@BotFather](https://t.me/botfather), then register the webhook to point at eve's route (\`/eve/v1/telegram\`). Store the bot token in an environment variable. See the [Telegram channel docs](/docs/channels/telegram) for group privacy and command setup.`,
+    configure: `Create a bot with [@BotFather](https://t.me/botfather), then register the webhook to point at ovo's route (\`/ovo/v1/telegram\`). Store the bot token in an environment variable. See the [Telegram channel docs](/docs/channels/telegram) for group privacy and command setup.`,
   },
   twilio: {
     logo: "twilio",
@@ -233,13 +233,13 @@ export default telegramChannel({
     install: `Install the framework:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
     quickStart: `Create \`agent/channels/twilio.ts\`. \`allowFrom\` is required and gates who can reach the inbound hooks:
 
 \`\`\`ts
 // agent/channels/twilio.ts
-import { twilioChannel } from "eve/channels/twilio";
+import { twilioChannel } from "ovo/channels/twilio";
 
 export default twilioChannel({
   allowFrom: "+15551234567",
@@ -251,7 +251,7 @@ export default twilioChannel({
 TWILIO_ACCOUNT_SID=AC...   # required for default outbound SMS
 TWILIO_AUTH_TOKEN=...      # required for inbound signature verification
 \`\`\``,
-    configure: `In the Twilio console, point your number's Messaging webhook at \`/eve/v1/twilio/messages\` and its Voice webhook at \`/eve/v1/twilio/voice\`. Inbound calls are answered with speech gathering, and the transcript feeds the same session SMS uses. See the [Twilio channel docs](/docs/channels/twilio) for dispatch, streaming, and voice specifics.`,
+    configure: `In the Twilio console, point your number's Messaging webhook at \`/ovo/v1/twilio/messages\` and its Voice webhook at \`/ovo/v1/twilio/voice\`. Inbound calls are answered with speech gathering, and the transcript feeds the same session SMS uses. See the [Twilio channel docs](/docs/channels/twilio) for dispatch, streaming, and voice specifics.`,
   },
   github: {
     logo: "github",
@@ -260,13 +260,13 @@ TWILIO_AUTH_TOKEN=...      # required for inbound signature verification
     install: `Install the framework:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
     quickStart: `Create \`agent/channels/github.ts\`:
 
 \`\`\`ts
 // agent/channels/github.ts
-import { githubChannel } from "eve/channels/github";
+import { githubChannel } from "ovo/channels/github";
 
 export default githubChannel({
   appId: () => process.env.GITHUB_APP_ID!,
@@ -274,7 +274,7 @@ export default githubChannel({
   webhookSecret: () => process.env.GITHUB_WEBHOOK_SECRET!,
 });
 \`\`\``,
-    configure: `Create a GitHub App, subscribe to issue and pull-request events, and set the webhook URL to eve's route (\`/eve/v1/github\`). Provide the app ID, private key, and webhook secret through environment variables. See the [GitHub channel docs](/docs/channels/github) for required permissions.`,
+    configure: `Create a GitHub App, subscribe to issue and pull-request events, and set the webhook URL to ovo's route (\`/ovo/v1/github\`). Provide the app ID, private key, and webhook secret through environment variables. See the [GitHub channel docs](/docs/channels/github) for required permissions.`,
   },
   "linear-agent": {
     logo: "linear",
@@ -283,13 +283,13 @@ export default githubChannel({
     install: `Install the framework. The Linear channel ships with it:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
     quickStart: `Create \`agent/channels/linear.ts\`:
 
 \`\`\`ts
 // agent/channels/linear.ts
-import { linearChannel } from "eve/channels/linear";
+import { linearChannel } from "ovo/channels/linear";
 
 export default linearChannel({
   credentials: {
@@ -298,54 +298,54 @@ export default linearChannel({
   },
 });
 \`\`\``,
-    configure: `Create a Linear OAuth app with Agent Session events enabled, make the app assignable and mentionable, and point the webhook at eve's route (\`/eve/v1/linear\`). Provide the app access token and webhook secret through environment variables. See the [Linear channel docs](/docs/channels/linear) for scopes and Agent Activity behavior.`,
+    configure: `Create a Linear OAuth app with Agent Session events enabled, make the app assignable and mentionable, and point the webhook at ovo's route (\`/ovo/v1/linear\`). Provide the app access token and webhook secret through environment variables. See the [Linear channel docs](/docs/channels/linear) for scopes and Agent Activity behavior.`,
   },
-  eve: {
-    logo: "eve",
-    docsHref: "/docs/channels/eve",
+  ovo: {
+    logo: "ovo",
+    docsHref: "/docs/channels/ovo",
     keywords: ["web", "chat", "ui", "embed", "frontend"],
-    install: `The eve CLI scaffolds the full Next.js web chat app alongside \`agent/channels/eve.ts\`:
+    install: `The ovo CLI scaffolds the full Next.js web chat app alongside \`agent/channels/ovo.ts\`:
 
 \`\`\`bash
-eve channels add web
+ovo channels add web
 \`\`\`
 
 To wire it up by hand instead, install the framework:
 
 \`\`\`bash
-npm install eve@latest
+npm install ovo@latest
 \`\`\``,
-    quickStart: `The eve channel is on by default. Add \`agent/channels/eve.ts\` only when you want to override the default session routes or auth:
+    quickStart: `The ovo channel is on by default. Add \`agent/channels/ovo.ts\` only when you want to override the default session routes or auth:
 
 \`\`\`ts
-// agent/channels/eve.ts
-import { eveChannel } from "eve/channels/eve";
+// agent/channels/ovo.ts
+import { eveChannel } from "ovo/channels/ovo";
 
 export default eveChannel();
 \`\`\`
 
-Point your frontend at the session routes eve serves (\`/eve/v1/session\`) and stream responses with the eve web client.`,
-    configure: `The eve channel is the lowest-friction way to talk to your agent, with no third-party provisioning required. Layer in auth and route protection as needed. See the [eve channel docs](/docs/channels/eve) and the [Frontend guide](/docs/guides/frontend/overview).`,
+Point your frontend at the session routes ovo serves (\`/ovo/v1/session\`) and stream responses with the ovo web client.`,
+    configure: `The ovo channel is the lowest-friction way to talk to your agent, with no third-party provisioning required. Layer in auth and route protection as needed. See the [ovo channel docs](/docs/channels/ovo) and the [Frontend guide](/docs/guides/frontend/overview).`,
   },
   "chat-sdk-gchat": {
     logo: "googlechat",
     docsHref: "/docs/channels/chat-sdk",
     badge: "Chat SDK",
     keywords: ["chat sdk", "google chat", "spaces", "bot"],
-    install: `Install eve, the Chat SDK core (\`chat\`), the Google Chat adapter, and a state adapter:
+    install: `Install ovo, the Chat SDK core (\`chat\`), the Google Chat adapter, and a state adapter:
 
 \`\`\`bash
-npm install eve@latest chat @chat-adapter/gchat @chat-adapter/state-memory
+npm install ovo@latest chat @chat-adapter/gchat @chat-adapter/state-memory
 \`\`\`
 
 The in-memory state store is fine for local development; use a durable state adapter (Redis, PostgreSQL) in production so thread subscriptions survive restarts.`,
-    quickStart: `Create \`agent/channels/gchat.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to eve, and export the channel:
+    quickStart: `Create \`agent/channels/gchat.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to ovo, and export the channel:
 
 \`\`\`ts
 // agent/channels/gchat.ts
 import { createGoogleChatAdapter } from "@chat-adapter/gchat";
 import { createMemoryState } from "@chat-adapter/state-memory";
-import { chatSdkChannel } from "eve/channels/chat-sdk";
+import { chatSdkChannel } from "ovo/channels/chat-sdk";
 
 export const { bot, channel, send } = chatSdkChannel({
   userName: "My Agent",
@@ -366,27 +366,27 @@ export default channel;
 \`\`\`
 
 Credentials come from the \`createGoogleChatAdapter\` config or the adapter's environment variables; see the [Google Chat adapter docs](https://chat-sdk.dev/adapters/official/gchat).`,
-    configure: `The adapter mounts its webhook at \`/eve/v1/gchat\`. Point your Google Chat app's HTTP endpoint at it. The adapter owns provider auth, verification, and delivery, while eve owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
+    configure: `The adapter mounts its webhook at \`/ovo/v1/gchat\`. Point your Google Chat app's HTTP endpoint at it. The adapter owns provider auth, verification, and delivery, while ovo owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
   },
   "chat-sdk-whatsapp": {
     logo: "whatsapp",
     docsHref: "/docs/channels/chat-sdk",
     badge: "Chat SDK",
     keywords: ["chat sdk", "whatsapp", "business cloud", "messaging"],
-    install: `Install eve, the Chat SDK core (\`chat\`), the WhatsApp adapter, and a state adapter:
+    install: `Install ovo, the Chat SDK core (\`chat\`), the WhatsApp adapter, and a state adapter:
 
 \`\`\`bash
-npm install eve@latest chat @chat-adapter/whatsapp @chat-adapter/state-memory
+npm install ovo@latest chat @chat-adapter/whatsapp @chat-adapter/state-memory
 \`\`\`
 
 The in-memory state store is fine for local development; use a durable state adapter (Redis, PostgreSQL) in production so thread subscriptions survive restarts.`,
-    quickStart: `Create \`agent/channels/whatsapp.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to eve, and export the channel:
+    quickStart: `Create \`agent/channels/whatsapp.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to ovo, and export the channel:
 
 \`\`\`ts
 // agent/channels/whatsapp.ts
 import { createWhatsAppAdapter } from "@chat-adapter/whatsapp";
 import { createMemoryState } from "@chat-adapter/state-memory";
-import { chatSdkChannel } from "eve/channels/chat-sdk";
+import { chatSdkChannel } from "ovo/channels/chat-sdk";
 
 export const { bot, channel, send } = chatSdkChannel({
   userName: "My Agent",
@@ -407,27 +407,27 @@ export default channel;
 \`\`\`
 
 Credentials come from the \`createWhatsAppAdapter\` config or the adapter's environment variables; see the [WhatsApp adapter docs](https://chat-sdk.dev/adapters/official/whatsapp).`,
-    configure: `The adapter mounts its webhook at \`/eve/v1/whatsapp\`. Point your WhatsApp Business Cloud webhook at it. The adapter owns provider auth, verification, and delivery, while eve owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
+    configure: `The adapter mounts its webhook at \`/ovo/v1/whatsapp\`. Point your WhatsApp Business Cloud webhook at it. The adapter owns provider auth, verification, and delivery, while ovo owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
   },
   "chat-sdk-x": {
     logo: "x",
     docsHref: "/docs/channels/chat-sdk",
     badge: "Chat SDK",
     keywords: ["chat sdk", "x", "twitter", "mentions", "dms"],
-    install: `Install eve, the Chat SDK core (\`chat\`), the X adapter, and a state adapter:
+    install: `Install ovo, the Chat SDK core (\`chat\`), the X adapter, and a state adapter:
 
 \`\`\`bash
-npm install eve@latest chat @chat-adapter/x @chat-adapter/state-memory
+npm install ovo@latest chat @chat-adapter/x @chat-adapter/state-memory
 \`\`\`
 
 The in-memory state store is fine for local development; use a durable state adapter (Redis, PostgreSQL) in production so thread subscriptions survive restarts.`,
-    quickStart: `Create \`agent/channels/x.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to eve, and export the channel:
+    quickStart: `Create \`agent/channels/x.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to ovo, and export the channel:
 
 \`\`\`ts
 // agent/channels/x.ts
 import { createXAdapter } from "@chat-adapter/x";
 import { createMemoryState } from "@chat-adapter/state-memory";
-import { chatSdkChannel } from "eve/channels/chat-sdk";
+import { chatSdkChannel } from "ovo/channels/chat-sdk";
 
 export const { bot, channel, send } = chatSdkChannel({
   userName: "My Agent",
@@ -448,27 +448,27 @@ export default channel;
 \`\`\`
 
 Credentials come from the \`createXAdapter\` config or the adapter's environment variables; see the [X adapter docs](https://chat-sdk.dev/adapters/official/x).`,
-    configure: `The adapter mounts its webhook at \`/eve/v1/x\`. Point your X account activity webhook at it. The adapter owns provider auth, verification, and delivery, while eve owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
+    configure: `The adapter mounts its webhook at \`/ovo/v1/x\`. Point your X account activity webhook at it. The adapter owns provider auth, verification, and delivery, while ovo owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
   },
   "chat-sdk-messenger": {
     logo: "messenger",
     docsHref: "/docs/channels/chat-sdk",
     badge: "Chat SDK",
     keywords: ["chat sdk", "messenger", "facebook", "bot"],
-    install: `Install eve, the Chat SDK core (\`chat\`), the Messenger adapter, and a state adapter:
+    install: `Install ovo, the Chat SDK core (\`chat\`), the Messenger adapter, and a state adapter:
 
 \`\`\`bash
-npm install eve@latest chat @chat-adapter/messenger @chat-adapter/state-memory
+npm install ovo@latest chat @chat-adapter/messenger @chat-adapter/state-memory
 \`\`\`
 
 The in-memory state store is fine for local development; use a durable state adapter (Redis, PostgreSQL) in production so thread subscriptions survive restarts.`,
-    quickStart: `Create \`agent/channels/messenger.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to eve, and export the channel:
+    quickStart: `Create \`agent/channels/messenger.ts\`. Register Chat SDK handlers on \`bot\`, call \`send\` to hand each turn to ovo, and export the channel:
 
 \`\`\`ts
 // agent/channels/messenger.ts
 import { createMessengerAdapter } from "@chat-adapter/messenger";
 import { createMemoryState } from "@chat-adapter/state-memory";
-import { chatSdkChannel } from "eve/channels/chat-sdk";
+import { chatSdkChannel } from "ovo/channels/chat-sdk";
 
 export const { bot, channel, send } = chatSdkChannel({
   userName: "My Agent",
@@ -489,7 +489,7 @@ export default channel;
 \`\`\`
 
 Credentials come from the \`createMessengerAdapter\` config or the adapter's environment variables; see the [Messenger adapter docs](https://chat-sdk.dev/adapters/official/messenger).`,
-    configure: `The adapter mounts its webhook at \`/eve/v1/messenger\`. Point your Messenger webhook at it. The adapter owns provider auth, verification, and delivery, while eve owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
+    configure: `The adapter mounts its webhook at \`/ovo/v1/messenger\`. Point your Messenger webhook at it. The adapter owns provider auth, verification, and delivery, while ovo owns session dispatch, streaming, typing, and human-in-the-loop. See the [Chat SDK channel docs](/docs/channels/chat-sdk) for routes, streaming, and state options.`,
   },
 };
 
@@ -497,7 +497,7 @@ const extensionPresentations: Record<string, ExtensionPresentation> = {
   "agent-browser": {
     logo: "agent-browser",
     docsHref:
-      "https://github.com/vercel-labs/agent-browser/tree/main/packages/%40agent-browser/eve",
+      "https://github.com/vercel-labs/agent-browser/tree/main/packages/%40agent-browser/ovo",
     keywords: [
       "browser",
       "browser automation",
@@ -510,26 +510,26 @@ const extensionPresentations: Record<string, ExtensionPresentation> = {
       "browserbase",
       "browser use",
     ],
-    install: `Install the agent-browser extension for eve:
+    install: `Install the agent-browser extension for ovo:
 
 \`\`\`bash
-npm install @agent-browser/eve
+npm install @agent-browser/ovo
 \`\`\`
 
 The extension installs agent-browser automatically on first use and runs it inside the agent's sandbox. It requires a sandbox backend with real process execution, such as Vercel Sandbox, Docker, or microsandbox.`,
     quickStart: `Mount the extension under \`agent/extensions/\`:
 
 \`\`\`ts title="agent/extensions/browser.ts"
-import browser from "@agent-browser/eve";
+import browser from "@agent-browser/ovo";
 
 export default browser({});
 \`\`\`
 
-The filename supplies the \`browser\` namespace. The extension adds tools such as \`browser__navigate\`, \`browser__snapshot\`, \`browser__click\`, \`browser__fill\`, \`browser__find\`, and \`browser__screenshot\`. agent-browser keeps the underlying browser process and session state in the eve sandbox.`,
+The filename supplies the \`browser\` namespace. The extension adds tools such as \`browser__navigate\`, \`browser__snapshot\`, \`browser__click\`, \`browser__fill\`, \`browser__find\`, and \`browser__screenshot\`. agent-browser keeps the underlying browser process and session state in the ovo sandbox.`,
     configure: `Restrict browser access to the sites the agent needs with the extension's domain allow-list:
 
 \`\`\`ts title="agent/extensions/browser.ts"
-import browser from "@agent-browser/eve";
+import browser from "@agent-browser/ovo";
 
 export default browser({
   allowedDomains: ["example.com", "*.example.com"],
@@ -540,13 +540,13 @@ export default browser({
 
 Also configure the [sandbox network policy](/docs/sandbox#network-policy) for defense in depth. Treat saved browser state, cookies, screenshots, downloads, and recordings as sensitive data. Do not place passwords or session tokens in prompts. Use the extension's per-tool overrides to gate or disable actions your agent should not take unattended.
 
-The extension also supports inline screenshots, session naming, proxies, and production pre-installation. See the [agent-browser eve extension documentation](https://github.com/vercel-labs/agent-browser/tree/main/packages/%40agent-browser/eve) for the complete options and example app.`,
+The extension also supports inline screenshots, session naming, proxies, and production pre-installation. See the [agent-browser ovo extension documentation](https://github.com/vercel-labs/agent-browser/tree/main/packages/%40agent-browser/ovo) for the complete options and example app.`,
   },
 };
 
 /**
  * Connection presentation overlay, keyed by catalog slug. Transport (`mcp`,
- * `openapi`) and the model-facing description come from `@vercel/eve-catalog`;
+ * `openapi`) and the model-facing description come from `@vercel/ovo-catalog`;
  * this carries the docs-only auth modes, optional connector UID, and configure
  * note.
  */

@@ -1,4 +1,4 @@
-import { defineOpenAPIConnection } from "eve/connections";
+import { defineOpenAPIConnection } from "ovo/connections";
 
 export default defineOpenAPIConnection({
   spec: "https://api.tfl.gov.uk/swagger/docs/v1",

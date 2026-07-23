@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const DYNAMIC_INSTRUCTIONS_TOKEN = "dynamic-instructions-ok-M3K8";
 

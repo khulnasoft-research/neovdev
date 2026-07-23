@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 /**
  * A freeform answer can resolve an ask_question request before the user clicks

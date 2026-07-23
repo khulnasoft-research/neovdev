@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 /**
  * A marked turn selects an explicit reference to `EVE_E2E_MODEL`; the next

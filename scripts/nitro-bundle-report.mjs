@@ -911,7 +911,7 @@ function renderInitDependencyManifestDelta(initInstallComparison, baselineLabel)
 
   const lines = [
     "<details>",
-    `<summary><code>eve init</code> dependency changes vs <code>${escapeHtml(baselineLabel)}</code></summary>`,
+    `<summary><code>ovo init</code> dependency changes vs <code>${escapeHtml(baselineLabel)}</code></summary>`,
     "",
   ];
 
@@ -1195,7 +1195,7 @@ function renderPublishedPackageSection(publishedPackage) {
 function renderInitInstallSummarySection(report) {
   if (report.comparison?.initInstall) {
     const comparison = report.comparison.initInstall;
-    const lines = ["### `eve init` install", ""];
+    const lines = ["### `ovo init` install", ""];
 
     if (comparison.status !== "present") {
       lines.push(
@@ -1245,7 +1245,7 @@ function renderInitInstallSummarySection(report) {
     return [];
   }
 
-  const lines = ["### `eve init` install", ""];
+  const lines = ["### `ovo init` install", ""];
   lines.push("| Metric | Value |");
   lines.push("| --- | --- |");
   lines.push(`| Installed footprint | ${formatBytes(report.initInstall.installedSizeBytes)} |`);
@@ -1284,9 +1284,9 @@ function renderInitDependencyTable(title, dependencies, totalBytes) {
 }
 
 function renderInitInstallSection(initInstall) {
-  const lines = ["<details>", "<summary><code>eve init</code> install drill-down</summary>", ""];
-  lines.push("### `eve init` install details", "");
-  lines.push(`- Command: \`eve init ${initInstall.projectName}\``);
+  const lines = ["<details>", "<summary><code>ovo init</code> install drill-down</summary>", ""];
+  lines.push("### `ovo init` install details", "");
+  lines.push(`- Command: \`ovo init ${initInstall.projectName}\``);
   lines.push(`- Package manager: \`${initInstall.packageManager}\``);
   lines.push(
     `- Installed footprint: ${formatBytes(initInstall.installedSizeBytes)} across ${initInstall.installedFileCount} installed file${initInstall.installedFileCount === 1 ? "" : "s"}`,
@@ -1305,7 +1305,7 @@ function renderInitInstallSection(initInstall) {
   );
   lines.push(
     "",
-    "_Installed footprint is measured from an isolated temporary `eve init my-agent` using the current packed eve tarball._",
+    "_Installed footprint is measured from an isolated temporary `ovo init my-agent` using the current packed ovo tarball._",
     "",
   );
 
@@ -1507,8 +1507,8 @@ async function collectPackageReports(options) {
   }
 
   const packageRoot = resolve(options.packageRoot);
-  const packDirectory = await mkdtemp(join(tmpdir(), "eve-package-pack-"));
-  const installDirectory = await mkdtemp(join(tmpdir(), "eve-package-install-"));
+  const packDirectory = await mkdtemp(join(tmpdir(), "ovo-package-pack-"));
+  const installDirectory = await mkdtemp(join(tmpdir(), "ovo-package-install-"));
 
   try {
     const packResult = await runPack(packageRoot, packDirectory);

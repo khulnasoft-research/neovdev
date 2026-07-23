@@ -3,12 +3,12 @@ title: "Session Context"
 description: "Runtime helpers: ctx.session, ctx.getSandbox, ctx.getSkill, and defineState."
 ---
 
-eve exposes runtime state through the `ctx` parameter passed to tool `execute`, hook handlers, channel event handlers, and connection auth/header resolvers:
+ovo exposes runtime state through the `ctx` parameter passed to tool `execute`, hook handlers, channel event handlers, and connection auth/header resolvers:
 
 - `ctx.session`: session metadata, turn, auth, and parent lineage
 - `ctx.getSandbox()`: live sandbox handle for the current agent
 - `ctx.getSkill(identifier)`: handle for a named skill visible to the current agent
-- `defineState(name, initial)`: typed durable state with `get()` and `update()` (imported from `eve/context`)
+- `defineState(name, initial)`: typed durable state with `get()` and `update()` (imported from `ovo/context`)
 
 These APIs work only inside active authored runtime execution, including tools, channel event handlers, and authored hooks. They throw when called outside a managed context.
 
@@ -17,7 +17,7 @@ These APIs work only inside active authored runtime execution, including tools, 
 `ctx.session` exposes durable runtime metadata about the current execution.
 
 ```ts title="agent/tools/who_called_me.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export default defineTool({
@@ -51,7 +51,7 @@ Behavior:
 - `auth.current` is the caller for the active inbound turn.
 - `auth.initiator` is the caller that started the durable session.
 - Unprotected agents expose both as `null`.
-- Top-level schedule sessions expose the framework app principal (`principalId: "eve:app"`, `principalType: "runtime"`).
+- Top-level schedule sessions expose the framework app principal (`principalId: "ovo:app"`, `principalType: "runtime"`).
 - `parent` is present for child subagent sessions and includes the parent `callId`, `sessionId`, `rootSessionId`, and `turn`.
 
 ## `ctx.getSandbox()`
@@ -66,7 +66,7 @@ const result = await sandbox.run({ command: "npm test" });
 Behavior:
 
 - It takes no arguments. Each agent has exactly one sandbox.
-- It is async because eve binds or restores sandbox state lazily.
+- It is async because ovo binds or restores sandbox state lazily.
 - It only works when sandbox access is attached to the active runtime path.
 - Visibility is node-local. A subagent sees its own sandbox, not the parent's.
 
@@ -99,7 +99,7 @@ See [Skills](../skills) for the full authoring model.
 Use `defineState` when your agent needs durable typed state that tools, hooks, and channel handlers can share. State survives workflow step boundaries. Declare the handle at module scope so every importer shares it:
 
 ```ts title="agent/lib/budget.ts"
-import { defineState } from "eve/context";
+import { defineState } from "ovo/context";
 
 interface BudgetState {
   readonly count: number;
@@ -120,7 +120,7 @@ Safe places:
 
 - inside `defineTool(...).execute(input, ctx)`
 - inside connection `auth: (ctx) => provider` and `headers: (ctx) => values` resolvers
-- inside authored callbacks eve runs inside the runtime
+- inside authored callbacks ovo runs inside the runtime
 - after asynchronous boundaries inside the same authored execution chain
 
 Unsafe places:
@@ -129,7 +129,7 @@ Unsafe places:
 - build scripts
 - discovery-time code paths
 
-If you call them outside an active eve runtime context, they throw immediately with a message explaining the required scope.
+If you call them outside an active ovo runtime context, they throw immediately with a message explaining the required scope.
 
 ## How it works
 

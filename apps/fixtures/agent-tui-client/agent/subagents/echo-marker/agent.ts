@@ -1,4 +1,4 @@
-import { defineAgent } from "eve";
+import { defineAgent } from "ovo";
 
 /**
  * Smoke-test fixture: a leaf subagent whose only purpose is to emit a

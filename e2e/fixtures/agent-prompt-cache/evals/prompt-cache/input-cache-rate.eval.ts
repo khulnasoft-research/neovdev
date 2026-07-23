@@ -1,5 +1,5 @@
-import { defineEval } from "eve/evals";
-import { satisfies } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { satisfies } from "ovo/evals/expect";
 
 /**
  * Proves the harness's Anthropic cache breakpoints keep a regular
@@ -18,7 +18,7 @@ import { satisfies } from "eve/evals/expect";
  * above 99%. When the final breakpoint lags one message (the regression this
  * eval guards against), every tool result is billed uncached once before it
  * enters the cache, and the rate collapses to roughly 45–60% — see
- * `packages/eve/src/harness/prompt-cache-accounting.test.ts` for the
+ * `packages/ovo/src/harness/prompt-cache-accounting.test.ts` for the
  * trace-level accounting.
  */
 export default defineEval({

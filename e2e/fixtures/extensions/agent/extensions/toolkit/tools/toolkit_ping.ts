@@ -1,4 +1,4 @@
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 // Co-located override: shadows the extension's own same-named toolkit_ping.

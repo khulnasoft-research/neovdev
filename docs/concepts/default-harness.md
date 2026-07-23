@@ -1,13 +1,13 @@
 ---
 title: "The Harness"
-description: "How eve manages model context and built-in tools during an agent turn."
+description: "How ovo manages model context and built-in tools during an agent turn."
 ---
 
-The default harness is eve's built-in agent loop. It manages model calls, compaction, and tool execution. You can extend it with capabilities specific to your agent. To see how turns checkpoint and resume, read [Execution model and durability](./execution-model-and-durability).
+The default harness is ovo's built-in agent loop. It manages model calls, compaction, and tool execution. You can extend it with capabilities specific to your agent. To see how turns checkpoint and resume, read [Execution model and durability](./execution-model-and-durability).
 
 ## Compaction
 
-The harness keeps a long session from overflowing the model's context window. Before comparing the conversation with `thresholdPercent` (`0.9` by default), it adds the estimated fixed envelope of the checkpoint prompt used for compaction. It then summarizes the older turns and keeps going. The prompt asks the compaction model to distinguish completed progress and decisions from remaining work and to retain the constraints, preferences, data, and references needed to continue. When eve compacts again, it passes the previous checkpoint separately and without the transcript's per-message truncation, then replaces it with the updated checkpoint. The summary uses the active turn model unless you override it. Tune when and how it kicks in under [`compaction`](../agent-config#compaction) in `agent.ts`:
+The harness keeps a long session from overflowing the model's context window. Before comparing the conversation with `thresholdPercent` (`0.9` by default), it adds the estimated fixed envelope of the checkpoint prompt used for compaction. It then summarizes the older turns and keeps going. The prompt asks the compaction model to distinguish completed progress and decisions from remaining work and to retain the constraints, preferences, data, and references needed to continue. When ovo compacts again, it passes the previous checkpoint separately and without the transcript's per-message truncation, then replaces it with the updated checkpoint. The summary uses the active turn model unless you override it. Tune when and how it kicks in under [`compaction`](../agent-config#compaction) in `agent.ts`:
 
 ```ts title="agent/agent.ts"
 export default defineAgent({
@@ -55,8 +55,8 @@ Review these built-in tools before production use. Disable, wrap, restrict, or r
 Author a tool at the same slug and it takes over the built-in of that name. The file `agent/tools/write_file.ts` replaces the built-in `write_file` by existing:
 
 ```ts title="agent/tools/write_file.ts"
-import { defineTool } from "eve/tools";
-import { writeFile } from "eve/tools/defaults";
+import { defineTool } from "ovo/tools";
+import { writeFile } from "ovo/tools/defaults";
 
 export default defineTool({
   ...writeFile, // keep the default description, schema, and executor
@@ -67,14 +67,14 @@ export default defineTool({
 });
 ```
 
-The framework defaults are importable from `eve/tools/defaults` (`bash`, `readFile`, `writeFile`, `glob`, `grep`, `webFetch`, `webSearch`, `todo`, `loadSkill`), so you can spread, wrap, or patch them. Skip the spread and your replacement owns its own context. A fresh `defineTool` for `todo` won't inherit the framework's durable state key.
+The framework defaults are importable from `ovo/tools/defaults` (`bash`, `readFile`, `writeFile`, `glob`, `grep`, `webFetch`, `webSearch`, `todo`, `loadSkill`), so you can spread, wrap, or patch them. Skip the spread and your replacement owns its own context. A fresh `defineTool` for `todo` won't inherit the framework's durable state key.
 
 ## Disable a default
 
 Export a `disableTool()` sentinel from a file named after the tool's slug. The filename is what picks the default to remove:
 
 ```ts title="agent/tools/bash.ts"
-import { disableTool } from "eve/tools";
+import { disableTool } from "ovo/tools";
 
 export default disableTool();
 ```
@@ -87,7 +87,7 @@ If the filename matches no known framework tool, resolution fails instead of sil
 
 Three moves shape the harness. The right one depends on whether the model should keep the built-in capability.
 
-- **Override** when you want the same capability with different behavior. Spread the default from `eve/tools/defaults` and wrap it (logging, an extra guard, a different backend), and the model still sees a tool by that name. Spreading keeps the default's description, schema, and any framework state, such as the `todo` tool's durable state key. Drop the spread and your replacement owns its own context, losing that wiring.
+- **Override** when you want the same capability with different behavior. Spread the default from `ovo/tools/defaults` and wrap it (logging, an extra guard, a different backend), and the model still sees a tool by that name. Spreading keeps the default's description, schema, and any framework state, such as the `todo` tool's durable state key. Drop the spread and your replacement owns its own context, losing that wiring.
 - **Disable** when the model should not have the capability at all. A `disableTool()` sentinel removes the built-in, and the model never sees it. Reach for this to lock down `bash` or `web_fetch` in an agent that should not run shell commands or fetch arbitrary URLs.
 - **Author a new tool** when you want a capability the harness does not ship. Give it a fresh slug under `agent/tools/` and it joins the built-ins instead of replacing one. See [Tools](../tools) for the authoring model.
 
@@ -96,7 +96,7 @@ Three moves shape the harness. The right one depends on whether the model should
 An experimental `Workflow` tool ships but stays off by default. To turn it on, export its definition from `agent/tools/workflow.ts`:
 
 ```ts
-import { experimental_workflow } from "eve/tools";
+import { experimental_workflow } from "ovo/tools";
 
 export default experimental_workflow({ maxSubagents: 100 });
 ```

@@ -47,7 +47,7 @@ export const integrationMarkdown = (integration: Integration): string => {
     : (integration.configure ?? "");
 
   return [
-    `${typeLabel[integration.type]} integration for eve. ${integration.tagline}`,
+    `${typeLabel[integration.type]} integration for ovo. ${integration.tagline}`,
     section("Install", install),
     section("Quick start", quickStart),
     section("Configure", configure),
@@ -58,7 +58,7 @@ export const integrationMarkdown = (integration: Integration): string => {
 /** Markdown landing page for agent-readable integration discovery. */
 export const integrationsIndexMarkdown = (): string =>
   [
-    "Browse every third-party service eve connects to, including extensions, messaging channels, and tool connections over MCP or OpenAPI.",
+    "Browse every third-party service ovo connects to, including extensions, messaging channels, and tool connections over MCP or OpenAPI.",
     ...integrations.map(
       (integration) =>
         `- [${integration.name}](/integrations/${integration.slug}): ${integration.tagline}`,

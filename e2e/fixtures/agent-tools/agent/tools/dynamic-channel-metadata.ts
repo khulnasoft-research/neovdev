@@ -1,5 +1,5 @@
-import { isChannel } from "eve/channels";
-import { defineDynamic, defineTool } from "eve/tools";
+import { isChannel } from "ovo/channels";
+import { defineDynamic, defineTool } from "ovo/tools";
 import { z } from "zod";
 import metadataProvider from "../channels/metadata-provider";
 

@@ -1,8 +1,8 @@
-import { defineState } from "eve/context";
-import { defineTool } from "eve/tools";
+import { defineState } from "ovo/context";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
-// Same bare "budget" name as toolkit-extension; eve scopes each per package so
+// Same bare "budget" name as toolkit-extension; ovo scopes each per package so
 // the counters stay independent.
 const budget = defineState("budget", () => ({ count: 0 }));
 

@@ -15,9 +15,9 @@ const config: NextConfig = {
   },
 
   // The integrations gallery sources identity from the workspace package
-  // `@vercel/eve-catalog`; transpile it from source so dev and build compile
+  // `@vercel/ovo-catalog`; transpile it from source so dev and build compile
   // its TypeScript without a separate prebuild step.
-  transpilePackages: ["@vercel/eve-catalog"],
+  transpilePackages: ["@vercel/ovo-catalog"],
 
   experimental: {
     turbopackFileSystemCacheForDev: true,
@@ -47,7 +47,7 @@ const config: NextConfig = {
     return [
       {
         source: "/sitemap.xml",
-        destination: "https://crawled-sitemap.vercel.sh/eve.dev-.xml",
+        destination: "https://crawled-sitemap.vercel.sh/ovo.dev-.xml",
       },
     ];
   },

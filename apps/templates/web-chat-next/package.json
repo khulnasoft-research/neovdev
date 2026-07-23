@@ -4,11 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "build:eve": "eve build",
+    "build:ovo": "ovo build",
     "dev": "next dev",
-    "dev:eve": "eve dev",
+    "dev:ovo": "ovo dev",
     "start": "next start",
-    "start:eve": "eve start",
+    "start:ovo": "ovo start",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
@@ -25,11 +25,11 @@
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
-    "eve": "workspace:*",
     "lucide-react": "1.16.0",
     "motion": "12.40.0",
     "nanoid": "5.1.11",
     "next": "catalog:",
+    "ovo": "workspace:*",
     "radix-ui": "1.4.3",
     "react": "catalog:",
     "react-dom": "catalog:",

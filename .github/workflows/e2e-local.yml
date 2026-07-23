@@ -36,7 +36,7 @@ jobs:
           fi
           # HEAD is the PR merge commit; HEAD^1 is the base branch tip, so
           # this diff is exactly the PR's changed files.
-          if git diff --name-only HEAD^1 HEAD | grep -qE '^(packages/eve/|apps/fixtures/|e2e/|pnpm-workspace\.yaml$|pnpm-lock\.yaml$|\.github/workflows/e2e-local\.yml$|\.github/scripts/discover-e2e-fixtures\.sh$)'; then
+          if git diff --name-only HEAD^1 HEAD | grep -qE '^(packages/ovo/|apps/fixtures/|e2e/|pnpm-workspace\.yaml$|pnpm-lock\.yaml$|\.github/workflows/e2e-local\.yml$|\.github/scripts/discover-e2e-fixtures\.sh$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -101,11 +101,11 @@ jobs:
         if: needs.changes.outputs.relevant == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Build eve package
+      - name: Build ovo package
         if: needs.changes.outputs.relevant == 'true'
         # Full build, not build:js: the deployed/runtime bundles must carry the
         # stamped package version (scripts/stamp-version-tokens.mjs) and docs.
-        run: pnpm --filter eve run build
+        run: pnpm --filter ovo run build
 
       - name: Build extension fixtures
         if: needs.changes.outputs.relevant == 'true'
@@ -132,7 +132,7 @@ jobs:
         run: |
           mkdir -p "$EVE_EVAL_JUNIT_DIR"
           cd "${{ matrix.fixture.dir }}"
-          pnpm exec eve eval --strict --verbose \
+          pnpm exec ovo eval --strict --verbose \
             --junit "$EVE_EVAL_JUNIT_DIR/${{ matrix.fixture.name }}-${{ matrix.model.name }}.xml"
 
       - name: Upload eval artifacts
@@ -142,8 +142,8 @@ jobs:
           name: eval-artifacts-${{ matrix.fixture.name }}-${{ matrix.model.name }}
           path: |
             .junit
-            e2e/fixtures/*/.eve/evals
-            apps/fixtures/*/.eve/evals
+            e2e/fixtures/*/.ovo/evals
+            apps/fixtures/*/.ovo/evals
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7

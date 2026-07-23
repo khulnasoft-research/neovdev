@@ -3,13 +3,13 @@ title: "Multi-tenant memory"
 description: "Compose dynamic instructions, authenticated session context, and ordinary tools into tenant-scoped long-term memory."
 ---
 
-eve does not have a tenant-aware memory subsystem. You can build one today by composing three existing primitives:
+ovo does not have a tenant-aware memory subsystem. You can build one today by composing three existing primitives:
 
 1. route auth puts the tenant and user on `ctx.session.auth`;
 2. dynamic instructions load that caller's memories before each turn;
 3. ordinary tools write and delete memories in your application store.
 
-The storage implementation is deliberately outside eve. PostgreSQL, a durable KV store, or a vector database all work as long as every operation is scoped by tenant and user.
+The storage implementation is deliberately outside ovo. PostgreSQL, a durable KV store, or a vector database all work as long as every operation is scoped by tenant and user.
 
 ```text
 agent/
@@ -26,7 +26,7 @@ agent/
 Never accept a tenant or user id from the model. Read both from verified session context:
 
 ```ts title="agent/lib/tenant.ts"
-import type { SessionContext } from "eve/context";
+import type { SessionContext } from "ovo/context";
 
 export interface TenantCaller {
   tenantId: string;
@@ -52,7 +52,7 @@ export function requireTenantCaller(ctx: SessionContext): TenantCaller {
 Resolve on `turn.started` so later turns in the same session see memories written by earlier turns:
 
 ```ts title="agent/instructions/memory.ts"
-import { defineDynamic, defineInstructions } from "eve/instructions";
+import { defineDynamic, defineInstructions } from "ovo/instructions";
 import { memoryStore } from "../lib/memory-store";
 import { requireTenantCaller } from "../lib/tenant";
 
@@ -86,7 +86,7 @@ For a large corpus, replace `list` with semantic retrieval using the current mes
 The model chooses the memory key and value. The executor chooses the tenant and user.
 
 ```ts title="agent/tools/remember.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 import { memoryStore } from "../lib/memory-store";
 import { requireTenantCaller } from "../lib/tenant";
@@ -108,7 +108,7 @@ export default defineTool({
 ```
 
 ```ts title="agent/tools/list_memories.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 import { memoryStore } from "../lib/memory-store";
 import { requireTenantCaller } from "../lib/tenant";
@@ -123,8 +123,8 @@ export default defineTool({
 ```
 
 ```ts title="agent/tools/forget.ts"
-import { defineTool } from "eve/tools";
-import { always } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { always } from "ovo/tools/approval";
 import { z } from "zod";
 import { memoryStore } from "../lib/memory-store";
 import { requireTenantCaller } from "../lib/tenant";
@@ -140,11 +140,11 @@ export default defineTool({
 });
 ```
 
-The approval on `forget` is optional product policy. It demonstrates that memory remains an ordinary application capability that composes with eve's existing approval flow.
+The approval on `forget` is optional product policy. It demonstrates that memory remains an ordinary application capability that composes with ovo's existing approval flow.
 
 ## Supply the storage adapter
 
-The eve-facing code needs only this contract:
+The ovo-facing code needs only this contract:
 
 ```ts title="agent/lib/memory-store.ts"
 export interface MemoryScope {
@@ -185,4 +185,4 @@ future sessions. Never save passwords, access tokens, payment data, private
 keys, or one-time codes. Tell the user when you save or delete a memory.
 ```
 
-The complete eve implementation is dynamic instructions plus three normal tools. The database is an application concern hidden behind a small tenant-scoped interface.
+The complete ovo implementation is dynamic instructions plus three normal tools. The database is an application concern hidden behind a small tenant-scoped interface.

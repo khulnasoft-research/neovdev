@@ -1,25 +1,25 @@
 <div align="center">
-  <a href="https://github.com/vercel/eve">
+  <a href="https://github.com/vercel/ovo">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset=".github/assets/eve.svg">
-      <img alt="eve logo" src=".github/assets/eve.svg" height="128">
+      <source media="(prefers-color-scheme: dark)" srcset=".github/assets/ovo.svg">
+      <img alt="ovo logo" src=".github/assets/ovo.svg" height="128">
     </picture>
   </a>
-  <h1>eve</h1>
+  <h1>ovo</h1>
 
 <a href="https://vercel.com"><img alt="Vercel logo" src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=Vercel&labelColor=000"></a>
-<a href="https://www.npmjs.com/package/eve"><img alt="NPM version" src="https://img.shields.io/npm/v/eve.svg?style=for-the-badge&labelColor=000000"></a>
-<a href="https://github.com/vercel/eve/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/eve.svg?style=for-the-badge&labelColor=000000"></a>
-<a href="https://github.com/vercel/eve/discussions"><img alt="Join the community on GitHub" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=Github&labelColor=000000&logoWidth=20"></a>
+<a href="https://www.npmjs.com/package/ovo"><img alt="NPM version" src="https://img.shields.io/npm/v/ovo.svg?style=for-the-badge&labelColor=000000"></a>
+<a href="https://github.com/vercel/ovo/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/ovo.svg?style=for-the-badge&labelColor=000000"></a>
+<a href="https://github.com/vercel/ovo/discussions"><img alt="Join the community on GitHub" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=Github&labelColor=000000&logoWidth=20"></a>
 
 </div>
 
-eve is a filesystem-first framework for durable AI agents. Core agent capabilities live in
+ovo is a filesystem-first framework for durable AI agents. Core agent capabilities live in
 conventional locations, so projects are easier to inspect, extend, and operate.
 
 ## The filesystem is the authoring interface
 
-A typical eve agent has this structure:
+A typical ovo agent has this structure:
 
 ```text
 my-agent/
@@ -36,27 +36,27 @@ my-agent/
         └── weekly_recap.ts
 ```
 
-Read the [documentation](https://eve.dev/docs) for the full project layout and guides.
+Read the [documentation](https://ovo.dev/docs) for the full project layout and guides.
 
 ## Quick start
 
 ```bash
-npx eve@latest init my-agent
+npx ovo@latest init my-agent
 ```
 
 This creates a new `my-agent` directory, installs its dependencies, initializes Git, and starts
 the interactive terminal UI.
 
-To add eve to an existing project, pass a path:
+To add ovo to an existing project, pass a path:
 
 ```bash
 cd myapp
-npx eve@latest init .
+npx ovo@latest init .
 ```
 
 > [!NOTE]
-> The `eve` package includes its full documentation, so coding agents can read it locally from
-> `node_modules/eve/docs`.
+> The `ovo` package includes its full documentation, so coding agents can read it locally from
+> `node_modules/ovo/docs`.
 
 ### A minimal example
 
@@ -69,7 +69,7 @@ You are a concise weather demo assistant. Tell users that the weather data is mo
 Add a mock weather tool at `agent/tools/get_weather.ts`:
 
 ```ts
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export default defineTool({
@@ -84,7 +84,7 @@ export default defineTool({
 Choose the model in `agent/agent.ts`:
 
 ```ts
-import { defineAgent } from "eve";
+import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: "anthropic/claude-sonnet-5",
@@ -98,20 +98,20 @@ npm run dev
 ```
 
 That's a working agent. Add human-in-the-loop prompts, subagents, and schedules as needed.
-Follow the [first-agent tutorial](https://eve.dev/docs/tutorial/first-agent) for a complete
+Follow the [first-agent tutorial](https://ovo.dev/docs/tutorial/first-agent) for a complete
 walkthrough.
 
 ## Community
 
-The eve community lives on [GitHub Discussions](https://github.com/vercel/eve/discussions),
+The ovo community lives on [GitHub Discussions](https://github.com/vercel/ovo/discussions),
 where you can ask questions, share ideas, and show what you've built.
 
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get the repo
 running locally and land a change, and use
-[issues](https://github.com/vercel/eve/issues) and
-[discussions](https://github.com/vercel/eve/discussions) to collaborate. By
+[issues](https://github.com/vercel/ovo/issues) and
+[discussions](https://github.com/vercel/ovo/discussions) to collaborate. By
 participating, you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Security
@@ -122,5 +122,5 @@ Please do not open public issues for security vulnerabilities. Instead, follow
 
 ## Beta terms
 
-eve is currently in beta and subject to the [Vercel beta terms](https://vercel.com/docs/release-phases/public-beta-agreement);
+ovo is currently in beta and subject to the [Vercel beta terms](https://vercel.com/docs/release-phases/public-beta-agreement);
 the framework, APIs, documentation, and behavior may change before general availability.

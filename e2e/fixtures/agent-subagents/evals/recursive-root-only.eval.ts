@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const CHILD_TOKEN = "RECURSIVE_AGENT_NOT_AVAILABLE";
 

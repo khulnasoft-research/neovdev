@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const MULTI_STEP_FINAL_VALUE = "phoenix-rising-9F2X";
 

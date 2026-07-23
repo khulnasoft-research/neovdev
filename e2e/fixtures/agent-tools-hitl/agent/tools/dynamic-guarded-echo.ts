@@ -1,4 +1,4 @@
-import { defineDynamic, defineTool } from "eve/tools";
+import { defineDynamic, defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export const DYNAMIC_GUARDED_ECHO_TOKEN = "dynamic-guarded-echo-ok-L8R6";

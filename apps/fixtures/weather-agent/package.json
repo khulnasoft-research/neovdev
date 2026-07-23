@@ -3,14 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "eve dev",
-    "build": "eve build",
-    "start": "eve start",
-    "info": "eve info",
+    "dev": "ovo dev",
+    "build": "ovo build",
+    "start": "ovo start",
+    "info": "ovo info",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "eve": "workspace:*",
+    "ovo": "workspace:*",
     "zod": "catalog:"
   }
 }

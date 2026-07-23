@@ -1,8 +1,8 @@
 {
-  "name": "eve-monorepo",
+  "name": "ovo-monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "Monorepo for eve, a filesystem-first framework for durable backend agents on Vercel.",
+  "description": "Monorepo for ovo, a filesystem-first framework for durable backend agents on Vercel.",
   "workspaces": [
     "apps/*",
     "apps/*/*",
@@ -31,7 +31,7 @@
     "typecheck": "turbo run typecheck",
     "version-packages": "changeset version",
     "release": "pnpm build && node ./scripts/assert-changeset-publish-packages.mjs && changeset publish",
-    "test:tui": "pnpm --filter eve run test:tui",
+    "test:tui": "pnpm --filter ovo run test:tui",
     "update:extension-contracts": "node ./scripts/extension-capability-contracts.mjs"
   },
   "devDependencies": {

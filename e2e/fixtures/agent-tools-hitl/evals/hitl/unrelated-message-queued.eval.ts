@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { GUARDED_ECHO_TOKEN } from "./shared";
 

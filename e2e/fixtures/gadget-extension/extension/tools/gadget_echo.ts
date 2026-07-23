@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export default defineTool({

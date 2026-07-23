@@ -1,4 +1,4 @@
-import { defineSchedule } from "eve/schedules";
+import { defineSchedule } from "ovo/schedules";
 
 /**
  * Markdown (task-mode) schedule used by `evals/schedule-dispatch.eval.ts`.

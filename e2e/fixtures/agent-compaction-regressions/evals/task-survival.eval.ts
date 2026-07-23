@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { TASK_PRESERVED_MARKER, TASK_TAIL_SENTINEL } from "../constants";
 

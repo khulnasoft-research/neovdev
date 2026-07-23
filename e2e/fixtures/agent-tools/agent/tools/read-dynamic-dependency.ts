@@ -1,5 +1,5 @@
-import { readDynamicImportMarker } from "@eve-e2e/dynamic-import-dependency";
-import { defineTool } from "eve/tools";
+import { readDynamicImportMarker } from "@ovo-e2e/dynamic-import-dependency";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export default defineTool({

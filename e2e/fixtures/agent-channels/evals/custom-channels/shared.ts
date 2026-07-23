@@ -1,4 +1,4 @@
-import type { EveEvalTargetHandle } from "eve/evals";
+import type { EveEvalTargetHandle } from "ovo/evals";
 
 export async function postChannel<T>(
   target: EveEvalTargetHandle,

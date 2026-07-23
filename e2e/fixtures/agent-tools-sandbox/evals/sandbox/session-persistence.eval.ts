@@ -1,5 +1,5 @@
-import { defineEval } from "eve/evals";
-import { equals } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { equals } from "ovo/evals/expect";
 
 // Durable sessions keep their sandbox filesystem across turns: a file written
 // in turn one must still be readable in turn two of the same session. The

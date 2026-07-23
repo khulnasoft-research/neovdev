@@ -1,5 +1,5 @@
-import { defineHook, type HookDefinition } from "eve/hooks";
-import { toolResultFrom } from "eve/tools";
+import { defineHook, type HookDefinition } from "ovo/hooks";
+import { toolResultFrom } from "ovo/tools";
 import structuredEcho from "../tools/structured-echo";
 
 const hook: HookDefinition = defineHook({

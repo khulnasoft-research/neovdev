@@ -1,10 +1,10 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const DYNAMIC_GUARDED_ECHO_TOKEN = "dynamic-guarded-echo-ok-L8R6";
 const TOOL_NAME = "dynamic_guarded_echo";
 
 /**
- * Regression coverage for https://github.com/vercel/eve/issues/533.
+ * Regression coverage for https://github.com/vercel/ovo/issues/533.
  *
  * An always-gated dynamic tool parks, the user approves, the tool executes,
  * and then the session must keep working. The follow-up turn replays the

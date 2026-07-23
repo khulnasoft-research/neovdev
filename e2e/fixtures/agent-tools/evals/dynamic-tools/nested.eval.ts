@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // One resolver returns a helper-built tool (closing over the helper
 // param and handler vars) and an inline tool; both survive replay.

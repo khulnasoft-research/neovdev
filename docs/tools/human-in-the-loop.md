@@ -13,11 +13,11 @@ Either way the run parks at `session.waiting`, durably, for as long as it takes 
 
 ## Approvals
 
-Approval is a property of a [tool](/docs/tools) that pauses for a person before it runs. Gate a tool with `approval` and the helpers from `eve/tools/approval`:
+Approval is a property of a [tool](/docs/tools) that pauses for a person before it runs. Gate a tool with `approval` and the helpers from `ovo/tools/approval`:
 
 ```ts title="agent/tools/refund_charge.ts"
-import { defineTool } from "eve/tools";
-import { always } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { always } from "ovo/tools/approval";
 import { z } from "zod";
 
 export default defineTool({
@@ -52,16 +52,16 @@ approval: ({ session, toolInput }) => {
 
 For compatibility with the previous predicate shape, policies may return booleans: `true` is treated as `"user-approval"` and `false` as `"not-applicable"`. Boolean promises are supported too.
 
-Policies can also return `"approved"` or `"denied"` to decide automatically. Use `{ type: "approved" | "denied", reason }` when the model should receive a reason. The `Approval`, `ApprovalContext`, and `ApprovalStatus` types are exported from both `eve/tools` and `eve/tools/approval`.
+Policies can also return `"approved"` or `"denied"` to decide automatically. Use `{ type: "approved" | "denied", reason }` when the model should receive a reason. The `Approval`, `ApprovalContext`, and `ApprovalStatus` types are exported from both `ovo/tools` and `ovo/tools/approval`.
 
 Gating a side effect on approval is also how you make non-idempotent work safe across replays: a charge or email that sits behind `always()` can't fire from a re-run step without a fresh human decision.
 
 ### Skipping approval for schedule-dispatched turns
 
-`session.auth.current` identifies the caller of this turn. Markdown schedules use the app principal (`authenticator: "app"`, `principalId: "eve:app"`, `principalType: "runtime"`) automatically. A `run` schedule must pass its `appAuth` to `receive(...)` for the child session to use that principal. Match all three fields to skip approval for automated turns while still prompting when a person calls the same tool:
+`session.auth.current` identifies the caller of this turn. Markdown schedules use the app principal (`authenticator: "app"`, `principalId: "ovo:app"`, `principalType: "runtime"`) automatically. A `run` schedule must pass its `appAuth` to `receive(...)` for the child session to use that principal. Match all three fields to skip approval for automated turns while still prompting when a person calls the same tool:
 
 ```ts title="agent/tools/refund_charge.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export default defineTool({
@@ -70,7 +70,7 @@ export default defineTool({
   approval: ({ session }) => {
     const auth = session.auth.current;
     return auth?.authenticator === "app" &&
-      auth.principalId === "eve:app" &&
+      auth.principalId === "ovo:app" &&
       auth.principalType === "runtime"
       ? "not-applicable"
       : "user-approval";
@@ -98,13 +98,13 @@ The built-in `ask_question` tool lets the model pause and ask the user, rather t
 Approvals and questions share one protocol:
 
 1. The model requests input (an approval, or an `ask_question`).
-2. eve emits an `input.requested` stream event carrying the pending requests.
+2. ovo emits an `input.requested` stream event carrying the pending requests.
 3. The turn parks at `session.waiting`, durably, for as long as it takes.
 4. The client answers with `inputResponses` (structured, keyed by `requestId`) or a normal follow-up `message`. A follow-up whose text matches an option ID, option label, or numeric option index resolves automatically, including approval options such as `approve` and `deny`.
 
 The run picks back up exactly where it parked. Because the pause is durable, nothing is held in memory while it waits — the process can restart and the parked turn survives.
 
-For approval requests, unrelated follow-up text does not deny the tool call. eve keeps the approval pending and holds that text until the approval is answered, then replays it as the next message in the session.
+For approval requests, unrelated follow-up text does not deny the tool call. ovo keeps the approval pending and holds that text until the approval is answered, then replays it as the next message in the session.
 
 See [Sessions, runs & streaming](/docs/concepts/sessions-runs-and-streaming) for the full event and resume contract that this builds on.
 

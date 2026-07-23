@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // The action.result stream event carries the RAW execute output
 // (including the secret field), not the toModelOutput projection.

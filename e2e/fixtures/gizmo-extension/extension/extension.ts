@@ -1,4 +1,4 @@
-import { defineExtension } from "eve/extension";
+import { defineExtension } from "ovo/extension";
 
 // No consumer config, so a bare defineExtension() — consumers mount it with a
 // bare re-export.

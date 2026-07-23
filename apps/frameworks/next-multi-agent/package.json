@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter eve build && next build",
-    "build:billing-agent": "cd agents/billing && eve build",
+    "build": "pnpm --filter ovo build && next build",
+    "build:billing-agent": "cd agents/billing && ovo build",
     "dev": "next dev",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "ai": "catalog:",
-    "eve": "workspace:*",
     "next": "catalog:",
+    "ovo": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
     "zod": "catalog:"

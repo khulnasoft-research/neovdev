@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { DYNAMIC_ECHO_TOKEN, ECHO_TOOL } from "./shared";
 

@@ -1,5 +1,5 @@
-import { defineEval } from "eve/evals";
-import { equals, satisfies } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { equals, satisfies } from "ovo/evals/expect";
 
 /** Proves an every-minute polling schedule can leave its target channel silent. */
 export default defineEval({

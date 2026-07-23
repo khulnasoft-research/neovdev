@@ -1,5 +1,5 @@
-import { defineEval, type EveEvalTargetHandle } from "eve/evals";
-import { satisfies } from "eve/evals/expect";
+import { defineEval, type EveEvalTargetHandle } from "ovo/evals";
+import { satisfies } from "ovo/evals/expect";
 
 const TOOL_NAME = "wait-for-cancellation";
 

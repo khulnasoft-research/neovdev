@@ -17,20 +17,20 @@
     }
   },
   "scripts": {
-    "build": "eve extension build"
+    "build": "ovo extension build"
   },
   "dependencies": {
     "zod": "4.4.3"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "eve": "workspace:*",
+    "ovo": "workspace:*",
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "eve": "*"
+    "ovo": "*"
   },
-  "eve": {
+  "ovo": {
     "extension": {
       "source": "./extension",
       "dist": "./dist/extension"

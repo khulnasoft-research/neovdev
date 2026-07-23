@@ -166,7 +166,7 @@ function normalizeDependencyRanges(dependencies, input) {
 
 async function runInitCommand(input) {
   const packageRoot = resolve(input.packageRoot);
-  const cliPath = join(packageRoot, "bin", "eve.js");
+  const cliPath = join(packageRoot, "bin", "ovo.js");
 
   if (!(await pathExists(cliPath))) {
     return null;
@@ -189,7 +189,7 @@ async function runInitCommand(input) {
 
 export async function collectInitInstallReportFromTarball(options) {
   const packageRoot = resolve(options.packageRoot);
-  const initDirectory = await mkdtemp(join(tmpdir(), "eve-init-install-"));
+  const initDirectory = await mkdtemp(join(tmpdir(), "ovo-init-install-"));
 
   try {
     const initialized = await runInitCommand({
@@ -224,14 +224,14 @@ export async function collectInitInstallReportFromTarball(options) {
     const dependencies = normalizeDependencyRanges(
       attachInstalledBytes(readDependencyBlock(packageJson, "dependencies"), packageSizes),
       {
-        packageName: "eve",
+        packageName: "ovo",
         packageSpec,
       },
     );
     const devDependencies = normalizeDependencyRanges(
       attachInstalledBytes(readDependencyBlock(packageJson, "devDependencies"), packageSizes),
       {
-        packageName: "eve",
+        packageName: "ovo",
         packageSpec,
       },
     );
@@ -281,7 +281,7 @@ export async function collectInitInstallReportFromTarball(options) {
 
 export async function collectInitInstallReport(options) {
   const packageRoot = resolve(options.packageRoot);
-  const packDirectory = await mkdtemp(join(tmpdir(), "eve-init-package-pack-"));
+  const packDirectory = await mkdtemp(join(tmpdir(), "ovo-init-package-pack-"));
 
   try {
     const packResult = await runPack(packageRoot, packDirectory);

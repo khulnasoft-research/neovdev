@@ -1,4 +1,4 @@
-import { defineSchedule } from "eve/schedules";
+import { defineSchedule } from "ovo/schedules";
 
 import quietSink from "../channels/quiet-sink";
 

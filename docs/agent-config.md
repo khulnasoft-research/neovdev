@@ -3,26 +3,26 @@ title: "agent.ts"
 description: "Set the agent's runtime config in agent.ts with defineAgent, including the model, reasoning effort, and compaction."
 ---
 
-An agent's `agent.ts` calls `defineAgent` (from `eve`) to set its runtime config.
+An agent's `agent.ts` calls `defineAgent` (from `ovo`) to set its runtime config.
 
 ## Set the model
 
 A typical config selects a model:
 
 ```ts title="agent/agent.ts"
-import { defineAgent } from "eve";
+import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: "anthropic/claude-opus-4.8",
 });
 ```
 
-The root `agent.ts` can be omitted when no runtime config is needed. In that case, eve defaults
+The root `agent.ts` can be omitted when no runtime config is needed. In that case, ovo defaults
 to `anthropic/claude-sonnet-5`. When `agent.ts` is present, `model` is required.
 
 `model` accepts a gateway model id string, which routes through the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway). To call a provider directly and configure the model in code, pass a provider-authored `LanguageModel`.
 
-Provider-specific AI SDK packages are regular project dependencies. A fresh `eve init` app includes the core `ai` package, but it does not install every provider package. Install the provider package you import, then set that provider's API key:
+Provider-specific AI SDK packages are regular project dependencies. A fresh `ovo init` app includes the core `ai` package, but it does not install every provider package. Install the provider package you import, then set that provider's API key:
 
 ```bash
 npm install @ai-sdk/anthropic
@@ -30,7 +30,7 @@ npm install @ai-sdk/anthropic
 
 ```ts title="agent/agent.ts"
 import { anthropic } from "@ai-sdk/anthropic";
-import { defineAgent } from "eve";
+import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: anthropic("claude-opus-4-8"),
@@ -50,7 +50,7 @@ compiled static model: it anchors build-time metadata (routing, credentials,
 context window) and serves whenever no dynamic selection is set.
 
 ```ts title="agent/agent.ts"
-import { defineAgent, defineDynamic } from "eve";
+import { defineAgent, defineDynamic } from "ovo";
 
 export default defineAgent({
   model: defineDynamic({
@@ -106,7 +106,7 @@ which levels are available and how they map to provider-native settings. Use
 
 ## Compaction
 
-Compaction summarizes older turns as you approach the context window. It's on by default, so you only tune when it kicks in. eve adds the estimated fixed checkpoint-prompt envelope to the trigger count, so compaction starts sooner than the conversation-only estimate. Lower `thresholdPercent` to compact sooner:
+Compaction summarizes older turns as you approach the context window. It's on by default, so you only tune when it kicks in. ovo adds the estimated fixed checkpoint-prompt envelope to the trigger count, so compaction starts sooner than the conversation-only estimate. Lower `thresholdPercent` to compact sooner:
 
 ```ts title="agent/agent.ts"
 export default defineAgent({
@@ -137,7 +137,7 @@ export default defineAgent({
 
 Input and output budgets are checked independently. The model call that crosses
 either limit is allowed to finish because providers only report exact token
-usage after a call completes. Before the next model call, eve pauses the
+usage after a call completes. Before the next model call, ovo pauses the
 session and sends a deterministic continuation prompt with two options:
 **Approve** grants a fresh budget window of the configured size (both input
 and output windows reset together), and **Stop** cancels the in-flight turn
@@ -169,13 +169,13 @@ parent's grant; an uncapped parent delegates uncapped children.
 
 ## Workflow world
 
-By default, eve selects the Workflow SDK world for the host: Vercel Workflow on
-Vercel, and the SDK's local world in local development or `eve start`. Advanced
+By default, ovo selects the Workflow SDK world for the host: Vercel Workflow on
+Vercel, and the SDK's local world in local development or `ovo start`. Advanced
 self-hosted deployments can select the Workflow world package to use from the
 root `agent.ts`:
 
 ```ts title="agent/agent.ts"
-import { defineAgent } from "eve";
+import { defineAgent } from "ovo";
 
 export default defineAgent({
   model: "anthropic/claude-opus-4.8",
@@ -189,7 +189,7 @@ export default defineAgent({
 
 Install that package in your app. It should export a default factory or
 `createWorld()` function. Pin a version built against the same `@workflow/*`
-line as your eve release (currently the `5.0.0-beta` line):
+line as your ovo release (currently the `5.0.0-beta` line):
 
 ```bash
 pnpm add @workflow/world-postgres@5.0.0-beta.x
@@ -215,11 +215,11 @@ installed package must stay external in hosted output, list it in
 | `limits`       | `AgentLimitsDefinition`                 | field-specific   | Framework-owned runtime limits. `maxInputTokensPerSession` defaults to `40_000_000` for root sessions, and delegated subagent sessions inherit the parent's remaining quota; `maxOutputTokensPerSession` is unset unless configured; `false` uncaps a session token limit. |
 | `experimental` | `{ workflow?: { world?: string } }`     | unset            | Opt-in settings that can change or disappear in any release. Treat them as unstable. `workflow.world` selects the Workflow world package backing session state, queues, hooks, and streams on the root agent.                                                              |
 | `outputSchema` | Standard Schema or a JSON Schema object | none             | Structured return type for task-mode runs (a subagent, schedule, or remote job). Interactive conversation turns ignore it unless the client supplies a per-message schema.                                                                                                 |
-| `build`        | `{ externalDependencies?: string[] }`   | none             | Hosted-build packaging controls. `externalDependencies` keeps listed packages external while eve compiles authored modules such as tools and channels, and traces those packages into the hosted output.                                                                   |
+| `build`        | `{ externalDependencies?: string[] }`   | none             | Hosted-build packaging controls. `externalDependencies` keeps listed packages external while ovo compiles authored modules such as tools and channels, and traces those packages into the hosted output.                                                                   |
 
 `externalDependencies` is a packaging control only. It keeps selected packages as runtime dependencies in the hosted output; it does not authorize, configure, or review any third-party service those packages may call.
 
-During `eve dev`, ordinary dependencies are bundled into each retained runtime generation. Packages listed in `externalDependencies` keep normal Node.js resolution instead, so replacing one of those packages requires restarting the dev server.
+During `ovo dev`, ordinary dependencies are bundled into each retained runtime generation. Packages listed in `externalDependencies` keep normal Node.js resolution instead, so replacing one of those packages requires restarting the dev server.
 
 ## Where adjacent settings live
 

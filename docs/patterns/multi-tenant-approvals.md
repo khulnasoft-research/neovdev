@@ -3,7 +3,7 @@ title: "Multi-tenant approvals"
 description: "Resolve tenant policy asynchronously for authored tools, OpenAPI operations, and MCP tools."
 ---
 
-eve's `approval` field is an async policy hook. It receives the active session, qualified tool name, tool input, and previously approved tools. That is enough to ask your application whether this tenant should allow, deny, or require human confirmation for any authored or connection tool.
+ovo's `approval` field is an async policy hook. It receives the active session, qualified tool name, tool input, and previously approved tools. That is enough to ask your application whether this tenant should allow, deny, or require human confirmation for any authored or connection tool.
 
 Use this with [multi-tenant outbound auth](./multi-tenant-auth) when your own
 API key, JWT, or app session establishes the tenant and the connection
@@ -11,17 +11,17 @@ credential is selected from your credential store rather than OAuth.
 
 The pattern has two pieces:
 
-1. one adapter translates eve's approval context into an application policy request;
+1. one adapter translates ovo's approval context into an application policy request;
 2. tools, OpenAPI connections, and MCP connections reuse that adapter.
 
 Tenant policy storage remains yours. It might be a few columns in PostgreSQL, a policy service, an authorization engine, or configuration in a durable KV store.
 
-## Adapt tenant policy to eve approval
+## Adapt tenant policy to ovo approval
 
 The current caller and initiating caller are both available on the session. This example requires them to belong to the same tenant before consulting policy:
 
 ```ts title="agent/lib/tenant-approval.ts"
-import type { ApprovalContext, ApprovalStatus } from "eve/tools";
+import type { ApprovalContext, ApprovalStatus } from "ovo/tools";
 import { approvalPolicies } from "./approval-policies";
 
 type Surface = "connection" | "tool";
@@ -75,7 +75,7 @@ The callback deliberately does not treat `approvedTools` as a session-wide grant
 Approval runs before `execute`. The executor must still derive and enforce tenancy again because approval is a gate, not authorization:
 
 ```ts title="agent/tools/transfer_funds.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 import { transferFunds } from "../../lib/payments";
 import { decideTenantApproval } from "../lib/tenant-approval";
@@ -110,7 +110,7 @@ Use an application idempotency key for side effects. Human approval and replay s
 The same callback gates every generated operation. The qualified operation name lets tenant policy distinguish reads from writes:
 
 ```ts title="agent/connections/billing.ts"
-import { defineOpenAPIConnection } from "eve/connections";
+import { defineOpenAPIConnection } from "ovo/connections";
 import { decideTenantApproval } from "../lib/tenant-approval";
 
 export default defineOpenAPIConnection({
@@ -134,7 +134,7 @@ The allow-list limits what the model can discover. Approval independently decide
 ## Apply it to an MCP connection
 
 ```ts title="agent/connections/support.ts"
-import { defineMcpClientConnection } from "eve/connections";
+import { defineMcpClientConnection } from "ovo/connections";
 import { decideTenantApproval } from "../lib/tenant-approval";
 
 export default defineMcpClientConnection({
@@ -157,7 +157,7 @@ The policy receives `connection:support__search_tickets` or `connection:support_
 
 ## Supply the policy adapter
 
-The eve code needs only this interface:
+The ovo code needs only this interface:
 
 ```ts title="agent/lib/approval-policies.ts"
 export interface ApprovalPolicyRequest {
@@ -187,9 +187,9 @@ Policy lookup failures should throw or deny, never silently allow. Recheck autho
 
 An approval durably pauses the session and a later request resumes it. Your HTTP boundary must ensure a caller cannot continue or stream a session owned by another tenant. Persist session ownership in your application and check it before proxying:
 
-- `POST /eve/v1/session/:sessionId`, including `inputResponses`;
-- `GET /eve/v1/session/:sessionId/stream`.
+- `POST /ovo/v1/session/:sessionId`, including `inputResponses`;
+- `GET /ovo/v1/session/:sessionId/stream`.
 
 Built-in approval confirms that a human with access to the session approved the call. It is not a four-eyes workflow that proves a different person or role approved it. For that requirement, create an application-owned approval request, notify eligible approvers through a channel, and have policy return allow only after that request records an authorized decision.
 
-The complete eve integration is one async adapter reused by tools and both connection protocols. The tenant's rule storage and governance model remain application concerns.
+The complete ovo integration is one async adapter reused by tools and both connection protocols. The tenant's rule storage and governance model remain application concerns.

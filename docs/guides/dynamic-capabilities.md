@@ -30,7 +30,7 @@ Dynamic tool executors receive the same `ToolContext` as static authored tools, 
 The example below builds one tool per warehouse table. A map return names each tool by its bare key, so the model sees `orders`, `users`, and so on.
 
 ```ts title="agent/tools/query.ts"
-import { defineDynamic, defineTool } from "eve/tools";
+import { defineDynamic, defineTool } from "ovo/tools";
 import { z } from "zod";
 import { listTables, runReadOnly } from "../lib/warehouse";
 
@@ -89,7 +89,7 @@ The tool loop reads the current set right before each model call, so a mid-turn 
 A single file can declare handlers for several events, and the most recently fired one owns that file's tool set. Re-resolve on `turn.started` to replace what `session.started` returned:
 
 ```ts title="agent/tools/catalog.ts"
-import { defineDynamic, defineTool } from "eve/tools";
+import { defineDynamic, defineTool } from "ovo/tools";
 import { z } from "zod";
 import { runReadOnly, searchCatalog } from "../lib/catalog";
 
@@ -121,7 +121,7 @@ Resolvers across files run concurrently.
 A dynamic skills file resolves which [skill](../skills) a caller can load, keyed on the principal. It resolves on `session.started` and `turn.started` only (`step.started` is reserved for dynamic tools). Read `ctx.session.auth` or channel metadata and return a `defineSkill(...)` (named after the file slug) or `null`:
 
 ```ts title="agent/skills/team_playbook.ts"
-import { defineDynamic, defineSkill } from "eve/skills";
+import { defineDynamic, defineSkill } from "ovo/skills";
 import { PLAYBOOKS } from "../lib/playbooks";
 
 export default defineDynamic({
@@ -144,7 +144,7 @@ Skills follow the same naming rule as tools: a single `defineSkill(...)` is name
 A dynamic instructions file resolves the per-session system prompt the same way, returning `defineInstructions(...)` built from the principal, tenant, or external data:
 
 ```ts title="agent/instructions/persona.ts"
-import { defineDynamic, defineInstructions } from "eve/instructions";
+import { defineDynamic, defineInstructions } from "ovo/instructions";
 
 export default defineDynamic({
   events: {

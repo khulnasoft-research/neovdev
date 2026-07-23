@@ -1,32 +1,32 @@
 ---
 title: "Overview"
-description: "Choose a deployment strategy and prepare an eve agent for production."
+description: "Choose a deployment strategy and prepare an ovo agent for production."
 ---
 
-Deploy eve to Vercel or run it as a Node service on your own infrastructure. Your deployment strategy determines the build output, workflow storage, sandbox backend, and routing. The agent’s filesystem-based configuration remains portable across these strategies.
+Deploy ovo to Vercel or run it as a Node service on your own infrastructure. Your deployment strategy determines the build output, workflow storage, sandbox backend, and routing. The agent’s filesystem-based configuration remains portable across these strategies.
 
 ## Choose a deployment strategy
 
-Choose where the eve runtime will run:
+Choose where the ovo runtime will run:
 
 | Strategy                       | Build output           | Workflows                      | Sandbox                         | Choose it when                                        |
 | ------------------------------ | ---------------------- | ------------------------------ | ------------------------------- | ----------------------------------------------------- |
 | [Vercel](./vercel)             | `.vercel/output`       | Vercel Workflow                | Vercel Sandbox                  | You want Vercel to operate the runtime services       |
 | [Self-hosting](./self-hosting) | `.output/` Node server | Local or custom Workflow world | Docker, microsandbox, or custom | You operate your own Node or container infrastructure |
 
-eve is frontend agnostic and can be deployed within Next.js, Nuxt, or SvelteKit applications. See [Frontend integrations](../frontend/overview) for more details.
+ovo is frontend agnostic and can be deployed within Next.js, Nuxt, or SvelteKit applications. See [Frontend integrations](../frontend/overview) for more details.
 
 ## Prepare for production
 
 Every production deployment must satisfy the same runtime requirements:
 
-1. Run `eve build` to compile the agent and create host output.
+1. Run `ovo build` to compile the agent and create host output.
 2. Provide a model credential and any secrets required by tools, connections, and route authentication.
 3. Replace `placeholderAuth()` with a production route policy before accepting browser traffic.
 4. Select workflow and sandbox implementations that match the host.
 5. Verify the health route and complete a real agent turn.
 
-`eve build` always writes compiler artifacts under `.eve/`. A Vercel build also writes `.vercel/output`. A build for another host writes the standard Nitro server under `.output/`.
+`ovo build` always writes compiler artifacts under `.ovo/`. A Vercel build also writes `.vercel/output`. A build for another host writes the standard Nitro server under `.output/`.
 
 ## Configure credentials
 
@@ -41,13 +41,13 @@ Configure production route authentication separately from model access. The defa
 Check the public health route first:
 
 ```bash
-curl https://your_agent.example.com/eve/v1/health
+curl https://your_agent.example.com/ovo/v1/health
 ```
 
 Then connect the development terminal user interface (TUI) to the deployment and send a real message:
 
 ```bash
-eve dev https://your_agent.example.com
+ovo dev https://your_agent.example.com
 ```
 
 Set `VERCEL_AUTOMATION_BYPASS_SECRET` locally first if a Vercel deployment uses Deployment Protection.
@@ -57,5 +57,5 @@ Set `VERCEL_AUTOMATION_BYPASS_SECRET` locally first if a Vercel deployment uses 
 Follow the guide for your deployment platform or application topology:
 
 - [Deploy to Vercel](./vercel): use Vercel Build Output, Workflow, Sandbox, Cron, and observability
-- [Self-host eve](./self-hosting): run the Nitro Node server with infrastructure you manage
-- [Frontend integrations](../frontend/overview): mount eve alongside Next.js, Nuxt, or SvelteKit
+- [Self-host ovo](./self-hosting): run the Nitro Node server with infrastructure you manage
+- [Frontend integrations](../frontend/overview): mount ovo alongside Next.js, Nuxt, or SvelteKit

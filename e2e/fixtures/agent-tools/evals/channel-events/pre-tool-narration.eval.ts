@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
 
-import type { HandleMessageStreamEvent } from "eve/client";
-import { defineEval, type EveEvalTargetHandle } from "eve/evals";
-import { satisfies } from "eve/evals/expect";
+import type { HandleMessageStreamEvent } from "ovo/client";
+import { defineEval, type EveEvalTargetHandle } from "ovo/evals";
+import { satisfies } from "ovo/evals/expect";
 
 const STREAMED_ACTION_TOOL = "streamed-action";
 

@@ -2,9 +2,9 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const BUILD_PROFILE_KIND = "eve-build-profile";
+const BUILD_PROFILE_KIND = "ovo-build-profile";
 const BUILD_PROFILE_SCHEMA_VERSION = 1;
-const BUILD_PROFILE_REPORT_KIND = "eve-build-profile-report";
+const BUILD_PROFILE_REPORT_KIND = "ovo-build-profile-report";
 const BUILD_PROFILE_REPORT_SCHEMA_VERSION = 1;
 
 function isRecord(value) {
@@ -111,7 +111,7 @@ function createPhaseComparison(currentProfile, baselineProfile) {
 }
 
 /**
- * Creates a stable, CI-oriented view of one or two `eve build --profile` files.
+ * Creates a stable, CI-oriented view of one or two `ovo build --profile` files.
  */
 export function createBuildProfileReport(input) {
   const current = readBuildProfile(input.currentProfile, "Current build profile");
@@ -201,7 +201,7 @@ export function renderBuildProfileReportMarkdown(report) {
   const lines = [
     `## Build Timing: \`${formatMarkdownCode(report.appLabel)}\``,
     "",
-    "This is an informational timing measurement inside `eve build`, from preflight through publication. Output-size measurement and profile writing are excluded.",
+    "This is an informational timing measurement inside `ovo build`, from preflight through publication. Output-size measurement and profile writing are excluded.",
     "",
     report.sandboxPrewarm === "skipped"
       ? "**Benchmark mode:** Vercel bundling with sandbox template prewarm skipped. It is intentionally reproducible for Bundle Analysis, but not the full wall-clock time of a deployable Vercel build."
@@ -249,7 +249,7 @@ export function renderBuildProfileTimingLog(report) {
       ? "sandbox template prewarm skipped"
       : "sandbox template prewarm included";
 
-  return `eve build (${report.appLabel}): ${formatDuration(current.durationMs)} (${buildMode}).`;
+  return `ovo build (${report.appLabel}): ${formatDuration(current.durationMs)} (${buildMode}).`;
 }
 
 function printUsage() {
@@ -258,9 +258,9 @@ function printUsage() {
       "Usage: node ./scripts/build-profile-report.mjs --profile <path> [options]",
       "",
       "Options:",
-      "  --profile <path>           Current eve build profile JSON",
+      "  --profile <path>           Current ovo build profile JSON",
       "  --app-label <label>        Application label shown in the report",
-      "  --baseline-profile <path>  Optional baseline eve build profile JSON",
+      "  --baseline-profile <path>  Optional baseline ovo build profile JSON",
       "  --baseline-label <label>   Display label for the baseline profile",
       "  --current-label <label>    Display label for the current profile",
       "  --sandbox-prewarm <mode>   Whether prewarm was included or skipped (default: included)",
@@ -276,7 +276,7 @@ function printUsage() {
 
 function parseArguments(argv) {
   const parsedArguments = {
-    appLabel: "eve application",
+    appLabel: "ovo application",
     baselineLabel: "baseline",
     baselineProfilePath: null,
     currentLabel: "current",

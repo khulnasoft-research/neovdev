@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 /**
  * Core session-route runtime behavior: multimodal attachments.
@@ -18,7 +18,7 @@ export default defineEval({
 
   async test(t) {
     // Eval modules execute from a build cache, so assets resolve against
-    // the app root (`eve eval` runs with the app as cwd), not import.meta.
+    // the app root (`ovo eval` runs with the app as cwd), not import.meta.
     const filePath = join(process.cwd(), "evals/assets/cat-image.png");
     const turn = await t.sendFile(
       "What animal is in this image? Answer in one short sentence.",

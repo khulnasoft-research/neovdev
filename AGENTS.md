@@ -3,25 +3,25 @@
 Guidance for coding agents (and humans) working in this repository. For setup,
 PR workflow, and release process, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-## About eve
+## About ovo
 
-eve is a filesystem-first framework for durable backend AI agents. You author
+ovo is a filesystem-first framework for durable backend AI agents. You author
 an agent as a directory on disk — instructions, skills, tools, connections,
-channels, subagents, and schedules are all files — and eve compiles and runs it.
+channels, subagents, and schedules are all files — and ovo compiles and runs it.
 See the [README](./README.md) for the full overview and
 [`docs/`](./docs) for user-facing documentation.
 
-Always style the framework name as `eve`, lowercase, in user-facing copy,
+Always style the framework name as `ovo`, lowercase, in user-facing copy,
 docs, prompts, comments, and headings.
 
 ## Repository layout
 
-- `packages/eve` — the framework and `eve` CLI (the main package)
-- `packages/eve-catalog` — internal, unpublished library
+- `packages/ovo` — the framework and `ovo` CLI (the main package)
+- `packages/ovo-catalog` — internal, unpublished library
 - `apps/fixtures` — shared agent fixtures used by e2e, TUI smoke tests, and local dev
 - `apps/frameworks`, `apps/templates`, `apps/docs` — framework integrations, templates, docs site
 - `docs` — published documentation content
-- `e2e/` — fixture-owned `eve eval` end-to-end tests
+- `e2e/` — fixture-owned `ovo eval` end-to-end tests
 - `research` — issue-backed implementation plans for proposed changes
 
 ## Git workflow
@@ -48,7 +48,7 @@ pnpm test               # unit + integration
 pnpm test:unit          # unit tests (<3s)
 pnpm test:integration   # integration tests (<10s)
 pnpm test:scenario      # scenario tests (2–5 min; requires pnpm build first)
-pnpm test:e2e           # fixture-owned eve eval suites (CI only)
+pnpm test:e2e           # fixture-owned ovo eval suites (CI only)
 pnpm test:tui           # TUI smoke scripts (not e2e)
 ```
 
@@ -69,12 +69,12 @@ line of defense, and every required check must pass before merge.
 2. **Small modules over big helpers.** Favor composable primitives with narrow
    responsibilities. Split files that carry multiple concerns.
 
-3. **Wrap third-party dependencies.** Do not expose third-party APIs as eve
-   public APIs. Wrap them in eve-owned surfaces so internals can change freely.
+3. **Wrap third-party dependencies.** Do not expose third-party APIs as ovo
+   public APIs. Wrap them in ovo-owned surfaces so internals can change freely.
    Add runtime `dependencies` only as a last resort: prefer vendoring code or
    generated artifacts into the repository and listing the source package under
-   `devDependencies`. The `eve` package should aim to keep `nitro` as its only
-   runtime dependency. This keeps eve installs as small as possible and avoids
+   `devDependencies`. The `ovo` package should aim to keep `nitro` as its only
+   runtime dependency. This keeps ovo installs as small as possible and avoids
    exposure to hijacked nested dependencies that are not pinned directly in the
    main lockfile.
 
@@ -89,7 +89,7 @@ line of defense, and every required check must pass before merge.
 6. **Name definitions for the protocol they target.** Use
    `defineMcpClientConnection`, not `defineConnection`.
 
-7. **All runtime functionality lives in the `eve` package.** Never rely on
+7. **All runtime functionality lives in the `ovo` package.** Never rely on
    emitted or generated code for runtime behavior.
 
 8. **Comment why, not what.** Default to no comment; well-named code is the
@@ -122,7 +122,7 @@ assertion:
 - **Scenario** (`src/**/*.scenario.test.ts`, `test/scenarios/`): real
   subprocess, HTTP port, or bundler.
 - **E2E** (`e2e/fixtures/*/evals/`, plus `apps/fixtures/weather-fixture/evals/`):
-  fixture-owned `eve eval` suites that run only in CI.
+  fixture-owned `ovo eval` suites that run only in CI.
 
 **Running a single file or filtered test: always pass the tier config.** Only
 the `vitest.<tier>.config.ts` files alias `#*` imports to `./src`; a bare
@@ -130,15 +130,15 @@ the `vitest.<tier>.config.ts` files alias `#*` imports to `./src`; a bare
 testing stale builds. Use:
 
 ```sh
-pnpm --filter eve exec vitest run --config vitest.unit.config.ts <path-or-pattern>
+pnpm --filter ovo exec vitest run --config vitest.unit.config.ts <path-or-pattern>
 # or vitest.integration.config.ts / vitest.scenario.config.ts for those tiers
 ```
 
 Add `-t "<name>"` to filter by test name. If you touched anything under
-`#compiled/*`, run `pnpm --filter eve build:compiled` first — the tier configs
+`#compiled/*`, run `pnpm --filter ovo build:compiled` first — the tier configs
 do not rebuild it.
 
-Do not commit fixture trees under `packages/eve/test/fixtures/` — scenario app
+Do not commit fixture trees under `packages/ovo/test/fixtures/` — scenario app
 content is defined inline as `ScenarioAppDescriptor` objects (CI enforces this).
 
 ## End-to-end tests
@@ -159,7 +159,7 @@ identically at build and runtime, and Vercel has no team variable at runtime.
 
 The shared Vercel project's Preview env must provide the model-provider
 credentials the fixtures need. TUI smoke tests
-live under `packages/eve/test/tui-client` and run with `pnpm test:tui`. See
+live under `packages/ovo/test/tui-client` and run with `pnpm test:tui`. See
 [`e2e/README.md`](./e2e/README.md).
 
 ## Documentation
@@ -173,8 +173,8 @@ live under `packages/eve/test/tui-client` and run with `pnpm test:tui`. See
 
 ## Changesets
 
-Every PR that touches the published `eve` package must include a
-changeset (`pnpm changeset`). Because eve is pre-1.0, use `patch` in most
+Every PR that touches the published `ovo` package must include a
+changeset (`pnpm changeset`). Because ovo is pre-1.0, use `patch` in most
 cases, including bug fixes and new features. Use `minor` only when the change
 breaks a public API. Write the body for someone reading release notes — what
 changed and what they'll see differently, in 1–2 sentences.

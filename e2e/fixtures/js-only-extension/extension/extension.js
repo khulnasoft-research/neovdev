@@ -1,3 +1,3 @@
-import { defineExtension } from "eve/extension";
+import { defineExtension } from "ovo/extension";
 
 export default defineExtension();

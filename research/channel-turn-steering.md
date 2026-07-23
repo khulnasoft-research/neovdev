@@ -1,5 +1,5 @@
 ---
-issue: https://github.com/vercel/eve/issues/867
+issue: https://github.com/vercel/ovo/issues/867
 status: proposed
 last_updated: "2026-07-16"
 ---
@@ -20,8 +20,8 @@ turnPolicy: "queue" | "steer";
 ```
 
 `"queue"` is the existing default: hold input for the next turn. `"steer"`
-asks eve to apply the input to the active logical turn at its next safe step
-boundary. There is no public `"interrupt"` policy. Whether eve can stop an
+asks ovo to apply the input to the active logical turn at its next safe step
+boundary. There is no public `"interrupt"` policy. Whether ovo can stop an
 obsolete provider or tool operation early is an implementation detail of
 steering, not a distinct end-user intent.
 
@@ -42,7 +42,7 @@ export interface SendOptions<TState> {
 }
 ```
 
-`TurnPolicy` is exported from `eve/channels`. `SendOptions.turnPolicy` is
+`TurnPolicy` is exported from `ovo/channels`. `SendOptions.turnPolicy` is
 optional and defaults to `"queue"`.
 
 ```ts
@@ -129,7 +129,7 @@ that turn emits its own `turn.started` normally.
 
 ### Safe boundary
 
-A steering request does not rewrite an executing atomic step. eve applies it
+A steering request does not rewrite an executing atomic step. ovo applies it
 after the current model/tool boundary has settled or has been cooperatively
 stopped safely. The implementation may use a soft abort notification to stop
 obsolete provider work sooner, but authors cannot depend on whether a specific
@@ -153,7 +153,7 @@ later steering input B joins the current turn. If B cannot be applied and also
 falls back to the queue, the next turn observes A before B.
 
 Multiple steering deliveries are forwarded single-flight and applied in their
-admission order. eve may coalesce adjacent steering deliveries at one safe
+admission order. ovo may coalesce adjacent steering deliveries at one safe
 boundary as long as payload order and exactly-once behavior are preserved.
 Internal acknowledgement timing must never change their fallback order.
 
@@ -195,7 +195,7 @@ adapter payload. The adapter still projects the delivery into a harness
 `StepInput`.
 
 Explicit steering cannot be silently swallowed because an adapter returns
-`undefined`: eve falls back to the standard message/input-response projection
+`undefined`: ovo falls back to the standard message/input-response projection
 for that delivery. Structurally empty steering is normalized consistently with
 new-session input. The harness marks the projected replacement input with its
 existing internal `steering: true` marker so deferred input, compaction, and
@@ -297,7 +297,7 @@ step. Keep `StepInput.steering?: true` as the separate harness marker meaning
 `steeringState` avoids giving two adjacent layers incompatible fields named
 `steering`.
 
-Workflow serializes nested abort signals across step boundaries, but eve must
+Workflow serializes nested abort signals across step boundaries, but ovo must
 retain a focused live-signal integration test so an upstream serializer change
 cannot silently turn the signal into a plain object.
 

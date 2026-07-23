@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * CI lint that validates the `eve` import paths used in documentation code
+ * CI lint that validates the `ovo` import paths used in documentation code
  * samples against the package's real `exports` map.
  *
  * Docs are the most-copied surface of the framework, and the cheapest way for
@@ -11,8 +11,8 @@
  * positives.
  *
  * Checks every ```ts / ```typescript fenced block under /docs: any
- * `from "eve..."` / `import("eve...")` specifier must resolve to a real
- * subpath in packages/eve/package.json#exports.
+ * `from "ovo..."` / `import("ovo...")` specifier must resolve to a real
+ * subpath in packages/ovo/package.json#exports.
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { relative, resolve } from "node:path";
@@ -20,16 +20,16 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const docsDir = `${repoRoot}/docs`;
-const pkg = JSON.parse(readFileSync(`${repoRoot}/packages/eve/package.json`, "utf8"));
+const pkg = JSON.parse(readFileSync(`${repoRoot}/packages/ovo/package.json`, "utf8"));
 
 // Build the set of valid bare import specifiers from the exports map:
-//   "."            -> "eve"
-//   "./tools"      -> "eve/tools"
-//   "./channels/x" -> "eve/channels/x"
+//   "."            -> "ovo"
+//   "./tools"      -> "ovo/tools"
+//   "./channels/x" -> "ovo/channels/x"
 const validSpecifiers = new Set();
 for (const key of Object.keys(pkg.exports ?? {})) {
   if (key === "./package.json") continue;
-  validSpecifiers.add(key === "." ? "eve" : `eve/${key.slice(2)}`);
+  validSpecifiers.add(key === "." ? "ovo" : `ovo/${key.slice(2)}`);
 }
 
 function walk(dir) {
@@ -60,7 +60,7 @@ for (const abs of walk(docsDir)) {
     let m;
     while ((m = specRe.exec(code)) !== null) {
       const spec = m[1];
-      if (spec !== "eve" && !spec.startsWith("eve/")) continue; // only validate eve imports
+      if (spec !== "ovo" && !spec.startsWith("ovo/")) continue; // only validate ovo imports
       specCount += 1;
       if (!validSpecifiers.has(spec)) {
         failures.push({ file: rel, spec });
@@ -71,7 +71,7 @@ for (const abs of walk(docsDir)) {
 
 if (failures.length === 0) {
   process.stdout.write(
-    `[docs:snippets] ok — ${specCount} eve import path${specCount === 1 ? "" : "s"} across ${blockCount} code blocks resolve.\n`,
+    `[docs:snippets] ok — ${specCount} ovo import path${specCount === 1 ? "" : "s"} across ${blockCount} code blocks resolve.\n`,
   );
   process.exit(0);
 }
@@ -79,10 +79,10 @@ if (failures.length === 0) {
 process.stderr.write("[docs:snippets] FAIL\n\n");
 for (const { file, spec } of failures) {
   process.stderr.write(
-    `  docs/${file}\n    → imports \`${spec}\`, which is not an exported subpath of \`eve\`\n\n`,
+    `  docs/${file}\n    → imports \`${spec}\`, which is not an exported subpath of \`ovo\`\n\n`,
   );
 }
 process.stderr.write(
-  `Valid \`eve\` subpaths come from packages/eve/package.json#exports. Fix the import or add the export.\n`,
+  `Valid \`ovo\` subpaths come from packages/ovo/package.json#exports. Fix the import or add the export.\n`,
 );
 process.exit(1);

@@ -1,4 +1,4 @@
-import { defineEvalConfig } from "eve/evals";
+import { defineEvalConfig } from "ovo/evals";
 
 /** Judge is unused here; assertions are numeric. Kept for config parity. */
 export default defineEvalConfig({

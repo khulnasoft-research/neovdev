@@ -1,4 +1,4 @@
-import { defineEvalConfig } from "eve/evals";
+import { defineEvalConfig } from "ovo/evals";
 
 export default defineEvalConfig({
   maxConcurrency: 1,

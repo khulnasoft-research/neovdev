@@ -1,6 +1,6 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
-import { type AgentDefinition, defineAgent } from "eve";
-import { vercelOidc } from "eve/agents/auth";
+import { type AgentDefinition, defineAgent } from "ovo";
+import { vercelOidc } from "ovo/agents/auth";
 
 /**
  * Prompt-cache e2e fixture.

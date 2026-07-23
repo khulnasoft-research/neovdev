@@ -1,9 +1,9 @@
 ---
 title: "Context Control"
-description: "Control what an eve agent's model sees and when, across instructions, skills, the workspace, and subagents."
+description: "Control what an ovo agent's model sees and when, across instructions, skills, the workspace, and subagents."
 ---
 
-eve gives you a few levers for controlling what the model sees and when. `instructions.md` (or `instructions.ts`) is always on, `skills/` are available but loaded on demand, and the workspace and sandbox are visible through tools rather than pasted into the prompt.
+ovo gives you a few levers for controlling what the model sees and when. `instructions.md` (or `instructions.ts`) is always on, `skills/` are available but loaded on demand, and the workspace and sandbox are visible through tools rather than pasted into the prompt.
 
 ## Base identity with `instructions.md`
 
@@ -21,7 +21,7 @@ Keep this file focused on stable behavior that should apply on every turn.
 To build the instructions prompt from typed helpers, lib code, or environment-derived values, author it as a module instead of markdown.
 
 ```ts title="agent/instructions.ts"
-import { defineInstructions } from "eve/instructions";
+import { defineInstructions } from "ovo/instructions";
 import { buildInstructionsPrompt } from "./lib/prompts";
 
 export default defineInstructions({
@@ -29,11 +29,11 @@ export default defineInstructions({
 });
 ```
 
-Module-backed instructions run once at build time. eve captures the resulting markdown into the compiled manifest, so the runtime serves the same prompt every session without re-running the module.
+Module-backed instructions run once at build time. ovo captures the resulting markdown into the compiled manifest, so the runtime serves the same prompt every session without re-running the module.
 
 ## Load procedures on demand with `skills/`
 
-Skills stay out of the always-on prompt by default, which keeps rich procedures available without bloating every turn. eve advertises the available skills and adds a framework-owned `load_skill` tool. When the request clearly matches a skill description, or the user names a skill explicitly, the model activates that skill, and eve appends the skill's markdown to the active instructions for later turn work.
+Skills stay out of the always-on prompt by default, which keeps rich procedures available without bloating every turn. ovo advertises the available skills and adds a framework-owned `load_skill` tool. When the request clearly matches a skill description, or the user names a skill explicitly, the model activates that skill, and ovo appends the skill's markdown to the active instructions for later turn work.
 
 ### Flat skill
 
@@ -52,13 +52,13 @@ When the task is novel or ambiguous, gather evidence first, then answer with the
 remaining uncertainty.
 ```
 
-Packaged skills are useful when you also want sibling files such as `references/`, `assets/`, or `scripts/` under the same skill directory. Those files are available under the runtime skill root, normally `$HOME/.agents/skills/<skill>/`. Relative references inside a `SKILL.md` resolve from that specific skill directory, so `references/checklist.md` means `$HOME/.agents/skills/<skill>/references/checklist.md` unless eve has fallen back to `/workspace/skills/<skill>/`.
+Packaged skills are useful when you also want sibling files such as `references/`, `assets/`, or `scripts/` under the same skill directory. Those files are available under the runtime skill root, normally `$HOME/.agents/skills/<skill>/`. Relative references inside a `SKILL.md` resolve from that specific skill directory, so `references/checklist.md` means `$HOME/.agents/skills/<skill>/references/checklist.md` unless ovo has fallen back to `/workspace/skills/<skill>/`.
 
 See [Skills](../skills) for the full authoring model and install notes.
 
 ## Put runtime files in the workspace, not the prompt
 
-eve does not inline the entire authored surface into the prompt. Instead, it gives the model a shallow workspace hint, a separate skill-root hint, and runtime tools to inspect deeper when needed. Skill package files are outside `/workspace` in the normal case, and the model inspects them with the shared `bash` tool, which keeps prompts smaller and makes file and command work explicit.
+ovo does not inline the entire authored surface into the prompt. Instead, it gives the model a shallow workspace hint, a separate skill-root hint, and runtime tools to inspect deeper when needed. Skill package files are outside `/workspace` in the normal case, and the model inspects them with the shared `bash` tool, which keeps prompts smaller and makes file and command work explicit.
 
 See [Sandbox](../sandbox) for the workspace and sandbox model.
 

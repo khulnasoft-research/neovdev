@@ -1,4 +1,4 @@
-import { defineExtension } from "eve/extension";
+import { defineExtension } from "ovo/extension";
 import { z } from "zod";
 
 export default defineExtension({

@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const ECHO_MARKER_TOKEN = "skill-echo-marker-ok-V8Y2";
 

@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 /** A throwing resolver degrades to the fallback model instead of failing the turn. */
 export default defineEval({

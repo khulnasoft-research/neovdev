@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // Tools generated inside a for loop keep their per-iteration closures.
 export default defineEval({

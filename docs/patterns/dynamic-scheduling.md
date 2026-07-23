@@ -1,9 +1,9 @@
 ---
 title: "Dynamic scheduling"
-description: "Compose one minute-level eve schedule, proactive channel handoff, and CRUD tools into application-managed schedules."
+description: "Compose one minute-level ovo schedule, proactive channel handoff, and CRUD tools into application-managed schedules."
 ---
 
-Authored eve schedules are static files discovered at build time. You can build dynamic scheduling today by putting schedule rows in your application store and using one authored schedule as a dispatcher:
+Authored ovo schedules are static files discovered at build time. You can build dynamic scheduling today by putting schedule rows in your application store and using one authored schedule as a dispatcher:
 
 1. CRUD tools let the agent create and manage rows for the current tenant;
 2. `defineSchedule({ cron: "* * * * *" })` wakes once a minute;
@@ -29,7 +29,7 @@ agent/
 This is the only authored schedule. It looks up due application-managed rows and hands each one to Slack as a proactive session:
 
 ```ts title="agent/schedules/dynamic.ts"
-import { defineSchedule } from "eve/schedules";
+import { defineSchedule } from "ovo/schedules";
 import slack from "../channels/slack";
 import { scheduleStore } from "../lib/schedule-store";
 
@@ -85,8 +85,8 @@ This example uses Slack because it has a proactive target of `{ channelId }`. An
 Configure Slack normally:
 
 ```ts title="agent/channels/slack.ts"
-import { connectSlackCredentials } from "@vercel/connect/eve";
-import { slackChannel } from "eve/channels/slack";
+import { connectSlackCredentials } from "@vercel/connect/ovo";
+import { slackChannel } from "ovo/channels/slack";
 
 export default slackChannel({
   credentials: connectSlackCredentials("slack/my-agent"),
@@ -98,7 +98,7 @@ export default slackChannel({
 Tenant and owner identity come from `ctx.session`, never the model:
 
 ```ts title="agent/lib/tenant.ts"
-import type { SessionAuthContext, SessionContext } from "eve/context";
+import type { SessionAuthContext, SessionContext } from "ovo/context";
 
 export function requireScheduleOwner(ctx: SessionContext): {
   tenantId: string;
@@ -117,7 +117,7 @@ export function requireScheduleOwner(ctx: SessionContext): {
 Create a one-time schedule with `everyMinutes: null`, or a recurring one with an interval:
 
 ```ts title="agent/tools/create_schedule.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 import { scheduleStore } from "../lib/schedule-store";
 import { requireScheduleOwner } from "../lib/tenant";
@@ -140,7 +140,7 @@ export default defineTool({
 ```
 
 ```ts title="agent/tools/list_schedules.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 import { scheduleStore } from "../lib/schedule-store";
 import { requireScheduleOwner } from "../lib/tenant";
@@ -155,7 +155,7 @@ export default defineTool({
 ```
 
 ```ts title="agent/tools/update_schedule.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 import { scheduleStore } from "../lib/schedule-store";
 import { requireScheduleOwner } from "../lib/tenant";
@@ -180,8 +180,8 @@ export default defineTool({
 ```
 
 ```ts title="agent/tools/delete_schedule.ts"
-import { defineTool } from "eve/tools";
-import { always } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { always } from "ovo/tools/approval";
 import { z } from "zod";
 import { scheduleStore } from "../lib/schedule-store";
 import { requireScheduleOwner } from "../lib/tenant";
@@ -198,10 +198,10 @@ export default defineTool({
 
 ## Supply the schedule adapter
 
-The eve-facing implementation depends on this shape, not a database schema:
+The ovo-facing implementation depends on this shape, not a database schema:
 
 ```ts title="agent/lib/schedule-store.ts"
-import type { SessionAuthContext } from "eve/context";
+import type { SessionAuthContext } from "ovo/context";
 
 export interface ScheduleOwner {
   tenantId: string;
@@ -254,4 +254,4 @@ for repeating work and null for a one-time run. List schedules before changing
 an ambiguous one.
 ```
 
-The eve-specific core is small: four tools, one one-minute `defineSchedule`, and proactive `receive`. Storage and recurrence policy stay behind the application's adapter.
+The ovo-specific core is small: four tools, one one-minute `defineSchedule`, and proactive `receive`. Storage and recurrence policy stay behind the application's adapter.

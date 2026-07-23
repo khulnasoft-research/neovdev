@@ -1,4 +1,4 @@
-import { defineDynamic, defineSkill } from "eve/skills";
+import { defineDynamic, defineSkill } from "ovo/skills";
 
 export const HOUSE_RULES_OVERRIDE_TOKEN = "house-rules-dynamic-ok-M5T8";
 

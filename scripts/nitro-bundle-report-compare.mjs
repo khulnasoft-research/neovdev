@@ -75,7 +75,7 @@ function createInitInstallSizeBudgetChecks(initInstallComparison) {
     createSizeBudgetCheck(initInstallComparison.installedSizeBytes, {
       area: "Init",
       metric: "Installed footprint",
-      summary: "`eve init` install footprint",
+      summary: "`ovo init` install footprint",
     }),
   ];
 }

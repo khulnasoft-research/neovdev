@@ -1,4 +1,4 @@
-import { defineChannel, POST } from "eve/channels";
+import { defineChannel, POST } from "ovo/channels";
 
 export default defineChannel<undefined, void, { id: string }>({
   routes: [POST("/quiet-sink", async () => new Response("ok"))],

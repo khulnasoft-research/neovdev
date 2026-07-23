@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 import { SANDBOX_CLI_NAME, SANDBOX_CLI_TOKEN } from "./shared";
 

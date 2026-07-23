@@ -24,10 +24,10 @@ const integrationFiles = [
     data: {
       title: "Integrations",
       description:
-        "Browse every third-party service eve connects to, including channels and connections.",
+        "Browse every third-party service ovo connects to, including channels and connections.",
       excludeFrom: ["search" as const],
       type: "directory",
-      structuredData: structuredData("Integrations for eve."),
+      structuredData: structuredData("Integrations for ovo."),
       getText: async () => integrationsIndexMarkdown(),
     },
   },

@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const SEARCH_TOOL = "connection_search";
 const TFL_JOURNEY_MODES_TOOL = "tfl__Journey_Meta";

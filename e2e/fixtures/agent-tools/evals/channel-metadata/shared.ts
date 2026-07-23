@@ -1,4 +1,4 @@
-import type { EveEvalTargetHandle } from "eve/evals";
+import type { EveEvalTargetHandle } from "ovo/evals";
 
 /**
  * Shared helpers for the channel-metadata smoke evals. These cases verify

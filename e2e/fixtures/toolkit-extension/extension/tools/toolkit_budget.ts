@@ -1,10 +1,10 @@
-import { defineState } from "eve/context";
-import { defineTool } from "eve/tools";
+import { defineState } from "ovo/context";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 import { PROVIDER } from "../lib/brand";
 
-// Bare "budget" name — eve namespaces it per package so it can't collide with
+// Bare "budget" name — ovo namespaces it per package so it can't collide with
 // another extension's identically-named state.
 const budget = defineState("budget", () => ({ count: 0 }));
 

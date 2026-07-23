@@ -3,7 +3,7 @@ title: "Auth & Route Protection"
 description: "Secure your agent's HTTP routes with an ordered auth walk, verifier helpers, and connection OAuth via Vercel Connect."
 ---
 
-eve has two independent auth systems:
+ovo has two independent auth systems:
 
 - **Route auth** (inbound) decides who can reach your agent's HTTP routes. It runs at the channel layer, gating the request before any model work runs.
 - **Tool and connection auth** (outbound) is how your agent signs in to an external service it calls, like an OAuth MCP server. It happens later, when a tool or connection actually reaches out.
@@ -12,19 +12,19 @@ Start with route auth.
 
 ## Route auth
 
-The route-auth policy lives on the HTTP channel factory (`agent/channels/eve.ts`) and guards three routes:
+The route-auth policy lives on the HTTP channel factory (`agent/channels/ovo.ts`) and guards three routes:
 
-- `POST /eve/v1/session`
-- `POST /eve/v1/session/:sessionId`
-- `GET /eve/v1/session/:sessionId/stream`
+- `POST /ovo/v1/session`
+- `POST /ovo/v1/session/:sessionId`
+- `GET /ovo/v1/session/:sessionId/stream`
 
-These routes are protected by the channel's auth policy. eve fails closed by default: production browser traffic is rejected unless you configure an authenticator that accepts it, and anonymous access requires an explicit `none()`.
+These routes are protected by the channel's auth policy. ovo fails closed by default: production browser traffic is rejected unless you configure an authenticator that accepts it, and anonymous access requires an explicit `none()`.
 
-`GET /eve/v1/health` is always public and skips the walk entirely, so load balancers and uptime monitors can probe it without credentials.
+`GET /ovo/v1/health` is always public and skips the walk entirely, so load balancers and uptime monitors can probe it without credentials.
 
-```ts title="agent/channels/eve.ts"
-import { eveChannel } from "eve/channels/eve";
-import { localDev, vercelOidc } from "eve/channels/auth";
+```ts title="agent/channels/ovo.ts"
+import { eveChannel } from "ovo/channels/ovo";
+import { localDev, vercelOidc } from "ovo/channels/auth";
 
 export default eveChannel({
   auth: [vercelOidc(), localDev()],
@@ -35,7 +35,7 @@ export default eveChannel({
 
 ## The ordered auth walk
 
-`auth` takes a single `AuthFn` or an array that eve walks in order. Each entry has three possible outcomes:
+`auth` takes a single `AuthFn` or an array that ovo walks in order. Each entry has three possible outcomes:
 
 - returns a `SessionAuthContext`: accept the request and stop the walk
 - returns `null` / `undefined`: skip to the next entry
@@ -44,8 +44,8 @@ export default eveChannel({
 If every entry skips, the request gets a `401` whose `WWW-Authenticate` header advertises the challenge scheme(s) the configured entries declare — `Basic` for `httpBasic()`, `Bearer` for the token-based helpers (`jwtHmac`, `jwtEcdsa`, `oidc`, `vercelOidc`), both when you mix them, and `Bearer` as a fallback for entries that don't declare a scheme (custom `AuthFn`s, or an empty array). See [`withAuthChallenges`](#custom-verifiers) to declare a scheme on a custom `AuthFn`.
 
 ```ts
-import { type AuthFn, localDev, vercelOidc } from "eve/channels/auth";
-import { eveChannel } from "eve/channels/eve";
+import { type AuthFn, localDev, vercelOidc } from "ovo/channels/auth";
+import { eveChannel } from "ovo/channels/ovo";
 import { getSession } from "@/lib/auth";
 
 function appSession(): AuthFn<Request> {
@@ -71,7 +71,7 @@ Put your own providers ahead of the catch-all helpers. `localDev()` is the final
 To reject with a precise status instead of skipping, throw:
 
 ```ts
-import { ForbiddenError, UnauthenticatedError } from "eve/channels/auth";
+import { ForbiddenError, UnauthenticatedError } from "ovo/channels/auth";
 
 throw new UnauthenticatedError({
   code: "authentication_required",
@@ -80,11 +80,11 @@ throw new UnauthenticatedError({
 throw new ForbiddenError({ message: "Not allowed on this workspace." }); // 403
 ```
 
-Any other thrown error follows the normal channel failure path. When building a custom channel on `defineChannel`, call `routeAuth(request, auth)` from `eve/channels/auth` to reuse the same walk semantics.
+Any other thrown error follows the normal channel failure path. When building a custom channel on `defineChannel`, call `routeAuth(request, auth)` from `ovo/channels/auth` to reuse the same walk semantics.
 
 ## Verifier helpers
 
-`eve/channels/auth` ships these channel-auth helpers:
+`ovo/channels/auth` ships these channel-auth helpers:
 
 | Helper           | Use when                                                                  |
 | ---------------- | ------------------------------------------------------------------------- |
@@ -94,9 +94,9 @@ Any other thrown error follows the normal channel failure path. When building a 
 | `httpBasic(...)` | Operator or service access via a shared username/password.                |
 | `jwtHmac(...)`   | You control a shared-secret JWT signer.                                   |
 | `jwtEcdsa(...)`  | You verify asymmetric JWTs minted by another system.                      |
-| `oidc(...)`      | You want eve to verify OIDC-issued tokens from an arbitrary issuer.       |
+| `oidc(...)`      | You want ovo to verify OIDC-issued tokens from an arbitrary issuer.       |
 
-`httpBasic(credentials, { realm })` accepts an optional `realm`, rendered on the `WWW-Authenticate: Basic` challenge (e.g. `Basic realm="agent", charset="UTF-8"`) so browsers label their native login prompt. It defaults to `"eve"`, ensuring every Basic challenge includes the required realm. Usernames and passwords are normalized to Unicode NFC before comparison, matching the advertised UTF-8 credential encoding.
+`httpBasic(credentials, { realm })` accepts an optional `realm`, rendered on the `WWW-Authenticate: Basic` challenge (e.g. `Basic realm="agent", charset="UTF-8"`) so browsers label their native login prompt. It defaults to `"ovo"`, ensuring every Basic challenge includes the required realm. Usernames and passwords are normalized to Unicode NFC before comparison, matching the advertised UTF-8 credential encoding.
 
 Exercise caution for agents that process non-public, sensitive, regulated, or production data unless you have implemented other access controls.
 
@@ -117,7 +117,7 @@ Auth fails closed: routes reject unauthenticated traffic by default, and the OID
 Each `subjects` entry is matched against the token's `sub` claim, which Vercel shapes as `owner:<team>:project:<name>:environment:<env>`. Hand-writing that string is a footgun: a typo silently rejects every caller, and an over-broad `*` wildcard silently lets unrelated ones in. Build the pattern with `vercelSubject(...)` instead. It rejects malformed input at construction time, and defaults `environment` to `"production"` when you omit it, so an unspecified environment cannot silently accept preview or development tokens:
 
 ```ts
-import { vercelOidc, vercelSubject } from "eve/channels/auth";
+import { vercelOidc, vercelSubject } from "ovo/channels/auth";
 
 vercelOidc({
   subjects: [
@@ -136,7 +136,7 @@ When none of the shipped helpers fit, write your own `AuthFn` (the array example
 A custom `AuthFn` doesn't declare a `WWW-Authenticate` scheme by default, so `routeAuth` falls back to `Bearer` for it. Wrap it with `withAuthChallenges(fn, challenges)` to declare the scheme(s) it actually satisfies, so a mixed `auth` array produces an accurate 401:
 
 ```ts
-import { withAuthChallenges, type AuthFn } from "eve/channels/auth";
+import { withAuthChallenges, type AuthFn } from "ovo/channels/auth";
 
 const apiKeyAuth: AuthFn<Request> = withAuthChallenges(
   (request) => (isValidApiKey(request) ? apiKeySessionAuth : null),
@@ -155,7 +155,7 @@ const apiKeyAuth: AuthFn<Request> = withAuthChallenges(
 Pull the token with `extractBearerToken(request.headers.get("authorization"))` before you hand it to the JWT/OIDC verifiers. The configs (`VerifyJwtHmacConfig`, `VerifyJwtEcdsaConfig`, `VerifyOidcConfig`) take `issuer`, `audiences`, the signing material (`secret` / `publicKey` / `discoveryUrl`), and optional `subjects` / `claims` matchers.
 
 ```ts
-import { extractBearerToken, verifyJwtHmac, type AuthFn } from "eve/channels/auth";
+import { extractBearerToken, verifyJwtHmac, type AuthFn } from "ovo/channels/auth";
 
 function hmacAuth(): AuthFn<Request> {
   return async (request) => {
@@ -176,8 +176,8 @@ function hmacAuth(): AuthFn<Request> {
 If a `defineChannel` route handler runs its own checks instead of `routeAuth`, it can still emit a framework-shaped failure with `createUnauthorizedResponse(...)`. You get back a `Response` with `cache-control: no-store`, a `{ ok: false, code, error }` JSON body, and one `www-authenticate` header per challenge:
 
 ```ts title="agent/channels/intake.ts"
-import { defineChannel, POST } from "eve/channels";
-import { createUnauthorizedResponse } from "eve/channels/auth";
+import { defineChannel, POST } from "ovo/channels";
+import { createUnauthorizedResponse } from "ovo/channels/auth";
 
 export default defineChannel({
   routes: [
@@ -199,22 +199,22 @@ export default defineChannel({
 
 ## Network policy
 
-`eve/channels/auth` exports `createIpAllowList(...)` and `isIpAllowed(...)` for cutting off requests before any model work starts. A request that fails the network policy is dropped ahead of both auth and runtime execution.
+`ovo/channels/auth` exports `createIpAllowList(...)` and `isIpAllowed(...)` for cutting off requests before any model work starts. A request that fails the network policy is dropped ahead of both auth and runtime execution.
 
 ## Replace `placeholderAuth` before production
 
-`eve init` scaffolds `agent/channels/eve.ts` with a `placeholderAuth()` guardrail:
+`ovo init` scaffolds `agent/channels/ovo.ts` with a `placeholderAuth()` guardrail:
 
 ```ts
-import { eveChannel } from "eve/channels/eve";
-import { localDev, placeholderAuth, vercelOidc } from "eve/channels/auth";
+import { eveChannel } from "ovo/channels/ovo";
+import { localDev, placeholderAuth, vercelOidc } from "ovo/channels/auth";
 
 export default eveChannel({
   auth: [vercelOidc(), localDev(), placeholderAuth()],
 });
 ```
 
-In production, `placeholderAuth()` returns a structured `401` so a generated web chat app can say "auth isn't configured yet" instead of throwing an internal error. Replace it before a browser caller submits a production request: swap in your app's `AuthFn` or one of the shipped helpers. Delete the authored channel file entirely and eve falls back to the framework default `[vercelOidc(), localDev()]`, which also rejects production browser traffic.
+In production, `placeholderAuth()` returns a structured `401` so a generated web chat app can say "auth isn't configured yet" instead of throwing an internal error. Replace it before a browser caller submits a production request: swap in your app's `AuthFn` or one of the shipped helpers. Delete the authored channel file entirely and ovo falls back to the framework default `[vercelOidc(), localDev()]`, which also rejects production browser traffic.
 
 You do not have to keep `vercelOidc()` in the final policy. For a self-hosted app, an app-embedded frontend, or any deployment that uses a non-Vercel identity system, use `httpBasic()`, `jwtHmac()`, `jwtEcdsa()`, generic `oidc()`, or a custom `AuthFn` that maps your verified user/session/API key into a `SessionAuthContext`.
 
@@ -235,9 +235,9 @@ Route auth does not enforce session ownership. If multiple users or tenants can 
 
 ## Tool and connection auth
 
-Tool and connection auth is how your agent reaches an external service that wants an interactive sign-in, like an OAuth MCP server. Connections declare `auth` on the connection definition. Tools should resolve providers inline with `ctx.getToken(provider)` and call `ctx.requireAuth(provider)` only when a downstream service rejects a token; eve drives the sign-in, caches the token per step, and re-runs the call once the caller authorizes.
+Tool and connection auth is how your agent reaches an external service that wants an interactive sign-in, like an OAuth MCP server. Connections declare `auth` on the connection definition. Tools should resolve providers inline with `ctx.getToken(provider)` and call `ctx.requireAuth(provider)` only when a downstream service rejects a token; ovo drives the sign-in, caches the token per step, and re-runs the call once the caller authorizes.
 
-The principal for user-scoped tool and connection auth comes from route auth. `connect("...")` from `@vercel/connect/eve` defaults to `principalType: "user"`, so the active session must have `ctx.session.auth.current.principalType === "user"` before the first token lookup can start OAuth. If the session is anonymous, local-dev-only, runtime-scoped, or service-scoped, eve fails fast with `reason: "principal_required"` because there is no end-user identity to bind the OAuth grant to.
+The principal for user-scoped tool and connection auth comes from route auth. `connect("...")` from `@vercel/connect/ovo` defaults to `principalType: "user"`, so the active session must have `ctx.session.auth.current.principalType === "user"` before the first token lookup can start OAuth. If the session is anonymous, local-dev-only, runtime-scoped, or service-scoped, ovo fails fast with `reason: "principal_required"` because there is no end-user identity to bind the OAuth grant to.
 
 Use app-scoped auth when the external service should act as the agent itself:
 
@@ -251,11 +251,11 @@ Use user-scoped auth when the external service should act as the signed-in perso
 auth: connect("linear/myagent");
 ```
 
-For user-scoped auth in a browser app, the route-auth entry for the eve channel should verify your app session and return a user principal:
+For user-scoped auth in a browser app, the route-auth entry for the ovo channel should verify your app session and return a user principal:
 
-```ts title="agent/channels/eve.ts"
-import { eveChannel } from "eve/channels/eve";
-import { localDev, type AuthFn } from "eve/channels/auth";
+```ts title="agent/channels/ovo.ts"
+import { eveChannel } from "ovo/channels/ovo";
+import { localDev, type AuthFn } from "ovo/channels/auth";
 import { getSession } from "@/lib/auth";
 
 function appSession(): AuthFn<Request> {
@@ -286,12 +286,12 @@ Built-in platform channels that identify a human sender, such as Slack, Discord,
 
 ### On a connection
 
-Attach `connect()` from `@vercel/connect/eve` to the connection:
+Attach `connect()` from `@vercel/connect/ovo` to the connection:
 
 ```ts title="agent/connections/linear.ts"
-import { connect } from "@vercel/connect/eve";
-import { defineMcpClientConnection } from "eve/connections";
-import { once } from "eve/tools/approval";
+import { connect } from "@vercel/connect/ovo";
+import { defineMcpClientConnection } from "ovo/connections";
+import { once } from "ovo/tools/approval";
 
 export default defineMcpClientConnection({
   url: "https://mcp.linear.app/mcp",
@@ -308,8 +308,8 @@ The first call that needs a user-scoped connection kicks off an OAuth sign-in, s
 When one tool calls a service behind OAuth, keep the auth provider at the call site and skip the separate connection. Providers take the same shapes as connection `auth`: `connect("...")` for Vercel Connect-backed OAuth, a custom interactive definition, or a plain `{ getToken }` for static credentials.
 
 ```ts title="agent/tools/list_okta_groups.ts"
-import { defineTool } from "eve/tools";
-import { connect } from "@vercel/connect/eve";
+import { defineTool } from "ovo/tools";
+import { connect } from "@vercel/connect/ovo";
 import { z } from "zod";
 
 const oktaAuth = connect("okta/myagent");
@@ -330,8 +330,8 @@ export default defineTool({
 This same inline shape naturally handles tools that need more than one credential:
 
 ```ts title="agent/tools/sync_ticket.ts"
-import { connect } from "@vercel/connect/eve";
-import { defineTool } from "eve/tools";
+import { connect } from "@vercel/connect/ovo";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 const githubAuth = connect("github/myagent");
@@ -380,7 +380,7 @@ Throw `ConnectionAuthorizationRequiredError` from an inline provider's `getToken
 
 Vercel Connect providers usually supply their own display name in the authorization challenge. Set `displayName` in the inline options only when you need to override what users see, for example `ctx.getToken(customAuth, { displayName: "Salesforce" })`. It is presentation-only.
 
-Inline providers derive a stable tool-qualified auth key from Vercel Connect metadata when available. If you pass multiple custom providers that do not carry provider metadata, give each one an explicit auth key, for example `ctx.getToken(auth, { authKey: "github" })`. This `authKey` controls eve's cache and callback keys; it is not an OAuth scope.
+Inline providers derive a stable tool-qualified auth key from Vercel Connect metadata when available. If you pass multiple custom providers that do not carry provider metadata, give each one an explicit auth key, for example `ctx.getToken(auth, { authKey: "github" })`. This `authKey` controls ovo's cache and callback keys; it is not an OAuth scope.
 
 ## What to read next
 

@@ -3,7 +3,7 @@ title: "Project Layout"
 description: "Authored slots under agent/ and the path-derived naming rule."
 ---
 
-eve builds an agent by walking the filesystem under `agent/`. Each directory is an authored slot, and the slot a file lands in determines how eve loads it.
+ovo builds an agent by walking the filesystem under `agent/`. Each directory is an authored slot, and the slot a file lands in determines how ovo loads it.
 
 ## Naming rule
 
@@ -64,11 +64,11 @@ The Subagents column states whether a local subagent (`subagents/<id>/`) can aut
 
 ## What reaches the runtime sandbox
 
-eve does not mount the whole tree. Authored workspace files land in the sandbox workspace:
+ovo does not mount the whole tree. Authored workspace files land in the sandbox workspace:
 
 - `agent/sandbox/workspace/**` → `/workspace/...` at session bootstrap
 
-Skill files land outside the workspace, under `$HOME/.agents/skills/...`. If `$HOME` is unavailable, eve falls back to `/workspace/skills/...`. Packaged skill references such as `references/checklist.md` resolve relative to the directory containing that skill's `SKILL.md`.
+Skill files land outside the workspace, under `$HOME/.agents/skills/...`. If `$HOME` is unavailable, ovo falls back to `/workspace/skills/...`. Packaged skill references such as `references/checklist.md` resolve relative to the directory containing that skill's `SKILL.md`.
 
 Everything in `lib/` stays import-only source code and never reaches the workspace.
 
@@ -112,9 +112,9 @@ my-agent/
 
 Prefer the nested layout. It keeps the app root separate from the authored surface.
 
-## Why didn't eve discover my file?
+## Why didn't ovo discover my file?
 
-Run `eve info`. It lists the discovered surface and prints discovery diagnostics. From there, check that the file sits in the right authored slot (per the slot table above) and that the root-vs-subagent boundary is valid. eve also writes inspectable artifacts under `.eve/`. See the debugging artifacts in [instrumentation.ts](../guides/instrumentation) and the [CLI](./cli) reference.
+Run `ovo info`. It lists the discovered surface and prints discovery diagnostics. From there, check that the file sits in the right authored slot (per the slot table above) and that the root-vs-subagent boundary is valid. ovo also writes inspectable artifacts under `.ovo/`. See the debugging artifacts in [instrumentation.ts](../guides/instrumentation) and the [CLI](./cli) reference.
 
 ## What to read next
 

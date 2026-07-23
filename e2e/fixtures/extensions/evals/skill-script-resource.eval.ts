@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const TOOLKIT_SKILL_SCRIPT_TOKEN = "toolkit-skill-script-ok-8M3P";
 

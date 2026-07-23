@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 /**
  * Workflow subagent budget: the fixture configures `maxSubagents` as 2 on the

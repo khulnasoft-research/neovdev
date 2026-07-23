@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // A resolver returning null must register no tools: the turn completes
 // without any "dynamic-null" call.

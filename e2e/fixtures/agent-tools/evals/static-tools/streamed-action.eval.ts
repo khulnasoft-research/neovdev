@@ -1,5 +1,5 @@
-import type { ActionResultStreamEvent, HandleMessageStreamEvent } from "eve/client";
-import { defineEval } from "eve/evals";
+import type { ActionResultStreamEvent, HandleMessageStreamEvent } from "ovo/client";
+import { defineEval } from "ovo/evals";
 
 const TOOL_NAME = "streamed-action";
 const LABEL = "streaming-e2e";

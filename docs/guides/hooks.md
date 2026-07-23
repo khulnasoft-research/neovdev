@@ -3,12 +3,12 @@ title: "Hooks"
 description: "Subscribe to runtime stream events from agent/hooks/."
 ---
 
-Hooks are eve's authored extension points for the runtime event stream. A hook subscribes to stream events and runs side effects after each event is durably recorded, such as audit logging, metrics and alerting, or persisting every session and message to your own database for analytics. Reach for one to observe what the agent does without writing a tool, a context provider (a value made available across a step), or a channel adapter handler (a handler defined on a channel's adapter; see [Channels](../channels)).
+Hooks are ovo's authored extension points for the runtime event stream. A hook subscribes to stream events and runs side effects after each event is durably recorded, such as audit logging, metrics and alerting, or persisting every session and message to your own database for analytics. Reach for one to observe what the agent does without writing a tool, a context provider (a value made available across a step), or a channel adapter handler (a handler defined on a channel's adapter; see [Channels](../channels)).
 
 ## Define a hook
 
 ```ts title="agent/hooks/audit.ts"
-import { defineHook } from "eve/hooks";
+import { defineHook } from "ovo/hooks";
 
 export default defineHook({
   events: {
@@ -24,7 +24,7 @@ export default defineHook({
 
 The slug is the path-relative basename. `agent/hooks/audit.ts` becomes `"audit"`, and `agent/hooks/auth/load-profile.ts` becomes `"auth/load-profile"`.
 
-`defineHook`, `HookDefinition`, and `HookContext` live on `eve/hooks`.
+`defineHook`, `HookDefinition`, and `HookContext` live on `ovo/hooks`.
 
 A hook file declares stream-event subscribers under the `events` map, keyed by event type, with `*` matching every event. Subscribe to any event in the runtime stream vocabulary documented in [Sessions, runs and streaming](../concepts/sessions-runs-and-streaming), including the lifecycle events `session.started`, `turn.completed`, `message.completed`, and `action.result`. Handlers are observe-only. They cannot inject model context. To contribute runtime model messages, use `defineDynamic` and `defineInstructions` in `agent/instructions/`.
 
@@ -42,11 +42,11 @@ interface HookContext {
 
 ### Narrowing tool results
 
-`toolResultFrom` narrows an `action.result` event to a specific authored tool or MCP connection and returns typed output. Import it from `eve/tools`:
+`toolResultFrom` narrows an `action.result` event to a specific authored tool or MCP connection and returns typed output. Import it from `ovo/tools`:
 
 ```ts
-import { defineHook } from "eve/hooks";
-import { toolResultFrom } from "eve/tools";
+import { defineHook } from "ovo/hooks";
+import { toolResultFrom } from "ovo/tools";
 import getWeather from "../tools/get-weather";
 import linear from "../connections/linear";
 
@@ -92,7 +92,7 @@ Hooks always run after the event is durably recorded, so if a hook throws, the s
 
 ## What happens when a hook throws
 
-A thrown handler propagates through the emit composer and surfaces as `turn.failed`. If a hook subscribed to a failure-cascade event also throws, it escalates to `session.failed`. For belt-and-suspenders semantics inside a hook, wrap the body in `try`/`catch`. eve treats a thrown hook as a real failure.
+A thrown handler propagates through the emit composer and surfaces as `turn.failed`. If a hook subscribed to a failure-cascade event also throws, it escalates to `session.failed`. For belt-and-suspenders semantics inside a hook, wrap the body in `try`/`catch`. ovo treats a thrown hook as a real failure.
 
 ## Subagent isolation
 

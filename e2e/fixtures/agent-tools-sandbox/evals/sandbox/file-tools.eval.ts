@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // The framework `write_file`, `read_file`, and `grep` tools all target the
 // sandbox filesystem. Writing a unique token with `write_file`, then locating

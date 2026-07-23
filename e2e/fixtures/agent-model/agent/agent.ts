@@ -1,4 +1,4 @@
-import { defineAgent, defineDynamic, type DynamicResolveContext } from "eve";
+import { defineAgent, defineDynamic, type DynamicResolveContext } from "ovo";
 
 const model = process.env.EVE_E2E_MODEL ?? "openai/gpt-5.6-sol";
 

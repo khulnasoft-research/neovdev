@@ -3,8 +3,8 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { promisify } from "node:util";
 
-import { defineEval } from "eve/evals";
-import type { EveEvalContext } from "eve/evals";
+import { defineEval } from "ovo/evals";
+import type { EveEvalContext } from "ovo/evals";
 
 // Sandbox semantics across deployment updates, driven entirely from inside
 // the eval: the test body runs on the host with the fixture as cwd, so it
@@ -21,7 +21,7 @@ import type { EveEvalContext } from "eve/evals";
 // in execution/workflow-runtime.ts). The timeline below asserts exactly the
 // preview contract; the pinned-turn gate at t3 is a deliberate tripwire that
 // must be flipped when dispatch gains preview latest-routing
-// (https://github.com/vercel/eve/issues/582).
+// (https://github.com/vercel/ovo/issues/582).
 //
 // Timeline under test:
 //   t0  session A writes a file into its sandbox workspace
@@ -152,7 +152,7 @@ export default defineEval({
 async function deployToAlias(t: EveEvalContext, alias: string, phase: string): Promise<void> {
   // Mirror the workflow's build env. Sandbox templates key on
   // VERCEL_PROJECT_ID, which is already present in the environment.
-  await execFileAsync("pnpm", ["exec", "eve", "build"], {
+  await execFileAsync("pnpm", ["exec", "ovo", "build"], {
     ...EXEC_OPTIONS,
     env: {
       ...process.env,
@@ -191,13 +191,13 @@ async function deployToAlias(t: EveEvalContext, alias: string, phase: string): P
 }
 
 /**
- * Polls `/eve/v1/info` until the alias serves a deployment whose manifest
+ * Polls `/ovo/v1/info` until the alias serves a deployment whose manifest
  * contains `marker`, so post-redeploy turns cannot hit a stale deployment.
  */
 async function waitForAliasToServe(t: EveEvalContext, marker: string): Promise<void> {
   const deadline = Date.now() + 120_000;
   while (Date.now() < deadline) {
-    const response = await t.target.fetch("/eve/v1/info");
+    const response = await t.target.fetch("/ovo/v1/info");
     if (response.ok && JSON.stringify(await response.json()).includes(marker)) {
       return;
     }

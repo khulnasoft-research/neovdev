@@ -95,7 +95,7 @@ async function emitDeclarations(tempRoot, { contractRoot, eveRoot }) {
   await rewriteDeclarationSpecifiers(declarationRoot);
 
   const packageJson = JSON.parse(await readFile(join(eveRoot, "package.json"), "utf8"));
-  packageJson.name = "eve-extension-contracts";
+  packageJson.name = "ovo-extension-contracts";
   packageJson.version = "0.0.0";
   packageJson.private = true;
   packageJson.types = "./extension-contracts/entrypoints/extension.d.ts";
@@ -245,7 +245,7 @@ export async function generateHistoricalCapabilityReport(capability, version) {
       stdio: ["ignore", "pipe", "pipe"],
     });
     addedWorktree = true;
-    const historicalEveRoot = join(worktreeRoot, "packages/eve");
+    const historicalEveRoot = join(worktreeRoot, "packages/ovo");
     const historicalContractRoot = join(historicalEveRoot, "extension-contracts");
     await symlink(join(EVE_ROOT, "node_modules"), join(historicalEveRoot, "node_modules"), "dir");
     const historicalCapabilities = (await readdir(join(historicalContractRoot, "entrypoints")))
@@ -309,7 +309,7 @@ export async function checkCapabilityReports(configuration, update) {
       const metadataPath = join(REPORT_ROOT, capability, `v${version}.json`);
       const snapshot = formatSnapshot(
         JSON.stringify({
-          kind: "eve-extension-capability-contract",
+          kind: "ovo-extension-capability-contract",
           capability,
           epoch: version,
           sha256: createHash("sha256").update(generatedReport).digest("hex"),

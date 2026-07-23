@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // Both extensions author defineState("budget"). If package scoping regressed,
 // the counters would collapse onto one slot and gizmo would read 3, not 1.

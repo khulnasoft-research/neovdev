@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const DYNAMIC_SKILL_TOKEN = "dynamic-skill-ok-P4K9";
 

@@ -1,5 +1,5 @@
-import { defineEval } from "eve/evals";
-import { equals, satisfies } from "eve/evals/expect";
+import { defineEval } from "ovo/evals";
+import { equals, satisfies } from "ovo/evals/expect";
 
 // Token returned by agent/tools/record-heartbeat.ts; mirrored here because the
 // agent tree compiles independently of the eval tree.

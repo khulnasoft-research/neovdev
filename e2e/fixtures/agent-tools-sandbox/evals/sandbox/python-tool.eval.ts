@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // The `run_python` authored tool grabs a live sandbox via `ctx.getSandbox()`,
 // writes a generated script with `writeTextFile`, and executes it with `run`.

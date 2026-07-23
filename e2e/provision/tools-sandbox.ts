@@ -10,7 +10,7 @@ import { theme } from "../lib/theme.ts";
 const APP_NAME = "agent-tools-sandbox";
 const PORT = Number(process.env.PORT ?? 3350);
 
-const AUTHOR_MARKER_PATH = "/home/vercel-sandbox/eve-author-snapshot-marker.txt";
+const AUTHOR_MARKER_PATH = "/home/vercel-sandbox/ovo-author-snapshot-marker.txt";
 
 await provision("tools-sandbox", async (ctx) => {
   const env: NodeJS.ProcessEnv = {
@@ -34,7 +34,7 @@ await provision("tools-sandbox", async (ctx) => {
 });
 
 /**
- * Builds an author snapshot outside eve: create a standalone Vercel Sandbox,
+ * Builds an author snapshot outside ovo: create a standalone Vercel Sandbox,
  * write a fresh marker token outside `/workspace`, snapshot it, and delete
  * the seed. The fixture's sandbox definition rebinds its backend to
  * `vercel({ source: { type: "snapshot", snapshotId } })` when
@@ -73,7 +73,7 @@ async function seedAuthorSnapshot(): Promise<{ snapshotId: string; markerToken: 
   console.log(theme.muted(`[tools-sandbox] cleaning leftover ${APP_NAME} templates...`));
   const existing = await Sandbox.list({ limit: 50 });
   for (const sb of existing.sandboxes) {
-    if (sb.name.startsWith("eve-sbx-tpl-vercel-")) {
+    if (sb.name.startsWith("ovo-sbx-tpl-vercel-")) {
       try {
         const handle = await Sandbox.get({ name: sb.name });
         if (handle) await handle.delete();
@@ -84,7 +84,7 @@ async function seedAuthorSnapshot(): Promise<{ snapshotId: string; markerToken: 
   }
 
   const markerToken = `author-snapshot-ok-${randomBytes(6).toString("hex")}`;
-  const seedSandboxName = `eve-smoke-author-seed-${randomBytes(4).toString("hex")}`;
+  const seedSandboxName = `ovo-smoke-author-seed-${randomBytes(4).toString("hex")}`;
 
   console.log(theme.muted(`[tools-sandbox] creating seed sandbox "${seedSandboxName}"...`));
   const seedSandbox = await Sandbox.create({ name: seedSandboxName, persistent: false });

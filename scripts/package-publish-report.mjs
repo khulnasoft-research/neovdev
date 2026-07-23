@@ -316,7 +316,7 @@ async function resolveCatalogReferences(packageRoot, manifest) {
  * read the manifest mid-rewrite.
  */
 async function rewriteCatalogReferencesInTarball(tarballPath, packageRoot) {
-  const stagingDirectory = await mkdtemp(join(tmpdir(), "eve-package-rewrite-"));
+  const stagingDirectory = await mkdtemp(join(tmpdir(), "ovo-package-rewrite-"));
 
   try {
     await execFile("tar", ["-xzf", tarballPath, "-C", stagingDirectory], {
@@ -397,7 +397,7 @@ async function collectInstalledPackageSnapshot(input) {
     join(installRoot, "package.json"),
     `${JSON.stringify(
       {
-        name: "eve-package-install-footprint",
+        name: "ovo-package-install-footprint",
         private: true,
       },
       null,
@@ -497,8 +497,8 @@ export async function collectPublishedPackageReportFromPack(options) {
  */
 export async function collectPublishedPackageReport(options) {
   const packageRoot = resolve(options.packageRoot);
-  const packDirectory = await mkdtemp(join(tmpdir(), "eve-package-pack-"));
-  const installDirectory = await mkdtemp(join(tmpdir(), "eve-package-install-"));
+  const packDirectory = await mkdtemp(join(tmpdir(), "ovo-package-pack-"));
+  const installDirectory = await mkdtemp(join(tmpdir(), "ovo-package-install-"));
 
   try {
     const packResult = await runPack(packageRoot, packDirectory);

@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const CLIENT_CONTEXT_TOKEN = "clientctx-ok-W7R2";
 

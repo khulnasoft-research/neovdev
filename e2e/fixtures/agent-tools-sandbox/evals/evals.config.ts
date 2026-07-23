@@ -1,4 +1,4 @@
-import { defineEvalConfig } from "eve/evals";
+import { defineEvalConfig } from "ovo/evals";
 
 /** Default judge model for any `t.judge.*` assertion in this fixture. */
 export default defineEvalConfig({

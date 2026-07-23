@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 export default defineEval({
   description: "Mounted extension tool returns the config bound at the mount site.",

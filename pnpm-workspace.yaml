@@ -57,7 +57,7 @@ minimumReleaseAgeExclude:
   - ai
   - crossws
   - experimental-ai-sdk-code-mode
-  - eve
+  - ovo
   - nitro
   - rolldown
   - turbo

@@ -1,9 +1,9 @@
 ---
 title: "Extensions"
-description: "Publish reusable eve capabilities as an npm package, then install and mount them in an agent."
+description: "Publish reusable ovo capabilities as an npm package, then install and mount them in an agent."
 ---
 
-Extensions package eve tools, connections, skills, instruction fragments, and hooks. A publisher builds and distributes a package; a consumer installs it and mounts it in an agent.
+Extensions package ovo tools, connections, skills, instruction fragments, and hooks. A publisher builds and distributes a package; a consumer installs it and mounts it in an agent.
 
 This enables sharing many different capability sets. A browser extension might include several tools for navigating a site. A memory extension could use hooks to capture context and tools to recall it. A self-improving extension could pair hooks with dynamic instructions.
 
@@ -14,7 +14,7 @@ This enables sharing many different capability sets. A browser extension might i
 Start with the extension scaffold:
 
 ```bash
-npx eve@latest extension init my-crm
+npx ovo@latest extension init my-crm
 ```
 
 The command creates the package, installs dependencies, and initializes Git. It includes `extension/extension.ts`, TypeScript configuration, and the package metadata required to build and publish.
@@ -45,7 +45,7 @@ Keep agent configuration, sandboxes, schedules, and nested extensions in the con
 The publisher's `extension/extension.ts` default-exports a `defineExtension` handle. Give it a [Standard Schema](https://standardschema.dev) when consumers need to provide settings:
 
 ```ts title="extension/extension.ts"
-import { defineExtension } from "eve/extension";
+import { defineExtension } from "ovo/extension";
 import { z } from "zod";
 
 export default defineExtension({
@@ -59,7 +59,7 @@ export default defineExtension({
 Contributions import that handle to read the validated configuration. Defaults have already been applied:
 
 ```ts title="extension/tools/search.ts"
-import { defineTool } from "eve/tools";
+import { defineTool } from "ovo/tools";
 import { z } from "zod";
 
 import extension from "../extension";
@@ -87,7 +87,7 @@ The scaffold's `package.json` declares separate source and distribution roots:
   "name": "my-crm",
   "version": "0.0.0",
   "type": "module",
-  "eve": {
+  "ovo": {
     "extension": {
       "source": "./extension",
       "dist": "./dist/extension",
@@ -105,8 +105,8 @@ The scaffold's `package.json` declares separate source and distribution roots:
     },
   },
   "scripts": {
-    "build": "eve extension build",
-    "prepare": "eve extension build",
+    "build": "ovo extension build",
+    "prepare": "ovo extension build",
     "typecheck": "tsc",
   },
   "dependencies": {
@@ -114,11 +114,11 @@ The scaffold's `package.json` declares separate source and distribution roots:
   },
   "devDependencies": {
     "@types/node": "^x",
-    "eve": "x.y.z",
+    "ovo": "x.y.z",
     "typescript": "^x",
   },
   "peerDependencies": {
-    "eve": "*",
+    "ovo": "*",
   },
   "engines": {
     "node": ">=24",
@@ -128,15 +128,15 @@ The scaffold's `package.json` declares separate source and distribution roots:
 
 The scaffold omits `engines` when it creates a workspace package.
 
-Build the package with `eve extension build`:
+Build the package with `ovo extension build`:
 
 ```bash
-eve extension build
+ovo extension build
 ```
 
-`eve extension build` writes an agent-shaped `dist/extension` tree, copies skill assets, emits declarations, and records compatibility metadata. It also manages the package exports for the mount factory (`@acme/crm`) and tool definitions (`@acme/crm/tools`). Publish `dist/`; consumers do not need the publisher's TypeScript source.
+`ovo extension build` writes an agent-shaped `dist/extension` tree, copies skill assets, emits declarations, and records compatibility metadata. It also manages the package exports for the mount factory (`@acme/crm`) and tool definitions (`@acme/crm/tools`). Publish `dist/`; consumers do not need the publisher's TypeScript source.
 
-The exact `eve` development pin controls the publisher's authoring API and build tooling. The wildcard peer lets the consumer provide the runtime copy of eve. At consumption time, eve checks generated metadata, not the npm peer range. Do not add eve to regular `dependencies`.
+The exact `ovo` development pin controls the publisher's authoring API and build tooling. The wildcard peer lets the consumer provide the runtime copy of ovo. At consumption time, ovo checks generated metadata, not the npm peer range. Do not add ovo to regular `dependencies`.
 
 Put runtime packages such as `zod` or an SDK in `dependencies`. If a dependency cannot be bundled, such as a native addon, tell consumers to add it to `build.externalDependencies` in `agent.ts`.
 
@@ -196,8 +196,8 @@ A same-named consumer tool, connection, or skill wins. To adjust a publisher too
 
 ```ts title="agent/extensions/crm/tools/search.ts"
 import { search } from "@acme/crm/tools";
-import { defineTool } from "eve/tools";
-import { always } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { always } from "ovo/tools/approval";
 
 export default defineTool({ ...search, approval: always() });
 ```
@@ -205,7 +205,7 @@ export default defineTool({ ...search, approval: always() });
 To remove a publisher tool, use `disableTool()` in its matching slot:
 
 ```ts title="agent/extensions/crm/tools/search.ts"
-import { disableTool } from "eve/tools";
+import { disableTool } from "ovo/tools";
 
 export default disableTool();
 ```
@@ -219,8 +219,8 @@ The `crm__` prefix is reserved for this directory mount. A consumer cannot overr
 To retain a publisher tool's result type in a consumer hook, import its definition from `./tools` and pass it to [`toolResultFrom`](/guides/hooks#narrowing-tool-results):
 
 ```ts title="agent/hooks/narrow-crm.ts"
-import { defineHook } from "eve/hooks";
-import { toolResultFrom } from "eve/tools";
+import { defineHook } from "ovo/hooks";
+import { toolResultFrom } from "ovo/tools";
 import { search } from "@acme/crm/tools";
 
 export default defineHook({
@@ -233,11 +233,11 @@ export default defineHook({
 });
 ```
 
-`toolResultFrom` recognizes the mounted `crm__search` result from the original definition, not the namespaced string. Publishers should keep tool descriptions distinct so eve can assign each definition an unambiguous identity.
+`toolResultFrom` recognizes the mounted `crm__search` result from the original definition, not the namespaced string. Publishers should keep tool descriptions distinct so ovo can assign each definition an unambiguous identity.
 
 ### Compatibility
 
-At build time, eve checks the publisher's generated capability metadata. If the extension needs an unsupported capability contract, upgrade eve or install a compatible extension release.
+At build time, ovo checks the publisher's generated capability metadata. If the extension needs an unsupported capability contract, upgrade ovo or install a compatible extension release.
 
 ## What to read next
 

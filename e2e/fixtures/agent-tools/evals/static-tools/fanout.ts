@@ -1,4 +1,4 @@
-import type { HandleMessageStreamEvent } from "eve/client";
+import type { HandleMessageStreamEvent } from "ovo/client";
 
 export const FANOUT_SIZE = 10;
 
@@ -11,7 +11,7 @@ interface RequestedToolCall {
 /**
  * Checks the visible fan-out boundary: every requested call must have reached
  * the stream before the first matching result. This is the observable provider
- * contract; the provider's own network execution is outside eve's process.
+ * contract; the provider's own network execution is outside ovo's process.
  */
 export function fanoutRequestsPrecedeFirstResult(input: {
   readonly events: readonly HandleMessageStreamEvent[];
