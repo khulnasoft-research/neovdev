@@ -138,7 +138,7 @@ jobs:
             `;
             core.setOutput('prompt', prompt);
       - name: Run Oz Agent
-        uses: warpdotdev/oz-agent-action@v1
+        uses: khulnasoft/neodev@v1
         with:
           warp_api_key: ${{ secrets.WARP_API_KEY }}
           profile: ${{ inputs.profile || vars.WARP_AGENT_PROFILE || '' }}

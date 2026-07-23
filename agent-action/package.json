@@ -6,12 +6,12 @@
   "keywords": [
     "actions"
   ],
-  "homepage": "https://github.com/warpdotdev/oz-agent-action#readme",
+  "homepage": "https://github.com/khulnasoft/neodev#readme",
   "license": "MIT",
   "author": "Warp Team <dev@warp.dev>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/warpdotdev/oz-agent-action.git"
+    "url": "git+https://github.com/khulnasoft/neodev.git"
   },
   "type": "module",
   "main": "index.js",

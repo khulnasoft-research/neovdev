@@ -219,7 +219,7 @@ function updateOzAgentActionInputs(job, workflowCallInputs) {
 
   for (const step of job.steps) {
     if (!step || typeof step.uses !== "string") continue;
-    if (!step.uses.startsWith("warpdotdev/oz-agent-action@")) continue;
+    if (!step.uses.startsWith("khulnasoft/neodev@")) continue;
 
     step.with ||= {};
 
@@ -379,7 +379,7 @@ async function generateConsumerTemplate(scenario, exampleYaml) {
   const jobsClone = deepClone(exampleObj.jobs);
 
   const usesRefVersion = scenario.consumerTemplate.pinOzAgentVersion || "v1";
-  const usesRef = `warpdotdev/oz-agent-action/.github/workflows/${scenario.scenarioId}.yml@${usesRefVersion}`;
+  const usesRef = `khulnasoft/neodev/.github/workflows/${scenario.scenarioId}.yml@${usesRefVersion}`;
 
   const withBlock = {};
   if (scenario.reusableWorkflow?.inputs) {

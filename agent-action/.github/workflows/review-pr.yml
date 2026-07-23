@@ -235,11 +235,11 @@ jobs:
 
             core.setOutput('prompt', prompt);
       - name: Run Oz Agent Review
-        uses: warpdotdev/oz-agent-action@v1
+        uses: khulnasoft/neodev@v1
         env:
           GH_TOKEN: ${{ github.token }}
         with:
-          skill: ${{ inputs.skill || 'warpdotdev/oz-agent-action:review-pr' }}
+          skill: ${{ inputs.skill || 'khulnasoft/neodev:review-pr' }}
           prompt: ${{ steps.prompt.outputs.prompt }}
           warp_api_key: ${{ secrets.WARP_API_KEY }}
           profile: ${{ inputs.profile || vars.WARP_AGENT_PROFILE || '' }}
