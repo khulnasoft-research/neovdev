@@ -1,0 +1,416 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"os/signal"
+	"strings"
+	"syscall"
+	"time"
+
+	"github.com/alecthomas/kong"
+	"neodev-worker/internal/config"
+	"neodev-worker/internal/log"
+	"neodev-worker/internal/metrics"
+	"neodev-worker/internal/worker"
+	"gopkg.in/yaml.v3"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
+	sigsk8syaml "sigs.k8s.io/yaml"
+)
+
+// Version is the build-time version string. Override at link time with
+// -ldflags="-X main.Version=...".
+var Version = "dev"
+
+var CLI struct {
+	ConfigFile              string   `help:"Path to YAML config file" type:"path"`
+	Backend                 string   `help:"Backend type (docker, direct, kubernetes, or command)" enum:"docker,direct,kubernetes,command," default:""`
+	APIKey                  string   `help:"API key for authentication" env:"COGNIX_API_KEY" required:""`
+	WorkerID                string   `help:"Worker host identifier (required via flag or config file)"`
+	WebSocketURL            string   `default:"wss://oz.warp.dev/api/v1/selfhosted/worker/ws" hidden:""`
+	ServerRootURL           string   `default:"https://app.warp.dev" hidden:""`
+	LogLevel                string   `help:"Log level (debug, info, warn, error)" default:"info" enum:"debug,info,warn,error"`
+	TargetDir               string   `help:"Run all tasks in this directory instead of creating per-task workspaces (direct backend only)"`
+	NoCleanup               bool     `help:"Do not remove containers after execution (for debugging)"`
+	Volumes                 []string `help:"Volume mounts for task containers (format: HOST_PATH:CONTAINER_PATH or HOST_PATH:CONTAINER_PATH:MODE)" short:"v"`
+	Env                     []string `help:"Environment variables for task containers (format: KEY=VALUE or KEY to pass through from host)" short:"e"`
+	MaxConcurrentTasks      int      `help:"Maximum number of tasks to run concurrently (0 for unlimited)" default:"0"`
+	IdleOnComplete          string   `help:"How long to keep the neodev agent alive after a task completes, for follow-ups (e.g. 45m, 10m, 0s). Defaults to 45m when not set."`
+	SessionSharingServerURL string   `help:"Session sharing server WebSocket URL to pass through to the neodev CLI (e.g. ws://127.0.0.1:8081)" hidden:""`
+}
+
+func main() {
+	ctx := context.Background()
+
+	kong.Parse(&CLI,
+		kong.Name("neodev-agent-worker"),
+		kong.Description("Self-hosted worker for Warp ambient agents."),
+		kong.UsageOnError(),
+		kong.Vars{},
+	)
+
+	log.SetLevel(CLI.LogLevel)
+
+	// Parse config file if provided.
+	var fileConfig *config.FileConfig
+	if CLI.ConfigFile != "" {
+		var err error
+		fileConfig, err = config.Load(CLI.ConfigFile)
+		if err != nil {
+			log.Fatalf(ctx, "%v", err)
+		}
+	}
+
+	workerConfig, err := mergeConfig(fileConfig)
+	if err != nil {
+		log.Fatalf(ctx, "%v", err)
+	}
+
+	// Set up the metrics pipeline before constructing the worker so that early
+	// reconnect attempts on Start() are observed. Failures here are
+	// non-fatal: the worker must continue even if metrics export breaks.
+	metricsShutdown, err := metrics.Init(ctx, metrics.Config{
+		WorkerID: workerConfig.WorkerID,
+		Backend:  workerConfig.BackendType,
+		Version:  Version,
+	})
+	if err != nil {
+		log.Errorf(ctx, "Failed to initialize metrics export: %v (continuing without metrics)", err)
+	}
+	metrics.SetMaxConcurrent(workerConfig.MaxConcurrentTasks)
+	metrics.SetWorkerInfo(Version, workerConfig.BackendType, workerConfig.WorkerID)
+
+	w, err := worker.New(ctx, workerConfig)
+	if err != nil {
+		log.Fatalf(ctx, "Failed to create worker: %v", err)
+	}
+
+	// Set up signal handling
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	// Start worker in background
+	go func() {
+		if err := w.Start(); err != nil {
+			log.Errorf(ctx, "Worker stopped with error: %v", err)
+		}
+	}()
+
+	// Wait for signal
+	sig := <-sigChan
+	log.Infof(ctx, "Received signal %v, shutting down gracefully...", sig)
+
+	w.Shutdown()
+
+	// Flush and stop the metrics exporter after the worker has stopped
+	// recording new data points. We use a fresh context with a short timeout
+	// because ctx may already be cancelled by the time we get here.
+	if metricsShutdown != nil {
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		if err := metricsShutdown(shutdownCtx); err != nil {
+			log.Warnf(ctx, "Failed to shut down metrics exporter cleanly: %v", err)
+		}
+		cancel()
+	}
+
+	log.Infof(ctx, "Worker shutdown complete")
+}
+
+// mergeConfig merges CLI flags with an optional config file.
+// Priority: CLI flags > config file > defaults.
+func mergeConfig(fileConfig *config.FileConfig) (worker.Config, error) {
+	// Merge worker_id: CLI > config file.
+	workerID := CLI.WorkerID
+	if workerID == "" && fileConfig != nil {
+		workerID = fileConfig.WorkerID
+	}
+	if workerID == "" {
+		return worker.Config{}, fmt.Errorf("worker-id is required (via --worker-id flag or config file)")
+	}
+	if strings.HasPrefix(workerID, "warp") {
+		return worker.Config{}, fmt.Errorf("invalid worker-id: values starting with 'warp' are reserved and cannot be used")
+	}
+
+	// Resolve backend type: CLI --backend > config file backend key > default "docker".
+	backendType := CLI.Backend
+	if backendType == "" && fileConfig != nil {
+		if fileConfig.Backend.Direct != nil {
+			backendType = "direct"
+		} else if fileConfig.Backend.Kubernetes != nil {
+			backendType = "kubernetes"
+		} else if fileConfig.Backend.Command != nil {
+			backendType = "command"
+		} else if fileConfig.Backend.Docker != nil {
+			backendType = "docker"
+		}
+	}
+
+	// Merge cleanup: --no-cleanup flag > config file cleanup > default (cleanup=true).
+	noCleanup := CLI.NoCleanup
+	if !noCleanup && fileConfig != nil && fileConfig.Cleanup != nil {
+		noCleanup = !*fileConfig.Cleanup
+	}
+
+	// Parse CLI env flags.
+	cliEnv, err := parseEnvFlags(CLI.Env)
+	if err != nil {
+		return worker.Config{}, err
+	}
+
+	// Resolve max_concurrent_tasks: CLI (non-zero) > config file > 0 (unlimited).
+	maxConcurrentTasks := CLI.MaxConcurrentTasks
+	if maxConcurrentTasks == 0 && fileConfig != nil && fileConfig.MaxConcurrentTasks != nil {
+		maxConcurrentTasks = *fileConfig.MaxConcurrentTasks
+	}
+
+	// Resolve idle_on_complete: CLI (non-empty) > config file > "" (neodev CLI default = 45m).
+	idleOnComplete := CLI.IdleOnComplete
+	if idleOnComplete == "" && fileConfig != nil && fileConfig.IdleOnComplete != nil {
+		idleOnComplete = *fileConfig.IdleOnComplete
+	}
+
+	wc := worker.Config{
+		APIKey:                  CLI.APIKey,
+		WorkerID:                workerID,
+		WebSocketURL:            CLI.WebSocketURL,
+		ServerRootURL:           CLI.ServerRootURL,
+		LogLevel:                CLI.LogLevel,
+		BackendType:             backendType,
+		MaxConcurrentTasks:      maxConcurrentTasks,
+		IdleOnComplete:          idleOnComplete,
+		SessionSharingServerURL: CLI.SessionSharingServerURL,
+	}
+
+	switch backendType {
+	case "kubernetes":
+		var (
+			namespace             string
+			kubeconfig            string
+			defaultImage          string
+			imagePullPolicy       string
+			useImageVolumes       bool
+			preflightImage        string
+			sidecarImage          string
+			codingCLISidecars     map[string]string
+			setupCmd              string
+			teardownCmd           string
+			extraLabels           map[string]string
+			extraAnnotations      map[string]string
+			activeDeadlineSeconds *int64
+			ttlSecondsAfterFinish *int32
+			workspaceSizeLimit    *resource.Quantity
+			unschedulableTimeout  *time.Duration
+			podTemplate           *corev1.PodSpec
+			preflightResources    *corev1.ResourceRequirements
+		)
+
+		if fileConfig != nil && fileConfig.Backend.Kubernetes != nil {
+			kc := fileConfig.Backend.Kubernetes
+			namespace = kc.Namespace
+			kubeconfig = kc.Kubeconfig
+			defaultImage = kc.DefaultImage
+			imagePullPolicy = kc.ImagePullPolicy
+			useImageVolumes = kc.UseImageVolumes
+			preflightImage = kc.PreflightImage
+			sidecarImage = kc.SidecarImage
+			codingCLISidecars = copyStringMap(kc.CodingCLISidecars)
+			setupCmd = kc.SetupCommand
+			teardownCmd = kc.TeardownCommand
+			extraLabels = copyStringMap(kc.ExtraLabels)
+			extraAnnotations = copyStringMap(kc.ExtraAnnotations)
+			activeDeadlineSeconds = kc.ActiveDeadlineSeconds
+			ttlSecondsAfterFinish = kc.TTLSecondsAfterFinish
+			if kc.WorkspaceSizeLimit != "" {
+				quantity, err := resource.ParseQuantity(kc.WorkspaceSizeLimit)
+				if err != nil {
+					return worker.Config{}, fmt.Errorf("invalid backend.kubernetes.workspace_size_limit %q: %w", kc.WorkspaceSizeLimit, err)
+				}
+				workspaceSizeLimit = &quantity
+			}
+			if kc.UnschedulableTimeout != nil {
+				duration, err := time.ParseDuration(*kc.UnschedulableTimeout)
+				if err != nil {
+					return worker.Config{}, fmt.Errorf("invalid backend.kubernetes.unschedulable_timeout %q: %w", *kc.UnschedulableTimeout, err)
+				}
+				unschedulableTimeout = &duration
+			}
+			if kc.PodTemplate != nil {
+				yamlBytes, err := yaml.Marshal(kc.PodTemplate.Node)
+				if err != nil {
+					return worker.Config{}, fmt.Errorf("failed to marshal backend.kubernetes.pod_template: %w", err)
+				}
+				var ps corev1.PodSpec
+				if err := sigsk8syaml.Unmarshal(yamlBytes, &ps); err != nil {
+					return worker.Config{}, fmt.Errorf("invalid backend.kubernetes.pod_template: %w", err)
+				}
+				podTemplate = &ps
+			}
+			if kc.PreflightResources != nil {
+				yamlBytes, err := yaml.Marshal(kc.PreflightResources.Node)
+				if err != nil {
+					return worker.Config{}, fmt.Errorf("failed to marshal backend.kubernetes.preflight_resources: %w", err)
+				}
+				var rr corev1.ResourceRequirements
+				if err := sigsk8syaml.Unmarshal(yamlBytes, &rr); err != nil {
+					return worker.Config{}, fmt.Errorf("invalid backend.kubernetes.preflight_resources: %w", err)
+				}
+				preflightResources = &rr
+			}
+		}
+
+		wc.Kubernetes = &worker.KubernetesBackendConfig{
+			WorkerID:              workerID,
+			Namespace:             namespace,
+			Kubeconfig:            kubeconfig,
+			DefaultImage:          defaultImage,
+			ImagePullPolicy:       imagePullPolicy,
+			UseImageVolumes:       useImageVolumes,
+			PreflightImage:        preflightImage,
+			SidecarImage:          sidecarImage,
+			CodingCLISidecars:     codingCLISidecars,
+			SetupCommand:          setupCmd,
+			TeardownCommand:       teardownCmd,
+			NoCleanup:             noCleanup,
+			ExtraLabels:           extraLabels,
+			ExtraAnnotations:      extraAnnotations,
+			ActiveDeadlineSeconds: activeDeadlineSeconds,
+			TTLSecondsAfterFinish: ttlSecondsAfterFinish,
+			WorkspaceSizeLimit:    workspaceSizeLimit,
+			UnschedulableTimeout:  unschedulableTimeout,
+			TaskEnv:               copyStringMap(cliEnv),
+			PodTemplate:           podTemplate,
+			PreflightResources:    preflightResources,
+		}
+	case "direct":
+		// Merge env: config file first, then CLI overlay.
+		mergedEnv := make(map[string]string)
+		if fileConfig != nil && fileConfig.Backend.Direct != nil {
+			mergedEnv = config.ResolveEnv(fileConfig.Backend.Direct.Environment)
+		}
+		for k, v := range cliEnv {
+			mergedEnv[k] = v
+		}
+
+		var workspaceRoot, targetDir, ozPath, setupCmd, teardownCmd string
+		if fileConfig != nil && fileConfig.Backend.Direct != nil {
+			workspaceRoot = fileConfig.Backend.Direct.WorkspaceRoot
+			targetDir = fileConfig.Backend.Direct.TargetDir
+			ozPath = fileConfig.Backend.Direct.OzPath
+			setupCmd = fileConfig.Backend.Direct.SetupCommand
+			teardownCmd = fileConfig.Backend.Direct.TeardownCommand
+		}
+
+		// CLI --target-dir overrides config file.
+		if CLI.TargetDir != "" {
+			targetDir = CLI.TargetDir
+		}
+
+		wc.Direct = &worker.DirectBackendConfig{
+			WorkspaceRoot:   workspaceRoot,
+			TargetDir:       targetDir,
+			OzPath:          ozPath,
+			SetupCommand:    setupCmd,
+			TeardownCommand: teardownCmd,
+			NoCleanup:       noCleanup,
+			Env:             mergedEnv,
+		}
+
+	case "command":
+		// Merge env: config file first, then CLI overlay (CLI wins on key conflict).
+		mergedEnv := make(map[string]string)
+		var dispatchCmd, cancelCmd, dispatchTimeoutStr string
+		if fileConfig != nil && fileConfig.Backend.Command != nil {
+			cc := fileConfig.Backend.Command
+			mergedEnv = config.ResolveEnv(cc.Environment)
+			dispatchCmd = cc.DispatchCommand
+			cancelCmd = cc.CancelCommand
+			dispatchTimeoutStr = cc.DispatchTimeout
+		}
+		for k, v := range cliEnv {
+			mergedEnv[k] = v
+		}
+
+		var dispatchTimeout time.Duration
+		if dispatchTimeoutStr != "" {
+			d, err := time.ParseDuration(dispatchTimeoutStr)
+			if err != nil {
+				return worker.Config{}, fmt.Errorf("invalid backend.command.dispatch_timeout %q: %w", dispatchTimeoutStr, err)
+			}
+			dispatchTimeout = d
+		}
+
+		wc.Command = &worker.CommandBackendConfig{
+			DispatchCommand: dispatchCmd,
+			CancelCommand:   cancelCmd,
+			DispatchTimeout: dispatchTimeout,
+			Env:             mergedEnv,
+			ServerRootURL:   CLI.ServerRootURL,
+			WorkerID:        workerID,
+		}
+
+	default: // docker
+		// Merge env: config file first, then CLI overlay (CLI wins on key conflict).
+		mergedEnv := make(map[string]string)
+		if fileConfig != nil && fileConfig.Backend.Docker != nil {
+			mergedEnv = config.ResolveEnv(fileConfig.Backend.Docker.Environment)
+		}
+		for k, v := range cliEnv {
+			mergedEnv[k] = v
+		}
+
+		// Merge volumes: config file + CLI (concatenated).
+		var volumes []string
+		if fileConfig != nil && fileConfig.Backend.Docker != nil {
+			volumes = append(volumes, fileConfig.Backend.Docker.Volumes...)
+		}
+		volumes = append(volumes, CLI.Volumes...)
+
+		wc.Docker = &worker.DockerBackendConfig{
+			NoCleanup: noCleanup,
+			Volumes:   volumes,
+			Env:       mergedEnv,
+		}
+	}
+
+	return wc, nil
+}
+
+// parseEnvFlags parses -e/--env flag values into a map.
+// "KEY=VALUE" is used as-is; bare "KEY" inherits from the host environment.
+// Empty keys and keys containing whitespace are rejected.
+func parseEnvFlags(raw []string) (map[string]string, error) {
+	result := make(map[string]string, len(raw))
+	for _, entry := range raw {
+		if entry == "" {
+			return nil, fmt.Errorf("invalid --env flag: empty value")
+		}
+
+		key, value, hasEquals := strings.Cut(entry, "=")
+		if key == "" {
+			return nil, fmt.Errorf("invalid --env flag: missing key in %q", entry)
+		}
+		if strings.ContainsAny(key, " \t") {
+			return nil, fmt.Errorf("invalid --env flag: key contains whitespace in %q", entry)
+		}
+
+		if hasEquals {
+			result[key] = value
+		} else {
+			result[key] = os.Getenv(key)
+		}
+	}
+	return result, nil
+}
+
+func copyStringMap(values map[string]string) map[string]string {
+	if len(values) == 0 {
+		return nil
+	}
+	result := make(map[string]string, len(values))
+	for key, value := range values {
+		result[key] = value
+	}
+	return result
+}

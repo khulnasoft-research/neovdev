@@ -1,0 +1,5 @@
+apiVersion: v2
+name: neodev-agent-worker
+description: Namespace-scoped Helm chart for deploying neodev-agent-worker on Kubernetes
+type: application
+version: 0.1.0

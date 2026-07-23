@@ -1,0 +1,206 @@
+package config
+
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"os"
+	"reflect"
+	"strings"
+
+	"github.com/go-playground/validator/v10"
+	"gopkg.in/yaml.v3"
+)
+
+// FileConfig represents the top-level YAML configuration file.
+type FileConfig struct {
+	WorkerID           string `yaml:"worker_id"`
+	Cleanup            *bool  `yaml:"cleanup"`
+	MaxConcurrentTasks *int   `yaml:"max_concurrent_tasks"`
+	// IdleOnComplete controls how long the neodev CLI process stays alive after a task's
+	// conversation finishes, to allow follow-up interactions via the shared session.
+	// Uses humantime format (e.g. "45m", "10m", "0s"). When nil, the neodev CLI default
+	// of 45 minutes is used.
+	// TODO: Remove idle_on_complete from worker config/schema after task-level
+	// config.idle_timeout_minutes is fully rolled out and legacy worker-level
+	// overrides are no longer needed.
+	IdleOnComplete *string       `yaml:"idle_on_complete"`
+	Backend        BackendConfig `yaml:"backend"`
+}
+
+// BackendConfig contains the backend selection.
+// At most one backend field may be non-nil; configuring multiple backends simultaneously is an error.
+type BackendConfig struct {
+	Docker     *DockerConfig     `yaml:"docker"`
+	Direct     *DirectConfig     `yaml:"direct"`
+	Kubernetes *KubernetesConfig `yaml:"kubernetes"`
+	Command    *CommandConfig    `yaml:"command"`
+}
+
+// CommandConfig holds command-backend-specific configuration. The command
+// backend dispatches tasks to an operator-owned runtime over any transport by
+// invoking dispatch_command.
+type CommandConfig struct {
+	DispatchCommand string     `yaml:"dispatch_command" validate:"required"`
+	CancelCommand   string     `yaml:"cancel_command"`
+	DispatchTimeout string     `yaml:"dispatch_timeout"`
+	Environment     []EnvEntry `yaml:"environment" validate:"dive"`
+}
+
+// DockerConfig holds Docker-backend-specific configuration.
+type DockerConfig struct {
+	Volumes     []string   `yaml:"volumes"`
+	Environment []EnvEntry `yaml:"environment" validate:"dive"`
+}
+
+// DirectConfig holds direct-backend-specific configuration.
+type DirectConfig struct {
+	WorkspaceRoot   string     `yaml:"workspace_root"`
+	TargetDir       string     `yaml:"target_dir"`
+	OzPath          string     `yaml:"neodev_path"`
+	SetupCommand    string     `yaml:"setup_command"`
+	TeardownCommand string     `yaml:"teardown_command"`
+	Environment     []EnvEntry `yaml:"environment" validate:"dive"`
+}
+
+// KubernetesConfig holds Kubernetes-backend-specific configuration.
+type KubernetesConfig struct {
+	Namespace             string            `yaml:"namespace"`
+	Kubeconfig            string            `yaml:"kubeconfig"`
+	DefaultImage          string            `yaml:"default_image" validate:"omitempty,no_whitespace"`
+	ImagePullPolicy       string            `yaml:"image_pull_policy" validate:"omitempty,oneof=Always Never IfNotPresent"`
+	UseImageVolumes       bool              `yaml:"use_image_volumes"`
+	PreflightImage        string            `yaml:"preflight_image" validate:"omitempty,no_whitespace"`
+	SidecarImage          string            `yaml:"sidecar_image" validate:"omitempty,no_whitespace"`
+	SetupCommand          string            `yaml:"setup_command"`
+	TeardownCommand       string            `yaml:"teardown_command"`
+	ExtraLabels           map[string]string `yaml:"extra_labels"`
+	ExtraAnnotations      map[string]string `yaml:"extra_annotations"`
+	ActiveDeadlineSeconds *int64            `yaml:"active_deadline_seconds"`
+	TTLSecondsAfterFinish *int32            `yaml:"ttl_seconds_after_finished"`
+	WorkspaceSizeLimit    string            `yaml:"workspace_size_limit"`
+	UnschedulableTimeout  *string           `yaml:"unschedulable_timeout"`
+	// CodingCLISidecars maps harness config name (e.g. "claude", "codex") to a custom
+	// Docker image. When set, the worker overrides the server-provided sidecar image for
+	// that harness (or injects a new sidecar entry if the server did not send one),
+	// mounting it at /mnt/{harness}-cli-sidecar. Use this to bring your own Claude Code
+	// wrapper or custom harness binary instead of the Warp-provided sidecar image.
+	// The custom image must place the harness binary in the path where the Warp agent
+	// entrypoint expects it (e.g. /usr/local/bin for most sidecar layouts).
+	CodingCLISidecars map[string]string `yaml:"coding_cli_sidecars"`
+	// PodTemplate holds a raw Kubernetes PodSpec that is merged with the worker's
+	// required fields at runtime. Declarative task Job configuration such as
+	// serviceAccountName, imagePullSecrets, node selectors, tolerations,
+	// resources, and env must be configured here.
+	PodTemplate *RawYAMLNode `yaml:"pod_template"`
+	// PreflightResources holds optional cpu/memory requests and limits for the
+	// startup preflight Job containers.
+	PreflightResources *RawYAMLNode `yaml:"preflight_resources"`
+}
+
+// RawYAMLNode captures a raw YAML sub-tree without applying KnownFields validation
+// to its content. This is necessary because gopkg.in/yaml.v3's strict KnownFields
+// mode would otherwise try to match Kubernetes field names against yaml.Node's own
+// struct fields rather than treating the sub-tree as opaque YAML.
+type RawYAMLNode struct {
+	Node *yaml.Node
+}
+
+// UnmarshalYAML captures the raw YAML node, bypassing KnownFields strict validation.
+func (r *RawYAMLNode) UnmarshalYAML(value *yaml.Node) error {
+	r.Node = value
+	return nil
+}
+
+// EnvEntry represents a single environment variable in the config file.
+// If Value is nil, the variable is inherited from the host process environment.
+type EnvEntry struct {
+	Name  string  `yaml:"name" validate:"required,no_whitespace"`
+	Value *string `yaml:"value"`
+}
+
+// configValidator is the package-level validator instance, initialized once.
+var configValidator = newConfigValidator()
+
+func newConfigValidator() *validator.Validate {
+	v := validator.New()
+
+	// no_whitespace rejects strings that contain spaces or tabs.
+	_ = v.RegisterValidation("no_whitespace", func(fl validator.FieldLevel) bool {
+		return !strings.ContainsAny(fl.Field().String(), " \t")
+	})
+
+	// Struct-level validator for BackendConfig: at most one backend field may be non-nil.
+	// Uses reflection so that future backend fields are automatically covered.
+	v.RegisterStructValidation(func(sl validator.StructLevel) {
+		cfg := sl.Current()
+		configured := 0
+		for i := 0; i < cfg.NumField(); i++ {
+			if cfg.Field(i).Kind() == reflect.Pointer && !cfg.Field(i).IsNil() {
+				configured++
+			}
+		}
+		if configured > 1 {
+			sl.ReportError(sl.Current().Interface(), "Backend", "Backend", "only_one_backend", "")
+		}
+	}, BackendConfig{})
+
+	return v
+}
+
+// Load reads and validates a YAML config file.
+func Load(path string) (*FileConfig, error) {
+	data, err := os.ReadFile(path) // #nosec G304 -- the config path is an explicit operator-supplied CLI/config input.
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config file: %w", err)
+	}
+
+	var cfg FileConfig
+	decoder := yaml.NewDecoder(bytes.NewReader(data))
+	decoder.KnownFields(true)
+	if err := decoder.Decode(&cfg); err != nil {
+		return nil, fmt.Errorf("failed to parse config file: %w", err)
+	}
+
+	if err := configValidator.Struct(cfg); err != nil {
+		return nil, fmt.Errorf("invalid config: %w", formatValidationErrors(err))
+	}
+
+	return &cfg, nil
+}
+
+// formatValidationErrors converts validator.ValidationErrors into a human-readable error.
+func formatValidationErrors(err error) error {
+	var validationErrors validator.ValidationErrors
+	if !errors.As(err, &validationErrors) {
+		return err
+	}
+
+	msgs := make([]string, 0, len(validationErrors))
+	for _, e := range validationErrors {
+		switch e.Tag() {
+		case "required":
+			msgs = append(msgs, fmt.Sprintf("%s is required", e.Namespace()))
+		case "no_whitespace":
+			msgs = append(msgs, fmt.Sprintf("%s must not contain whitespace", e.Namespace()))
+		case "only_one_backend":
+			msgs = append(msgs, "at most one backend may be configured")
+		default:
+			msgs = append(msgs, fmt.Sprintf("%s failed validation %q", e.Namespace(), e.Tag()))
+		}
+	}
+	return fmt.Errorf("%s", strings.Join(msgs, "; "))
+}
+
+// ResolveEnv converts environment entries to a map, resolving host-inherited values.
+func ResolveEnv(entries []EnvEntry) map[string]string {
+	result := make(map[string]string, len(entries))
+	for _, entry := range entries {
+		if entry.Value != nil {
+			result[entry.Name] = *entry.Value
+		} else {
+			result[entry.Name] = os.Getenv(entry.Name)
+		}
+	}
+	return result
+}
