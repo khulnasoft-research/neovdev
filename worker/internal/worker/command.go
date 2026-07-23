@@ -9,8 +9,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/log"
-	"github.com/warpdotdev/oz-agent-worker/internal/metrics"
+	"neodev-worker/internal/log"
+	"neodev-worker/internal/metrics"
 )
 
 // defaultDispatchTimeout bounds how long the operator dispatch command may run.

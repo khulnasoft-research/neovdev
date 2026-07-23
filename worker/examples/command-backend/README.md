@@ -77,7 +77,7 @@ backend:
   "docker_image": "ubuntu:22.04",
   "base_args": ["agent", "run", "--task-id", "...", "--server-root-url", "..."],
   "env": { "GITHUB_ACCESS_TOKEN": "...", "...": "..." },
-  "sidecars": [ { "image": "...", "mount_path": "/agent", "read_write": false } ],
+  "sidecars": [{ "image": "...", "mount_path": "/agent", "read_write": false }],
   "task": { "id": "...", "title": "...", "task_definition": { "prompt": "..." } }
 }
 ```

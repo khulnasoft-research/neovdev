@@ -1,4 +1,4 @@
-module github.com/warpdotdev/oz-agent-worker
+module neodev-worker
 
 go 1.26.5
 

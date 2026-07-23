@@ -15,9 +15,9 @@ import (
 	"github.com/moby/moby/client"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/rs/zerolog"
-	"github.com/warpdotdev/oz-agent-worker/internal/log"
-	"github.com/warpdotdev/oz-agent-worker/internal/metrics"
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/log"
+	"neodev-worker/internal/metrics"
+	"neodev-worker/internal/types"
 )
 
 const dockerHubAuthConfigKey = "https://index.docker.io/v1/"

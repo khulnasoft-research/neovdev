@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 // waitFor polls cond until it returns true or the timeout elapses.

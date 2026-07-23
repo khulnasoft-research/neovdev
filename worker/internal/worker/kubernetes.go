@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/warpdotdev/oz-agent-worker/internal/log"
-	"github.com/warpdotdev/oz-agent-worker/internal/metrics"
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/log"
+	"neodev-worker/internal/metrics"
+	"neodev-worker/internal/types"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

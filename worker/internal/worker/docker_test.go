@@ -3,7 +3,7 @@ package worker
 import (
 	"testing"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 func TestDockerResourcesForShape(t *testing.T) {

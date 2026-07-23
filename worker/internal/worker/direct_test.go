@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 func TestDirectHarnessEnv(t *testing.T) {

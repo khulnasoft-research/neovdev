@@ -3,7 +3,7 @@ package worker
 import (
 	"context"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 // ExecuteOutcome describes how a backend handled a task in ExecuteTask.

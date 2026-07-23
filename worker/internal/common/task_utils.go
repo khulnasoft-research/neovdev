@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 // TaskAugmentOptions contains settings translated into oz CLI flags for every task.

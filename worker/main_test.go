@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/config"
+	"neodev-worker/internal/config"
 	"gopkg.in/yaml.v3"
 )
 

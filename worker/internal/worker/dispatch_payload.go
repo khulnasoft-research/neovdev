@@ -3,7 +3,7 @@ package worker
 import (
 	"strings"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 // DispatchPayloadVersion is the schema version of DispatchPayload. It is bumped

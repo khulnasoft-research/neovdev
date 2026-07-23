@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 )
 
 func strPtr(v string) *string                          { return &v }

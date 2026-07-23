@@ -51,7 +51,7 @@ import (
 // scopeName is the instrumentation-scope name used for all worker metrics.
 // Prometheus translates the scope into the otel_scope_name label, so making
 // this stable is part of the public contract for downstream dashboards.
-const scopeName = "github.com/warpdotdev/oz-agent-worker"
+const scopeName = "neodev-worker"
 
 // Config is the input for Init.
 type Config struct {

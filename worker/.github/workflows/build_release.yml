@@ -4,36 +4,36 @@ on:
   workflow_dispatch:
     inputs:
       docker_tag:
-        description: 'Docker image tag (leave empty to skip Docker push)'
+        description: "Docker image tag (leave empty to skip Docker push)"
         required: false
-        default: ''
+        default: ""
         type: string
       publish_latest:
-        description: 'Also tag the Docker image as latest when docker_tag is provided'
+        description: "Also tag the Docker image as latest when docker_tag is provided"
         required: false
         default: false
         type: boolean
       version:
         description: 'Build version stamped into the binary via -ldflags="-X main.Version=...". Defaults to docker_tag, then to the commit SHA.'
         required: false
-        default: ''
+        default: ""
         type: string
   workflow_call:
     inputs:
       docker_tag:
-        description: 'Docker image tag (leave empty to skip Docker push)'
+        description: "Docker image tag (leave empty to skip Docker push)"
         required: false
-        default: ''
+        default: ""
         type: string
       publish_latest:
-        description: 'Also tag the Docker image as latest when docker_tag is provided'
+        description: "Also tag the Docker image as latest when docker_tag is provided"
         required: false
         default: false
         type: boolean
       version:
         description: 'Build version stamped into the binary via -ldflags="-X main.Version=...". Defaults to docker_tag, then to the commit SHA.'
         required: false
-        default: ''
+        default: ""
         type: string
     secrets:
       DOCKERHUB_USERNAME:
@@ -42,10 +42,10 @@ on:
         required: false
     outputs:
       image:
-        description: 'Full Docker image reference'
+        description: "Full Docker image reference"
         value: ${{ jobs.docker.outputs.image }}
       tagged_image:
-        description: 'Primary tagged Docker image reference'
+        description: "Primary tagged Docker image reference"
         value: ${{ jobs.docker.outputs.tagged_image }}
 
 jobs:
@@ -70,14 +70,14 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
-      
+
       - name: Install Go
         uses: actions/setup-go@v6
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
           # Use the Namespace Go cache
           cache: false
-    
+
       - name: Set up build cache
         uses: namespacelabs/nscloud-cache-action@v1
         with:
@@ -85,7 +85,7 @@ jobs:
 
       - name: Build
         env:
-          CGO_ENABLED: '0'
+          CGO_ENABLED: "0"
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
           # Resolve the version stamped into the binary. Precedence:

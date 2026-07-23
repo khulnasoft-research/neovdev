@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/types"
 	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/sync/semaphore"
 )

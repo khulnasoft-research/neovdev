@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/warpdotdev/oz-agent-worker/internal/metrics"
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/metrics"
+	"neodev-worker/internal/types"
 	"go.opentelemetry.io/otel/trace"
 )
 

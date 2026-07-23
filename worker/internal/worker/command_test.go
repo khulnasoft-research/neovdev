@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/warpdotdev/oz-agent-worker/internal/metrics"
-	"github.com/warpdotdev/oz-agent-worker/internal/types"
+	"neodev-worker/internal/metrics"
+	"neodev-worker/internal/types"
 )
 
 func testTaskParams() *TaskParams {
