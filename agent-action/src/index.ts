@@ -227,7 +227,7 @@ export async function runAgent(options: RunAgentOptions = {}): Promise<void> {
     execResult = await exec.getExecOutput(command, args, {
       env: {
         ...process.env,
-        WARP_API_KEY: apiKey,
+        COGNIX_API_KEY: apiKey,
       },
       ignoreReturnCode: true,
       listeners: {
@@ -283,7 +283,7 @@ export async function reportShutdown(): Promise<void> {
   const result = await exec.getExecOutput(command, args, {
     env: {
       ...process.env,
-      WARP_API_KEY: apiKey,
+      COGNIX_API_KEY: apiKey,
     },
     ignoreReturnCode: true,
   });

@@ -11,7 +11,7 @@
 #   - This workflow will trigger, analyze the issue, and attempt to write code to fix it.
 #
 # Setup:
-#   - Ensure WARP_API_KEY is set in Repository Secrets.
+#   - Ensure COGNIX_API_KEY is set in Repository Secrets.
 #   - Ensure the Action has write permissions for contents, issues, and pull-requests.
 #
 # Expected Output:
@@ -40,4 +40,4 @@ jobs:
       host: ""
       environment: ""
     secrets:
-      WARP_API_KEY: ${{ secrets.WARP_API_KEY }}
+      COGNIX_API_KEY: ${{ secrets.COGNIX_API_KEY }}

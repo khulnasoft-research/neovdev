@@ -51,7 +51,7 @@ type TaskAssignmentMessage struct {
 	DockerImage string `json:"docker_image,omitempty"`
 	// The "sidecar image" contains the warp agent binary and a couple other dependencies.
 	SidecarImage string `json:"sidecar_image,omitempty"`
-	// EnvVars contains environment variables to set in the container (e.g. WARP_API_KEY, GITHUB_ACCESS_TOKEN)
+	// EnvVars contains environment variables to set in the container (e.g. COGNIX_API_KEY, GITHUB_ACCESS_TOKEN)
 	EnvVars map[string]string `json:"env_vars,omitempty"`
 	// AdditionalSidecars is a list of extra sidecar images to mount into the task container.
 	AdditionalSidecars []SidecarMount `json:"additional_sidecars,omitempty"`

@@ -98,7 +98,7 @@ Required/optional environment for this script:
 The easiest way to run the full stack is `warp-server`'s `script/neodev-local`, which boots the servers and the worker for you. Once it supports the command backend, run:
 
 ```bash
-# from warp-server, with WARP_API_KEY exported and a local neodev bundle built
+# from warp-server, with COGNIX_API_KEY exported and a local neodev bundle built
 ./script/neodev-local --worker-backend command --neodev-path <path-to-neodev-binary>
 ```
 

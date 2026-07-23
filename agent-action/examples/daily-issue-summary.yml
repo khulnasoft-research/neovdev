@@ -6,7 +6,7 @@
 #   - Fetches issues created in the last 24 hours.
 #
 # Setup:
-#   - Ensure WARP_API_KEY is set in Repository Secrets.
+#   - Ensure COGNIX_API_KEY is set in Repository Secrets.
 #   - Ensure SLACK_WEBHOOK_URL is set in Repository Secrets to receive the report.
 #
 # Expected Output:
@@ -116,8 +116,8 @@ jobs:
         id: agent
         with:
           prompt: ${{ steps.prompt.outputs.prompt }}
-          warp_api_key: ${{ secrets.WARP_API_KEY }}
-          profile: ${{ vars.WARP_AGENT_PROFILE || '' }}
+          warp_api_key: ${{ secrets.COGNIX_API_KEY }}
+          profile: ${{ vars.COGNIX_AGENT_PROFILE || '' }}
 
       - name: Post to Slack
         if: steps.fetch_issues.outputs.has_issues == 'true'

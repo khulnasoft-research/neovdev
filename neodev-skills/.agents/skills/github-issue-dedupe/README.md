@@ -25,9 +25,9 @@ jobs:
       - name: Run duplicate detection agent
         uses: khulnasoft/neodev@v1
         with:
-          warp_api_key: ${{ secrets.WARP_API_KEY }}
-          profile: ${{ vars.WARP_AGENT_PROFILE || '' }}
-          environment_id: ${{ vars.WARP_AGENT_ENVIRONMENT }}
+          warp_api_key: ${{ secrets.COGNIX_API_KEY }}
+          profile: ${{ vars.COGNIX_AGENT_PROFILE || '' }}
+          environment_id: ${{ vars.COGNIX_AGENT_ENVIRONMENT }}
           skill_spec: "khulnasoft/neodev:github-issue-dedupe"
           prompt: |
             Find duplicates of issue #${{ github.event.issue.number }} in ${{ github.repository }}.
@@ -45,8 +45,8 @@ jobs:
 
 ## Setup
 
-1. Add `WARP_API_KEY` to repository secrets
-2. (Optional) Set `WARP_AGENT_PROFILE` variable for custom agent config
+1. Add `COGNIX_API_KEY` to repository secrets
+2. (Optional) Set `COGNIX_AGENT_PROFILE` variable for custom agent config
 3. Workflow triggers automatically on new issues
 4. Agent comments on duplicates found
 

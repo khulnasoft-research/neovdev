@@ -17,7 +17,7 @@
 #   - Each re-review focuses on changes since the previous review.
 #
 # Setup:
-#   - Ensure WARP_API_KEY is set in Repository Secrets.
+#   - Ensure COGNIX_API_KEY is set in Repository Secrets.
 #   - The Agent needs read access to contents and write access to pull-requests.
 #
 # Expected Output:
@@ -51,4 +51,4 @@ jobs:
       host: ""
       environment: ""
     secrets:
-      WARP_API_KEY: ${{ secrets.WARP_API_KEY }}
+      COGNIX_API_KEY: ${{ secrets.COGNIX_API_KEY }}

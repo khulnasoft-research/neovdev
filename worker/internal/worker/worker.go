@@ -30,7 +30,7 @@ const (
 	WriteWait              = 10 * time.Second
 	BackendShutdownTimeout = 10 * time.Second
 
-	warpServerRootURLEnv = "WARP_SERVER_ROOT_URL"
+	warpServerRootURLEnv = "COGNIX_SERVER_ROOT_URL"
 )
 
 type Config struct {

@@ -22,7 +22,7 @@ warp:
   apiKeySecret:
     create: false
     name: neodev-agent-worker
-    key: WARP_API_KEY
+    key: COGNIX_API_KEY
     value: ""
   webSocketURL: wss://oz.warp.dev/api/v1/selfhosted/worker/ws
   serverRootURL: https://app.warp.dev

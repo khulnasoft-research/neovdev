@@ -70,7 +70,7 @@ const scenarios = [
     reusableWorkflow: {
       inputs: defaultReusableWorkflowInputs,
       secrets: {
-        WARP_API_KEY: {
+        COGNIX_API_KEY: {
           description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
@@ -87,7 +87,7 @@ const scenarios = [
     reusableWorkflow: {
       inputs: defaultReusableWorkflowInputs,
       secrets: {
-        WARP_API_KEY: {
+        COGNIX_API_KEY: {
           description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
@@ -104,7 +104,7 @@ const scenarios = [
     reusableWorkflow: {
       inputs: defaultReusableWorkflowInputs,
       secrets: {
-        WARP_API_KEY: {
+        COGNIX_API_KEY: {
           description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
@@ -121,7 +121,7 @@ const scenarios = [
     reusableWorkflow: {
       inputs: defaultReusableWorkflowInputs,
       secrets: {
-        WARP_API_KEY: {
+        COGNIX_API_KEY: {
           description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
@@ -142,7 +142,7 @@ const scenarios = [
     reusableWorkflow: {
       inputs: defaultReusableWorkflowInputs,
       secrets: {
-        WARP_API_KEY: {
+        COGNIX_API_KEY: {
           description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
@@ -159,7 +159,7 @@ const scenarios = [
     reusableWorkflow: {
       inputs: defaultReusableWorkflowInputs,
       secrets: {
-        WARP_API_KEY: {
+        COGNIX_API_KEY: {
           description: "Neodev API key used by the Neodev Agent.",
           required: true,
         },
@@ -224,21 +224,21 @@ function updateOzAgentActionInputs(job, workflowCallInputs) {
     step.with ||= {};
 
     if ("profile" in workflowCallInputs) {
-      // In the examples, profile is wired to vars.WARP_AGENT_PROFILE.
+      // In the examples, profile is wired to vars.COGNIX_AGENT_PROFILE.
       // In the reusable workflow, allow overriding via an input.
-      step.with.profile = "${{ inputs.profile || vars.WARP_AGENT_PROFILE || '' }}";
+      step.with.profile = "${{ inputs.profile || vars.COGNIX_AGENT_PROFILE || '' }}";
     }
 
     if ("model" in workflowCallInputs) {
-      step.with.model = "${{ inputs.model || vars.WARP_AGENT_MODEL || '' }}";
+      step.with.model = "${{ inputs.model || vars.COGNIX_AGENT_MODEL || '' }}";
     }
 
     if ("name" in workflowCallInputs) {
-      step.with.name = "${{ inputs.name || vars.WARP_AGENT_NAME || '' }}";
+      step.with.name = "${{ inputs.name || vars.COGNIX_AGENT_NAME || '' }}";
     }
 
     if ("mcp" in workflowCallInputs) {
-      step.with.mcp = "${{ inputs.mcp || vars.WARP_AGENT_MCP || '' }}";
+      step.with.mcp = "${{ inputs.mcp || vars.COGNIX_AGENT_MCP || '' }}";
     }
 
     if ("skill" in workflowCallInputs) {

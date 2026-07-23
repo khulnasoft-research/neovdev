@@ -49,7 +49,7 @@ on:
         type: string
         default: ""
     secrets:
-      WARP_API_KEY:
+      COGNIX_API_KEY:
         description: Neodev API key used by the Neodev Agent.
         required: true
 jobs:
@@ -241,11 +241,11 @@ jobs:
         with:
           skill: ${{ inputs.skill || 'khulnasoft/neodev:review-pr' }}
           prompt: ${{ steps.prompt.outputs.prompt }}
-          warp_api_key: ${{ secrets.WARP_API_KEY }}
-          profile: ${{ inputs.profile || vars.WARP_AGENT_PROFILE || '' }}
-          model: ${{ inputs.model || vars.WARP_AGENT_MODEL || '' }}
-          name: ${{ inputs.name || vars.WARP_AGENT_NAME || '' }}
-          mcp: ${{ inputs.mcp || vars.WARP_AGENT_MCP || '' }}
+          warp_api_key: ${{ secrets.COGNIX_API_KEY }}
+          profile: ${{ inputs.profile || vars.COGNIX_AGENT_PROFILE || '' }}
+          model: ${{ inputs.model || vars.COGNIX_AGENT_MODEL || '' }}
+          name: ${{ inputs.name || vars.COGNIX_AGENT_NAME || '' }}
+          mcp: ${{ inputs.mcp || vars.COGNIX_AGENT_MCP || '' }}
           cloud: ${{ inputs.cloud }}
           host: ${{ inputs.host }}
           environment: ${{ inputs.environment }}

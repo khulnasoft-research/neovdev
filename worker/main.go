@@ -27,7 +27,7 @@ var Version = "dev"
 var CLI struct {
 	ConfigFile              string   `help:"Path to YAML config file" type:"path"`
 	Backend                 string   `help:"Backend type (docker, direct, kubernetes, or command)" enum:"docker,direct,kubernetes,command," default:""`
-	APIKey                  string   `help:"API key for authentication" env:"WARP_API_KEY" required:""`
+	APIKey                  string   `help:"API key for authentication" env:"COGNIX_API_KEY" required:""`
 	WorkerID                string   `help:"Worker host identifier (required via flag or config file)"`
 	WebSocketURL            string   `default:"wss://oz.warp.dev/api/v1/selfhosted/worker/ws" hidden:""`
 	ServerRootURL           string   `default:"https://app.warp.dev" hidden:""`

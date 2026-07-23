@@ -59,7 +59,7 @@ spec:
             - {{ . | quote }}
             {{- end }}
           env:
-            - name: WARP_API_KEY
+            - name: COGNIX_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "neodev-agent-worker.apiKeySecretName" . }}
