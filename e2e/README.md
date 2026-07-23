@@ -70,7 +70,7 @@ a new deployment, its turns stay pinned to the deployment that created it
 sessions adopt the new deployment — a skill added by the redeploy loads there.
 The pinned-turn assertion is a deliberate tripwire: it must be flipped when
 turn dispatch gains preview latest-routing
-(https://github.com/vercel/ovo/issues/582).
+(https://github.com/khulnasoft/ovo/issues/582).
 
 The eval redeploys from inside its test body: it mutates the agent source,
 runs `ovo build` + `vc deploy`, and repoints a run-scoped Vercel alias at

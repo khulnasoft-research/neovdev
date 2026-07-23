@@ -20,14 +20,14 @@
     "vercel",
     "workflow"
   ],
-  "homepage": "https://github.com/vercel/ovo#readme",
+  "homepage": "https://github.com/khulnasoft/ovo#readme",
   "bugs": {
-    "url": "https://github.com/vercel/ovo/issues"
+    "url": "https://github.com/khulnasoft/ovo/issues"
   },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vercel/ovo.git",
+    "url": "git+https://github.com/khulnasoft/ovo.git",
     "directory": "packages/ovo"
   },
   "bin": {

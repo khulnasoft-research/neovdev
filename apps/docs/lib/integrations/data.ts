@@ -497,7 +497,7 @@ const extensionPresentations: Record<string, ExtensionPresentation> = {
   "agent-browser": {
     logo: "agent-browser",
     docsHref:
-      "https://github.com/vercel-labs/agent-browser/tree/main/packages/%40agent-browser/ovo",
+      "https://github.com/khulnasoft-labs/agent-browser/tree/main/packages/%40agent-browser/ovo",
     keywords: [
       "browser",
       "browser automation",
@@ -540,7 +540,7 @@ export default browser({
 
 Also configure the [sandbox network policy](/docs/sandbox#network-policy) for defense in depth. Treat saved browser state, cookies, screenshots, downloads, and recordings as sensitive data. Do not place passwords or session tokens in prompts. Use the extension's per-tool overrides to gate or disable actions your agent should not take unattended.
 
-The extension also supports inline screenshots, session naming, proxies, and production pre-installation. See the [agent-browser ovo extension documentation](https://github.com/vercel-labs/agent-browser/tree/main/packages/%40agent-browser/ovo) for the complete options and example app.`,
+The extension also supports inline screenshots, session naming, proxies, and production pre-installation. See the [agent-browser ovo extension documentation](https://github.com/khulnasoft-labs/agent-browser/tree/main/packages/%40agent-browser/ovo) for the complete options and example app.`,
   },
 };
 

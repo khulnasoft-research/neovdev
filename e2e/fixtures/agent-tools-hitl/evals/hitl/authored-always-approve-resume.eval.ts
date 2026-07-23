@@ -3,7 +3,7 @@ import { defineEval } from "ovo/evals";
 const MARKER = "authored-always-approve-resume-N4K7";
 const TOOL_NAME = "gate";
 
-/** Regression reproduction for https://github.com/vercel/ovo/issues/533. */
+/** Regression reproduction for https://github.com/khulnasoft/ovo/issues/533. */
 export default defineEval({
   description:
     "HITL repro (#533): a separate approval response executes an authored always-gated tool.",

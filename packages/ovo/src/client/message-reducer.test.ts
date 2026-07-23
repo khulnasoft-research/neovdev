@@ -652,7 +652,7 @@ describe("defaultMessageReducer", () => {
   });
 
   it("keeps multiple text runs within a single step as separate parts", () => {
-    // Regression test for https://github.com/vercel/ovo/issues/436: a step can
+    // Regression test for https://github.com/khulnasoft/ovo/issues/436: a step can
     // legitimately produce text, call tools, then produce more text. Keying
     // text parts by stepIndex alone drops the first run and reorders the second
     // ahead of the tool call.

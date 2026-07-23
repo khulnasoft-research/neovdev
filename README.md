@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/vercel/ovo">
+  <a href="https://github.com/khulnasoft/ovo">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset=".github/assets/ovo.svg">
       <img alt="ovo logo" src=".github/assets/ovo.svg" height="128">
@@ -9,8 +9,8 @@
 
 <a href="https://vercel.com"><img alt="Vercel logo" src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=Vercel&labelColor=000"></a>
 <a href="https://www.npmjs.com/package/ovo"><img alt="NPM version" src="https://img.shields.io/npm/v/ovo.svg?style=for-the-badge&labelColor=000000"></a>
-<a href="https://github.com/vercel/ovo/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/ovo.svg?style=for-the-badge&labelColor=000000"></a>
-<a href="https://github.com/vercel/ovo/discussions"><img alt="Join the community on GitHub" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=Github&labelColor=000000&logoWidth=20"></a>
+<a href="https://github.com/khulnasoft/ovo/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/ovo.svg?style=for-the-badge&labelColor=000000"></a>
+<a href="https://github.com/khulnasoft/ovo/discussions"><img alt="Join the community on GitHub" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=Github&labelColor=000000&logoWidth=20"></a>
 
 </div>
 
@@ -103,15 +103,15 @@ walkthrough.
 
 ## Community
 
-The ovo community lives on [GitHub Discussions](https://github.com/vercel/ovo/discussions),
+The ovo community lives on [GitHub Discussions](https://github.com/khulnasoft/ovo/discussions),
 where you can ask questions, share ideas, and show what you've built.
 
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get the repo
 running locally and land a change, and use
-[issues](https://github.com/vercel/ovo/issues) and
-[discussions](https://github.com/vercel/ovo/discussions) to collaborate. By
+[issues](https://github.com/khulnasoft/ovo/issues) and
+[discussions](https://github.com/khulnasoft/ovo/discussions) to collaborate. By
 participating, you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Security

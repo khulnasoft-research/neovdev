@@ -227,7 +227,7 @@ export function ArchitectureDiagram() {
               Self-hosted
             </button>{" "}
             <Link
-              href="https://github.com/vercel-labs/steve"
+              href="https://github.com/khulnasoft-labs/steve"
               className="text-gray-900 underline decoration-gray-400 underline-offset-2 transition-colors hover:text-gray-1000"
             >
               (example)
@@ -310,7 +310,7 @@ export function ArchitectureDiagram() {
             <>
               {" "}
               <Link
-                href="https://github.com/vercel-labs/steve"
+                href="https://github.com/khulnasoft-labs/steve"
                 className="inline-flex items-center gap-0 text-gray-1000 underline decoration-gray-400 underline-offset-2"
               >
                 See the example

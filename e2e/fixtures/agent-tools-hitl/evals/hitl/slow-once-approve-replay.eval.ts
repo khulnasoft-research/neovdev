@@ -5,7 +5,7 @@ import { GUARDED_SLOW_ECHO_TOKEN } from "./shared.js";
 const TOOL_NAME = "guarded-slow-echo";
 
 /**
- * Regression coverage for https://github.com/vercel/ovo/issues/460.
+ * Regression coverage for https://github.com/khulnasoft/ovo/issues/460.
  *
  * A `once()`-gated tool with a slow async `execute` is called twice in one
  * user turn. The first call is human-approved, and the second auto-approves via

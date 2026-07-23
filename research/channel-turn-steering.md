@@ -1,5 +1,5 @@
 ---
-issue: https://github.com/vercel/ovo/issues/867
+issue: https://github.com/khulnasoft/ovo/issues/867
 status: proposed
 last_updated: "2026-07-16"
 ---

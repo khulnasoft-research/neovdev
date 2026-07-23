@@ -21,7 +21,7 @@ import type { EveEvalContext } from "ovo/evals";
 // in execution/workflow-runtime.ts). The timeline below asserts exactly the
 // preview contract; the pinned-turn gate at t3 is a deliberate tripwire that
 // must be flipped when dispatch gains preview latest-routing
-// (https://github.com/vercel/ovo/issues/582).
+// (https://github.com/khulnasoft/ovo/issues/582).
 //
 // Timeline under test:
 //   t0  session A writes a file into its sandbox workspace

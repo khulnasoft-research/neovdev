@@ -24,19 +24,19 @@ describe("presentTool", () => {
   it("renders web_fetch as a semantic URL activity", () => {
     const presentation = presentTool("web_fetch", {
       format: "markdown",
-      url: "https://github.com/vercel/ovo/issues/648",
+      url: "https://github.com/khulnasoft/ovo/issues/648",
     });
 
-    expect(presentation.title).toBe("Fetch https://github.com/vercel/ovo/issues/648");
+    expect(presentation.title).toBe("Fetch https://github.com/khulnasoft/ovo/issues/648");
     expect(presentation.subtitle).toBe("");
     expect(presentation.summarizeResult({ content: "large page" })).toBeUndefined();
-    expect(presentation.doneTitle).toBe("Fetched https://github.com/vercel/ovo/issues/648");
+    expect(presentation.doneTitle).toBe("Fetched https://github.com/khulnasoft/ovo/issues/648");
     expect(presentation.group).toEqual({
       verb: "Fetch",
       pastVerb: "Fetched",
       singularNoun: "URL",
       pluralNoun: "URLs",
-      item: "https://github.com/vercel/ovo/issues/648",
+      item: "https://github.com/khulnasoft/ovo/issues/648",
     });
   });
 

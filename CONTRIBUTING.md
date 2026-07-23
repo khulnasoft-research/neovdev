@@ -26,7 +26,7 @@ commits need both.
 ## Getting started
 
 ```bash
-git clone https://github.com/vercel/ovo.git
+git clone https://github.com/khulnasoft/ovo.git
 cd ovo
 pnpm install
 pnpm build
@@ -210,7 +210,7 @@ valid sign-off.
 
 ## Reporting bugs and requesting features
 
-Please use the [issue templates](https://github.com/vercel/ovo/issues/new/choose). For security issues, **do not open a public issue** — follow [SECURITY.md](./SECURITY.md) instead.
+Please use the [issue templates](https://github.com/khulnasoft/ovo/issues/new/choose). For security issues, **do not open a public issue** — follow [SECURITY.md](./SECURITY.md) instead.
 
 ## Code of conduct
 

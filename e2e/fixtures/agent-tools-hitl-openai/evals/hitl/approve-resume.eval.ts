@@ -3,7 +3,7 @@ import { defineEval } from "ovo/evals";
 const GUARDED_ECHO_OPENAI_TOKEN = "guarded-echo-openai-ok-R2D7";
 
 /**
- * Regression coverage for https://github.com/vercel/ovo/issues/236.
+ * Regression coverage for https://github.com/khulnasoft/ovo/issues/236.
  *
  * An `always()`-gated executable tool on the OpenAI Responses provider:
  * approve-resume must execute the tool and the transcript must replay on a

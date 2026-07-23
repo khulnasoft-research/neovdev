@@ -5,7 +5,7 @@ import { z } from "zod";
 export const GUARDED_SLOW_ECHO_TOKEN = "guarded-slow-echo-ok-V7K2";
 
 /**
- * HITL fixture for https://github.com/vercel/ovo/issues/460. It is gated by
+ * HITL fixture for https://github.com/khulnasoft/ovo/issues/460. It is gated by
  * `once()` and deliberately slow. The issue's repro singles out a
  * non-trivial async `execute` as the trigger. The approved call's result
  * must survive the wait before history is rebuilt and replayed.
