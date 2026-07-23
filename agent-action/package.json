@@ -10,8 +10,8 @@
   "license": "MIT",
   "author": "KhulnaSoft Team <info@khulnasoft.com>",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/khulnasoft/neodev.git"
+    "url": "git+https://github.com/khulnasoft/neodev.git",
+    "directory": "agent-action"
   },
   "type": "module",
   "main": "index.js",
