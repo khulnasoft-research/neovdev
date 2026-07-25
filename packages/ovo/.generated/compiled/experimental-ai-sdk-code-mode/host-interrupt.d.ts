@@ -25,5 +25,5 @@ export declare function requestCodeModeInterrupt<TPayload extends CodeModeInterr
 export declare function isCodeModeHostInterruptSignal(
   value: unknown,
 ): value is CodeModeHostInterruptSignal;
-export {};
+
 //# sourceMappingURL=host-interrupt.d.ts.map

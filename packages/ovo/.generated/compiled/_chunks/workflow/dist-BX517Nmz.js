@@ -832,11 +832,11 @@ const At = /^[cC][^\s-]{8,}$/,
   Vt = zt(6),
   Ht = zt(7),
   Ut =
-    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/,
+    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/,
   Wt =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
   Gt =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   Kt = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u,
   qt = Kt,
   Jt =
@@ -1421,7 +1421,7 @@ var cr = class {
   compile() {
     let e = Function,
       t = this?.args,
-      n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+      n = (this?.content ?? [``]).map((e) => `  ${e}`);
     return new e(
       ...t,
       n.join(`
@@ -7762,7 +7762,7 @@ var Jo = class {
   get(e) {
     let t = e._zod.parent;
     if (t) {
-      let n = { ...(this.get(t) ?? {}) };
+      let n = { ...this.get(t) };
       delete n.id;
       let r = { ...n, ...this._map.get(e) };
       return Object.keys(r).length ? r : void 0;
@@ -8507,7 +8507,7 @@ const il =
     (e, t, n = {}) =>
     (r) => {
       let { libraryOptions: i, target: a } = r ?? {},
-        o = tl({ ...(i ?? {}), target: a, io: t, processors: n });
+        o = tl({ ...i, target: a, io: t, processors: n });
       return (O(e, o), nl(o, e), rl(o, e));
     },
   ol = { guid: `uuid`, url: `uri`, datetime: `date-time`, json_string: `json-string`, regex: `` },
@@ -8529,14 +8529,12 @@ const il =
       e.length === 1
         ? (i.pattern = e[0].source)
         : e.length > 1 &&
-          (i.allOf = [
-            ...e.map((e) => ({
-              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                ? { type: `string` }
-                : {}),
-              pattern: e.source,
-            })),
-          ]);
+          (i.allOf = e.map((e) => ({
+            ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+              ? { type: `string` }
+              : {}),
+            pattern: e.source,
+          })));
     }
   },
   cl = (e, t, n, r) => {
@@ -10937,7 +10935,7 @@ function Pp(e, t = {}) {
           )
         : !t.allowReservedAttributes && e.startsWith(`$`)
           ? new Mp(
-              `Attribute key ${JSON.stringify(e)} starts with reserved prefix "\$" — that namespace is reserved for framework/library code. Set { allowReservedAttributes: true } only if your caller is framework-level.`,
+              `Attribute key ${JSON.stringify(e)} starts with reserved prefix "$" — that namespace is reserved for framework/library code. Set { allowReservedAttributes: true } only if your caller is framework-level.`,
             )
           : null
     : new Mp(`Attribute key must be a string, got ${typeof e}`);
@@ -10977,7 +10975,7 @@ function Ip(e, t = {}) {
   if (o > 64) throw new Mp(`Run attribute count would exceed limit 64 (post-merge ${o})`);
 }
 function Lp(e, t) {
-  let n = { ...(e ?? {}) };
+  let n = { ...e };
   for (let { key: e, value: r } of t) r === null ? delete n[e] : (n[e] = r);
   return n;
 }

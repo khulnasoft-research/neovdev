@@ -6136,7 +6136,7 @@ function Pp$1(e, t = {}) {
           )
         : !t.allowReservedAttributes && e.startsWith(`$`)
           ? new Mp$1(
-              `Attribute key ${JSON.stringify(e)} starts with reserved prefix "\$" — that namespace is reserved for framework/library code. Set { allowReservedAttributes: true } only if your caller is framework-level.`,
+              `Attribute key ${JSON.stringify(e)} starts with reserved prefix "$" — that namespace is reserved for framework/library code. Set { allowReservedAttributes: true } only if your caller is framework-level.`,
             )
           : null
     : new Mp$1(`Attribute key must be a string, got ${typeof e}`);
@@ -7123,11 +7123,11 @@ var init_dist_BX517Nmz = __esmMin(() => {
     (Vt$9 = zt$11(6)),
     (Ht$9 = zt$11(7)),
     (Ut$9 =
-      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/),
+      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/),
     (Wt$9 =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/),
     (Gt$9 =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
     (Kt$9 = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u),
     (qt$9 = Kt$9),
     (Jt$9 =
@@ -7704,7 +7704,7 @@ var init_dist_BX517Nmz = __esmMin(() => {
     compile() {
       let e = Function,
         t = this?.args,
-        n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+        n = (this?.content ?? [``]).map((e) => `  ${e}`);
       return new e(
         ...t,
         n.join(`
@@ -14853,7 +14853,7 @@ var init_dist_BX517Nmz = __esmMin(() => {
     get(e) {
       let t = e._zod.parent;
       if (t) {
-        let n = { ...(this.get(t) ?? {}) };
+        let n = { ...this.get(t) };
         delete n.id;
         let r = {
           ...n,
@@ -14890,7 +14890,7 @@ var init_dist_BX517Nmz = __esmMin(() => {
       (r) => {
         let { libraryOptions: i, target: a } = r ?? {},
           o = tl$3({
-            ...(i ?? {}),
+            ...i,
             target: a,
             io: t,
             processors: n,
@@ -14922,14 +14922,12 @@ var init_dist_BX517Nmz = __esmMin(() => {
         e.length === 1
           ? (i.pattern = e[0].source)
           : e.length > 1 &&
-            (i.allOf = [
-              ...e.map((e) => ({
-                ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                  ? { type: `string` }
-                  : {}),
-                pattern: e.source,
-              })),
-            ]);
+            (i.allOf = e.map((e) => ({
+              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+                ? { type: `string` }
+                : {}),
+              pattern: e.source,
+            })));
       }
     }),
     (cl$3 = (e, t, n, r) => {
@@ -23735,7 +23733,7 @@ function wa$6(e, t = {}) {
               o || s
                 ? {
                     ...r,
-                    ...(a ?? {}),
+                    ...a,
                   }
                 : void 0;
           ((t === `error` || t === `warn`) &&
@@ -23767,7 +23765,7 @@ function wa$6(e, t = {}) {
           ...r,
           workflowRunId: e,
           ...(t === void 0 ? {} : { workflowName: t }),
-          ...(i ?? {}),
+          ...i,
         }),
     };
   };
@@ -29696,11 +29694,11 @@ const _t$8 = /^[cC][0-9a-z]{6,}$/,
   Dt$8 = L$10(6),
   Ot$8 = L$10(7),
   kt$8 =
-    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/,
+    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/,
   At$8 =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
   jt$8 =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   Mt$8 = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u,
   Nt$8 = Mt$8,
   Pt$8 =
@@ -30310,7 +30308,7 @@ var Kn$5 = class {
   compile() {
     let e = Function,
       t = this?.args,
-      n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+      n = (this?.content ?? [``]).map((e) => `  ${e}`);
     return new e(
       ...t,
       n.join(`
@@ -38446,7 +38444,7 @@ var zo$3 = class {
   get(e) {
     let t = e._zod.parent;
     if (t) {
-      let n = { ...(this.get(t) ?? {}) };
+      let n = { ...this.get(t) };
       delete n.id;
       let r = {
         ...n,
@@ -39668,7 +39666,7 @@ const Kc$2 =
     (r) => {
       let { libraryOptions: i, target: a } = r ?? {},
         o = Y$9({
-          ...(i ?? {}),
+          ...i,
           target: a,
           io: t,
           processors: n,
@@ -39700,14 +39698,12 @@ const Kc$2 =
       e.length === 1
         ? (i.pattern = e[0].source)
         : e.length > 1 &&
-          (i.allOf = [
-            ...e.map((e) => ({
-              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                ? { type: `string` }
-                : {}),
-              pattern: e.source,
-            })),
-          ]);
+          (i.allOf = e.map((e) => ({
+            ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+              ? { type: `string` }
+              : {}),
+            pattern: e.source,
+          })));
     }
   },
   Xc$2 = (e, t, n, r) => {
@@ -45887,7 +45883,7 @@ async function resolveSandboxSkillWritePath(input) {
   });
 }
 async function resolveSandboxSeedFilePath(input) {
-  if (!input.path.startsWith(`\$HOME/.agents/skills/`)) return input.path;
+  if (!input.path.startsWith(`$HOME/.agents/skills/`)) return input.path;
   return `${await resolveSandboxSkillRoot({ sandbox: input.sandbox })}${input.path.slice(20)}`;
 }
 function formatSkillPath(input) {
@@ -46949,7 +46945,7 @@ function formatAvailableSkillsSection(skills, options = {}) {
 function formatSkillLocationLine(options) {
   if (options.skillRoot !== void 0)
     return `Skill files live under \`${options.skillRoot}/<skill>/\`.`;
-  return `Skill files live under \`\$HOME/.agents/skills/<skill>/\`, with \`/workspace/skills/<skill>/\` as the fallback when \`$HOME\` is unavailable.`;
+  return `Skill files live under \`$HOME/.agents/skills/<skill>/\`, with \`/workspace/skills/<skill>/\` as the fallback when \`$HOME\` is unavailable.`;
 }
 function formatAvailableSkillLine(input) {
   return `${`- ${input.skill.name}: ${input.skill.description}`} (path: ${input.skillRoot ?? "$HOME/.agents/skills"}/${input.skill.name}/SKILL.md)`;
@@ -47985,7 +47981,7 @@ async function Xt$6(e, t, r) {
 }
 const X$8 = (e) => Math.floor(e.getTime() / 1e3),
   Qt$7 =
-    /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
+    /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
 function Z$9(e) {
   let t = Qt$7.exec(e);
   if (!t || (t[4] && t[1])) throw TypeError(`Invalid time period format`);
@@ -54832,7 +54828,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
     }
     let m = /--!?>/;
     function h(e) {
-      return m.test(e) ? e.replace(/(--\!?)>/g, `$1&gt;`) : e;
+      return m.test(e) ? e.replace(/(--!?)>/g, `$1&gt;`) : e;
     }
     function g(e) {
       return e.includes(`>`) ? e.replaceAll(`>`, `&gt;`) : e;
@@ -58087,11 +58083,11 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
         (t[5] && (this.path = t[5]), t[6] && (this.query = t[7]), t[8] && (this.fragment = t[9]));
       }
     }
-    ((n.pattern = /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/),
+    ((n.pattern = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/),
       (n.userinfoPattern = /^([^@:]*)(:([^@]*))?@/),
       (n.portPattern = /:\d+$/),
-      (n.authorityPattern = /^[^:\/?#]+:\/\//),
-      (n.hierarchyPattern = /^[^:\/?#]+:\//),
+      (n.authorityPattern = /^[^:/?#]+:\/\//),
+      (n.hierarchyPattern = /^[^:/?#]+:\//),
       (n.percentEncode = function (e) {
         var t = e.charCodeAt(0);
         if (t < 256) return `%` + t.toString(16);
@@ -58181,9 +58177,9 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
               else if (r === `/./`) e = `/` + e.substring(3);
               else if (n === `/.` && e.length === 2) e = `/`;
               else if (i === `/../` || (r === `/..` && e.length === 3))
-                ((e = `/` + e.substring(4)), (t = t.replace(/\/?[^\/]*$/, ``)));
+                ((e = `/` + e.substring(4)), (t = t.replace(/\/?[^/]*$/, ``)));
               else {
-                var a = e.match(/(\/?([^\/]*))/)[0];
+                var a = e.match(/(\/?([^/]*))/)[0];
                 ((t += a), (e = e.substring(a.length)));
               }
             }
@@ -58423,7 +58419,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
             r = new n(t);
           (r.isAbsolute() &&
             ((e = e.replace(/:+$/, ``)),
-            (e = e.replace(/[^-+\.a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+.a-zA-Z0-9]/g, n.percentEncode)),
             e.length > 0 && ((r.scheme = e), (t = r.toString()))),
             (this.href = t));
         },
@@ -58440,7 +58436,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
             r = new n(t);
           (r.isAbsolute() &&
             r.isAuthorityBased() &&
-            ((e = e.replace(/[^-+\._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
+            ((e = e.replace(/[^-+._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
             e.length > 0 && ((r.host = e), delete r.port, (t = r.toString()))),
             (this.href = t));
         },
@@ -58456,7 +58452,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
           (r.isAbsolute() &&
             r.isAuthorityBased() &&
             ((e = e.replace(/^\/+/, ``)),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
             e.length > 0 && ((r.host = e), (t = r.toString()))),
             (this.href = t));
         },
@@ -58490,7 +58486,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
           (r.isAbsolute() &&
             r.isHierarchical() &&
             (e.charAt(0) !== `/` && (e = `/` + e),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=@\/a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=@/a-zA-Z0-9]/g, n.percentEncode)),
             (r.path = e),
             (t = r.toString())),
             (this.href = t));
@@ -58507,7 +58503,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
           (r.isAbsolute() &&
             r.isHierarchical() &&
             (e.charAt(0) === `?` && (e = e.substring(1)),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=@\/?a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=@/?a-zA-Z0-9]/g, n.percentEncode)),
             (r.query = e),
             (t = r.toString())),
             (this.href = t));
@@ -58522,7 +58518,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
           var t = this.href,
             r = new n(t);
           (e.charAt(0) === `#` && (e = e.substring(1)),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=@\/?a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=@/?a-zA-Z0-9]/g, n.percentEncode)),
             (r.fragment = e),
             (t = r.toString()),
             (this.href = t));
@@ -58536,7 +58532,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
           var t = this.href,
             r = new n(t);
           (r.isAbsolute() &&
-            ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`\/@\\:]/g, n.percentEncode)),
+            ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`/@\\:]/g, n.percentEncode)),
             (r.username = e),
             (t = r.toString())),
             (this.href = t));
@@ -58552,7 +58548,7 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
           (r.isAbsolute() &&
             (e === ``
               ? (r.password = null)
-              : ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`\/@\\]/g, n.percentEncode)),
+              : ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`/@\\]/g, n.percentEncode)),
                 (r.password = e)),
             (t = r.toString())),
             (this.href = t));
@@ -63761,8 +63757,8 @@ var e$2 = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)
       he = /[^\r"&\u0000]+/g,
       ge = /[^\r'&\u0000]+/g,
       _e = /[^\r\t\n\f &>\u0000]+/g,
-      ve = /[^\r\t\n\f \/>A-Z\u0000]+/g,
-      ye = /[^\r\t\n\f \/=>A-Z\u0000]+/g,
+      ve = /[^\r\t\n\f />A-Z\u0000]+/g,
+      ye = /[^\r\t\n\f /=>A-Z\u0000]+/g,
       be = /[^\]\r\u0000\uffff]*/g,
       xe = /[^&<\r\u0000\uffff]*/g,
       Se = /[^<\r\u0000\uffff]*/g,
@@ -68643,7 +68639,7 @@ var I$6 = {};
           o = Array.prototype.indexOf.call(i.children, t);
         r = (a ? Number(a) + o : o + 1) + `.  `;
       }
-      var s = /\n$/.test(e);
+      var s = e.endsWith("\n");
       return (
         (e =
           we$8(e) +
@@ -68924,7 +68920,7 @@ function R$6(e) {
     for (var a = null, o = !1, s = null, c = Ve$8(s, t, i); c !== t;) {
       if (c.nodeType === 3 || c.nodeType === 4) {
         var l = c.data.replace(/[ \r\n\t]+/g, ` `);
-        if (((!a || / $/.test(a.data)) && !o && l[0] === ` ` && (l = l.substr(1)), !l)) {
+        if (((!a || a.data.endsWith(" ")) && !o && l[0] === ` ` && (l = l.substr(1)), !l)) {
           c = Be$8(c);
           continue;
         }
@@ -74173,7 +74169,7 @@ var ne$5 = Object.create,
               let c = i[n],
                 l = /^".*"$/.test(c) ? c.slice(1, -1) : c,
                 d = r.join(l, e);
-              a(f(!l && /^\.[\\\/]/.test(e) ? e.slice(0, 2) + d : d, n, 0));
+              a(f(!l && /^\.[\\/]/.test(e) ? e.slice(0, 2) + d : d, n, 0));
             }),
           f = (e, n, r) =>
             new Promise((i, o) => {
@@ -74197,7 +74193,7 @@ var ne$5 = Object.create,
           let s = n[o],
             u = /^".*"$/.test(s) ? s.slice(1, -1) : s,
             d = r.join(u, e),
-            f = !u && /^\.[\\\/]/.test(e) ? e.slice(0, 2) + d : d;
+            f = !u && /^\.[\\/]/.test(e) ? e.slice(0, 2) + d : d;
           for (let e = 0; e < i.length; e++) {
             let n = f + i[e];
             try {
@@ -77532,11 +77528,11 @@ var rr$4,
       (mr$3 = fr$3(6)),
       (hr$3 = fr$3(7)),
       (gr$3 =
-        /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/),
+        /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/),
       (_r$3 =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/),
       (vr$3 =
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
       (yr$3 = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u),
       (br$3 = yr$3),
       (xr$3 =
@@ -78138,7 +78134,7 @@ var F$5,
       compile() {
         let e = Function,
           t = this?.args,
-          n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+          n = (this?.content ?? [``]).map((e) => `  ${e}`);
         return new e(
           ...t,
           n.join(`
@@ -85579,7 +85575,7 @@ var al$1,
         get(e) {
           let t = e._zod.parent;
           if (t) {
-            let n = { ...(this.get(t) ?? {}) };
+            let n = { ...this.get(t) };
             delete n.id;
             let r = {
               ...n,
@@ -86634,16 +86630,14 @@ var md$1,
                     e.length === 1
                       ? (n.pattern = e[0].source)
                       : e.length > 1 &&
-                        (o.schema.allOf = [
-                          ...e.map((e) => ({
-                            ...(this.target === `draft-7` ||
-                            this.target === `draft-4` ||
-                            this.target === `openapi-3.0`
-                              ? { type: `string` }
-                              : {}),
-                            pattern: e.source,
-                          })),
-                        ]);
+                        (o.schema.allOf = e.map((e) => ({
+                          ...(this.target === `draft-7` ||
+                          this.target === `draft-4` ||
+                          this.target === `openapi-3.0`
+                            ? { type: `string` }
+                            : {}),
+                          pattern: e.source,
+                        })));
                   }
                   break;
                 }
@@ -92345,7 +92339,7 @@ var Iv = T$5(() => {
       (Hv = Vv * 7),
       (Uv = Vv * 365.25),
       (Wv =
-        /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i),
+        /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i),
       (Gv = (e) => {
         let t = Wv.exec(e);
         if (!t || (t[4] && t[1])) throw TypeError(`Invalid time period format`);
@@ -96228,7 +96222,7 @@ var init_version_CjHTLx2a = __esmMin(() => {
           )
         : /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/),
     (Be$6 =
-      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/));
+      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/));
   ((He$6 =
     /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/),
     (Ue$6 =
@@ -96626,7 +96620,7 @@ var init_version_CjHTLx2a = __esmMin(() => {
     compile() {
       let e = Function,
         t = this?.args,
-        n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+        n = (this?.content ?? [``]).map((e) => `  ${e}`);
       return new e(
         ...t,
         n.join(`
@@ -97702,7 +97696,7 @@ var init_version_CjHTLx2a = __esmMin(() => {
     get(e) {
       let t = e._zod.parent;
       if (t) {
-        let n = { ...(this.get(t) ?? {}) };
+        let n = { ...this.get(t) };
         delete n.id;
         let r = {
           ...n,
@@ -97732,7 +97726,7 @@ var init_version_CjHTLx2a = __esmMin(() => {
       (r) => {
         let { libraryOptions: i, target: a } = r ?? {},
           o = Fr$2({
-            ...(i ?? {}),
+            ...i,
             target: a,
             io: t,
             processors: n,
@@ -97764,14 +97758,12 @@ var init_version_CjHTLx2a = __esmMin(() => {
         e.length === 1
           ? (i.pattern = e[0].source)
           : e.length > 1 &&
-            (i.allOf = [
-              ...e.map((e) => ({
-                ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                  ? { type: `string` }
-                  : {}),
-                pattern: e.source,
-              })),
-            ]);
+            (i.allOf = e.map((e) => ({
+              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+                ? { type: `string` }
+                : {}),
+              pattern: e.source,
+            })));
       }
     }),
     (Vr$2 = (e, t, n, r) => {
@@ -125789,7 +125781,7 @@ ${e.message}`),
     }));
   ((ya$1 = (e) => Math.floor(e.getTime() / 1e3)),
     (ba$1 =
-      /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i));
+      /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i));
   ((Sa$1 = (e) => (e.includes(`/`) ? e.toLowerCase() : `application/${e.toLowerCase()}`)),
     (Ca$1 = (e, t) =>
       typeof e == `string`
@@ -135578,7 +135570,7 @@ function Fc(...e) {
   return e.reduce(
     (e, t) => ({
       ...e,
-      ...(t ?? {}),
+      ...t,
     }),
     {},
   );
@@ -136066,7 +136058,7 @@ async function Fl(e, t) {
   }
 }
 function Il(e) {
-  return Object.fromEntries([...e.headers]);
+  return Object.fromEntries(e.headers);
 }
 function Rl(e) {
   return (
@@ -137905,7 +137897,7 @@ var init_dist_C_VDTghO = __esmMin(() => {
           )
         : /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/),
     (st$4 =
-      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/));
+      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/));
   ((lt$4 =
     /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/),
     (ut$4 =
@@ -138304,7 +138296,7 @@ var init_dist_C_VDTghO = __esmMin(() => {
     compile() {
       let e = Function,
         t = this?.args,
-        n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+        n = (this?.content ?? [``]).map((e) => `  ${e}`);
       return new e(
         ...t,
         n.join(`
@@ -139489,7 +139481,7 @@ var init_dist_C_VDTghO = __esmMin(() => {
     get(e) {
       let t = e._zod.parent;
       if (t) {
-        let n = { ...(this.get(t) ?? {}) };
+        let n = { ...this.get(t) };
         delete n.id;
         let r = {
           ...n,
@@ -139519,7 +139511,7 @@ var init_dist_C_VDTghO = __esmMin(() => {
       (r) => {
         let { libraryOptions: i, target: a } = r ?? {},
           o = xi({
-            ...(i ?? {}),
+            ...i,
             target: a,
             io: t,
             processors: n,
@@ -139551,14 +139543,12 @@ var init_dist_C_VDTghO = __esmMin(() => {
         e.length === 1
           ? (i.pattern = e[0].source)
           : e.length > 1 &&
-            (i.allOf = [
-              ...e.map((e) => ({
-                ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                  ? { type: `string` }
-                  : {}),
-                pattern: e.source,
-              })),
-            ]);
+            (i.allOf = e.map((e) => ({
+              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+                ? { type: `string` }
+                : {}),
+              pattern: e.source,
+            })));
       }
     }),
     (Oi = (e, t, n, r) => {
@@ -141291,7 +141281,7 @@ var init_dist_C_VDTghO = __esmMin(() => {
     (Ds = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/),
     (Os =
       /^[-+]?P(?!$)(?:(?:[-+]?\d+Y)|(?:[-+]?\d+[.,]\d+Y$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:(?:[-+]?\d+W)|(?:[-+]?\d+[.,]\d+W$))?(?:(?:[-+]?\d+D)|(?:[-+]?\d+[.,]\d+D$))?(?:T(?=[\d+-])(?:(?:[-+]?\d+H)|(?:[-+]?\d+[.,]\d+H$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:[-+]?\d+(?:[.,]\d+)?S)?)??$/),
-    (ks = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i));
+    (ks = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i));
   ((js =
     /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/),
     (Ms =
@@ -144362,7 +144352,7 @@ var init_dist_C_VDTghO = __esmMin(() => {
       cuid2: /^[0-9a-z]+$/,
       ulid: /^[0-9A-HJKMNP-TV-Z]{26}$/,
       email:
-        /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-\.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9\-]*\.)+[a-zA-Z]{2,}$/,
+        /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+[a-zA-Z]{2,}$/,
       emoji: () => (
         Eu === void 0 && (Eu = RegExp(`^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`, `u`)),
         Eu
@@ -154468,9 +154458,9 @@ var __commonJSMin = (e, t) => () => (
       h =
         /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/,
       g = /[\x85\u2028\u2029]/,
-      _ = /[,\[\]\{\}]/,
-      v = /^(?:!|!!|![a-z\-]+!)$/i,
-      y = /^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;
+      _ = /[,[\]{\}]/,
+      v = /^(?:!|!!|![a-z-]+!)$/i,
+      y = /^(?:!|[^,[\]{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;/\?:@&=+\$,_.!~*'(\)[\]])*$/i;
     function b(e) {
       return Object.prototype.toString.call(e);
     }
@@ -175977,7 +175967,7 @@ function Ae({ finishReason: e, hasToolCalls: t }) {
   }
 }
 function Ne(e) {
-  return /gemini-3[\.\-]/i.test(e) || /gemini-3$/i.test(e);
+  return /gemini-3[.\-]/i.test(e) || /gemini-3$/i.test(e);
 }
 function Pe() {
   return 65536;
@@ -179803,7 +179793,7 @@ var init_google = __esmMin(() => {
           warnings: f,
           providerMetadata: {
             google: {
-              ...(y.providerMetadata?.google ?? {}),
+              ...y.providerMetadata?.google,
               images: x.map(() => ({})),
             },
           },
@@ -179857,7 +179847,7 @@ var init_google = __esmMin(() => {
               "X-Goog-Upload-Header-Content-Type": s,
               "Content-Type": `application/json`,
             },
-            body: JSON.stringify({ file: { ...(c == null ? {} : { display_name: c }) } }),
+            body: JSON.stringify({ file: c == null ? {} : { display_name: c } }),
           });
         if (!l.ok) {
           let t = await l.text();

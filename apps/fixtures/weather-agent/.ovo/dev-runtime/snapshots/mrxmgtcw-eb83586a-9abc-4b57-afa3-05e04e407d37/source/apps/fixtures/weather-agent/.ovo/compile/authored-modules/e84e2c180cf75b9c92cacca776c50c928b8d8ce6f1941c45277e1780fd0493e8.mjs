@@ -681,7 +681,7 @@ const uuid = (version) => {
   );
 };
 const email =
-  /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
+  /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/;
 const _emoji$1 = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
 function emoji() {
   return new RegExp(_emoji$1, "u");
@@ -980,7 +980,7 @@ var Doc = class {
   compile() {
     const F = Function;
     const args = this?.args;
-    const lines = [...(this?.content ?? [``]).map((x) => `  ${x}`)];
+    const lines = (this?.content ?? [``]).map((x) => `  ${x}`);
     return new F(...args, lines.join("\n"));
   }
 };
@@ -2142,7 +2142,7 @@ var $ZodRegistry = class {
   get(schema) {
     const p = schema._zod.parent;
     if (p) {
-      const pm = { ...(this.get(p) ?? {}) };
+      const pm = { ...this.get(p) };
       delete pm.id;
       const f = {
         ...pm,
@@ -2865,7 +2865,7 @@ const createStandardJSONSchemaMethod =
   (params) => {
     const { libraryOptions, target } = params ?? {};
     const ctx = initializeContext({
-      ...(libraryOptions ?? {}),
+      ...libraryOptions,
       target,
       io,
       processors,
@@ -2897,14 +2897,12 @@ const stringProcessor = (schema, ctx, _json, _params) => {
     const regexes = [...patterns];
     if (regexes.length === 1) json.pattern = regexes[0].source;
     else if (regexes.length > 1)
-      json.allOf = [
-        ...regexes.map((regex) => ({
-          ...(ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0"
-            ? { type: "string" }
-            : {}),
-          pattern: regex.source,
-        })),
-      ];
+      json.allOf = regexes.map((regex) => ({
+        ...(ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0"
+          ? { type: "string" }
+          : {}),
+        pattern: regex.source,
+      }));
   }
 };
 const neverProcessor = (_schema, _ctx, json, _params) => {

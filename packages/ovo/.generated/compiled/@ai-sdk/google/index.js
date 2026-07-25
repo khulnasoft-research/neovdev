@@ -1636,7 +1636,7 @@ var je = [
     }
   };
 function Ne(e) {
-  return /gemini-3[\.\-]/i.test(e) || /gemini-3$/i.test(e);
+  return /gemini-3[.\-]/i.test(e) || /gemini-3$/i.test(e);
 }
 function Pe() {
   return 65536;
@@ -2156,7 +2156,7 @@ var Xe = E({
         images: x,
         warnings: f,
         providerMetadata: {
-          google: { ...(y.providerMetadata?.google ?? {}), images: x.map(() => ({})) },
+          google: { ...y.providerMetadata?.google, images: x.map(() => ({})) },
         },
         response: { timestamp: b, modelId: this.modelId, headers: y.response?.headers },
         usage: y.usage
@@ -2199,7 +2199,7 @@ var rt = A(() => j(z({ predictions: L(z({ bytesBase64Encoded: U() })).default([]
             "X-Goog-Upload-Header-Content-Type": s,
             "Content-Type": `application/json`,
           },
-          body: JSON.stringify({ file: { ...(c == null ? {} : { display_name: c }) } }),
+          body: JSON.stringify({ file: c == null ? {} : { display_name: c } }),
         });
       if (!l.ok) {
         let t = await l.text();

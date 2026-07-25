@@ -21,5 +21,5 @@ export declare function addTelemetryEvent(
 ): void;
 export declare function recordTelemetryError(span: TelemetrySpan | undefined, error: unknown): void;
 export declare function endTelemetrySpan(span: TelemetrySpan | undefined): void;
-export {};
+
 //# sourceMappingURL=telemetry.d.ts.map

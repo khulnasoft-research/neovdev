@@ -17411,16 +17411,14 @@ async function Jt(e, t) {
   let n = Kt(t.url),
     r;
   n || (r = qt(t.url));
-  let i = await t
-    .text()
-    .catch(
-      (e) =>
-        new N(t, {
-          message: `Can't read response text: ${String(e)}`,
-          sessionId: n,
-          sandboxName: r,
-        }),
-    );
+  let i = await t.text().catch(
+    (e) =>
+      new N(t, {
+        message: `Can't read response text: ${String(e)}`,
+        sessionId: n,
+        sandboxName: r,
+      }),
+  );
   if (typeof i != `string`) return i;
   let a;
   try {
@@ -22975,7 +22973,7 @@ async function va(e, t, n) {
 }
 const ya = (e) => Math.floor(e.getTime() / 1e3),
   ba =
-    /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
+    /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
 function xa(e) {
   let t = ba.exec(e);
   if (!t || (t[4] && t[1])) throw TypeError(`Invalid time period format`);

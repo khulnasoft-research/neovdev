@@ -470,7 +470,7 @@ const O = (e) => (t, n, i, a) => {
         )
       : /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/,
   Be =
-    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
+    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/;
 function Ve() {
   return RegExp(`^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`, `u`);
 }
@@ -881,7 +881,7 @@ var St = class {
   compile() {
     let e = Function,
       t = this?.args,
-      n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+      n = (this?.content ?? [``]).map((e) => `  ${e}`);
     return new e(
       ...t,
       n.join(`
@@ -1968,7 +1968,7 @@ var Nn,
     get(e) {
       let t = e._zod.parent;
       if (t) {
-        let n = { ...(this.get(t) ?? {}) };
+        let n = { ...this.get(t) };
         delete n.id;
         let r = { ...n, ...this._map.get(e) };
         return Object.keys(r).length ? r : void 0;
@@ -2464,7 +2464,7 @@ const Rr =
     (e, t, n = {}) =>
     (r) => {
       let { libraryOptions: i, target: a } = r ?? {},
-        o = Fr({ ...(i ?? {}), target: a, io: t, processors: n });
+        o = Fr({ ...i, target: a, io: t, processors: n });
       return (G(e, o), Ir(o, e), Lr(o, e));
     },
   zr = { guid: `uuid`, url: `uri`, datetime: `date-time`, json_string: `json-string`, regex: `` },
@@ -2486,14 +2486,12 @@ const Rr =
       e.length === 1
         ? (i.pattern = e[0].source)
         : e.length > 1 &&
-          (i.allOf = [
-            ...e.map((e) => ({
-              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                ? { type: `string` }
-                : {}),
-              pattern: e.source,
-            })),
-          ]);
+          (i.allOf = e.map((e) => ({
+            ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+              ? { type: `string` }
+              : {}),
+            pattern: e.source,
+          })));
     }
   },
   Vr = (e, t, n, r) => {

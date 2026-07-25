@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-23T13:28:41.674Z",
+  "fetchedAt": "2026-07-25T03:42:47.369Z",
   "kind": "ovo-model-catalog-cache",
   "models": [
     {
@@ -883,8 +883,7 @@
             "vision",
             "file-input",
             "explicit-caching",
-            "web-search",
-            "fast"
+            "web-search"
           ]
         },
         {
@@ -913,26 +912,6 @@
             "file-input",
             "vision",
             "web-search"
-          ]
-        }
-      ]
-    },
-    {
-      "slug": "anthropic/claude-opus-4.7-fast",
-      "providers": [
-        {
-          "provider": "anthropic",
-          "providerModelId": "claude-opus-4-7",
-          "contextWindowTokens": 1000000,
-          "maxOutputTokens": 128000,
-          "tags": [
-            "tool-use",
-            "reasoning",
-            "vision",
-            "file-input",
-            "explicit-caching",
-            "web-search",
-            "fast"
           ]
         }
       ]
@@ -991,6 +970,74 @@
         {
           "provider": "anthropic",
           "providerModelId": "claude-opus-4-8",
+          "contextWindowTokens": 1000000,
+          "maxOutputTokens": 128000,
+          "tags": [
+            "tool-use",
+            "reasoning",
+            "vision",
+            "file-input",
+            "explicit-caching",
+            "web-search",
+            "fast"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "anthropic/claude-opus-5",
+      "providers": [
+        {
+          "provider": "anthropic",
+          "providerModelId": "claude-opus-5",
+          "contextWindowTokens": 1000000,
+          "maxOutputTokens": 128000,
+          "tags": [
+            "tool-use",
+            "reasoning",
+            "vision",
+            "file-input",
+            "explicit-caching",
+            "web-search",
+            "fast"
+          ]
+        },
+        {
+          "provider": "bedrock",
+          "providerModelId": "global.anthropic.claude-opus-5",
+          "contextWindowTokens": 1000000,
+          "maxOutputTokens": 128000,
+          "tags": [
+            "tool-use",
+            "reasoning",
+            "vision",
+            "file-input",
+            "explicit-caching",
+            "web-search"
+          ]
+        },
+        {
+          "provider": "vertex",
+          "providerModelId": "claude-opus-5",
+          "contextWindowTokens": 1000000,
+          "maxOutputTokens": 128000,
+          "tags": [
+            "tool-use",
+            "reasoning",
+            "vision",
+            "file-input",
+            "explicit-caching",
+            "web-search"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "anthropic/claude-opus-5-fast",
+      "providers": [
+        {
+          "provider": "anthropic",
+          "providerModelId": "claude-opus-5",
           "contextWindowTokens": 1000000,
           "maxOutputTokens": 128000,
           "tags": [
@@ -2040,39 +2087,6 @@
       ]
     },
     {
-      "slug": "google/gemini-3.1-flash-lite-preview",
-      "providers": [
-        {
-          "provider": "google",
-          "providerModelId": "gemini-3.1-flash-lite-preview",
-          "contextWindowTokens": 1000000,
-          "maxOutputTokens": 65000,
-          "tags": [
-            "reasoning",
-            "tool-use",
-            "implicit-caching",
-            "file-input",
-            "vision",
-            "web-search"
-          ]
-        },
-        {
-          "provider": "vertex",
-          "providerModelId": "gemini-3.1-flash-lite-preview",
-          "contextWindowTokens": 1000000,
-          "maxOutputTokens": 65000,
-          "tags": [
-            "reasoning",
-            "tool-use",
-            "implicit-caching",
-            "vision",
-            "file-input",
-            "web-search"
-          ]
-        }
-      ]
-    },
-    {
       "slug": "google/gemini-3.1-pro-preview",
       "providers": [
         {
@@ -2426,6 +2440,18 @@
           "contextWindowTokens": 32000,
           "maxOutputTokens": 16384,
           "tags": ["tool-use"]
+        }
+      ]
+    },
+    {
+      "slug": "inclusionai/ling-3.0-flash-free",
+      "providers": [
+        {
+          "provider": "novita",
+          "providerModelId": "inclusionai/ling-3.0-flash",
+          "contextWindowTokens": 256000,
+          "maxOutputTokens": 256000,
+          "tags": ["reasoning", "tool-use", "implicit-caching"]
         }
       ]
     },
@@ -3597,25 +3623,6 @@
       ]
     },
     {
-      "slug": "openai/gpt-5-chat",
-      "providers": [
-        {
-          "provider": "azure",
-          "providerModelId": "gpt-5-chat",
-          "contextWindowTokens": 128000,
-          "maxOutputTokens": 16384,
-          "tags": ["file-input", "implicit-caching", "tool-use", "vision", "web-search"]
-        },
-        {
-          "provider": "openai",
-          "providerModelId": "gpt-5-chat-latest",
-          "contextWindowTokens": 128000,
-          "maxOutputTokens": 16384,
-          "tags": ["file-input", "implicit-caching", "tool-use", "vision", "web-search"]
-        }
-      ]
-    },
-    {
       "slug": "openai/gpt-5-codex",
       "providers": [
         {
@@ -3905,27 +3912,9 @@
             "file-input",
             "reasoning",
             "implicit-caching",
-            "web-search"
+            "web-search",
+            "websocket-realtime"
           ]
-        }
-      ]
-    },
-    {
-      "slug": "openai/gpt-5.2-chat",
-      "providers": [
-        {
-          "provider": "azure",
-          "providerModelId": "gpt-5.2-chat",
-          "contextWindowTokens": 128000,
-          "maxOutputTokens": 16384,
-          "tags": ["file-input", "implicit-caching", "tool-use", "vision", "web-search"]
-        },
-        {
-          "provider": "openai",
-          "providerModelId": "gpt-5.2-chat-latest",
-          "contextWindowTokens": 128000,
-          "maxOutputTokens": 16384,
-          "tags": ["file-input", "implicit-caching", "tool-use", "vision", "web-search"]
         }
       ]
     },
@@ -3957,7 +3946,8 @@
             "reasoning",
             "vision",
             "web-search",
-            "implicit-caching"
+            "implicit-caching",
+            "websocket-realtime"
           ]
         }
       ]
@@ -4014,7 +4004,8 @@
             "file-input",
             "vision",
             "web-search",
-            "implicit-caching"
+            "implicit-caching",
+            "websocket-realtime"
           ]
         }
       ]
@@ -4081,7 +4072,8 @@
             "vision",
             "file-input",
             "implicit-caching",
-            "web-search"
+            "web-search",
+            "websocket-realtime"
           ]
         }
       ]
@@ -4114,7 +4106,8 @@
             "implicit-caching",
             "web-search",
             "vision",
-            "file-input"
+            "file-input",
+            "websocket-realtime"
           ]
         }
       ]
@@ -4194,7 +4187,14 @@
           "providerModelId": "gpt-5.5-pro",
           "contextWindowTokens": 1000000,
           "maxOutputTokens": 128000,
-          "tags": ["reasoning", "tool-use", "file-input", "web-search", "vision"]
+          "tags": [
+            "reasoning",
+            "tool-use",
+            "file-input",
+            "web-search",
+            "vision",
+            "websocket-realtime"
+          ]
         }
       ]
     },
@@ -5830,6 +5830,13 @@
           "provider": "parasail",
           "providerModelId": "zai-org/GLM-5.2",
           "contextWindowTokens": 262144,
+          "maxOutputTokens": 128000,
+          "tags": ["reasoning", "tool-use", "implicit-caching"]
+        },
+        {
+          "provider": "runware",
+          "providerModelId": "zai:glm@5.2",
+          "contextWindowTokens": 1000000,
           "maxOutputTokens": 128000,
           "tags": ["reasoning", "tool-use", "implicit-caching"]
         },

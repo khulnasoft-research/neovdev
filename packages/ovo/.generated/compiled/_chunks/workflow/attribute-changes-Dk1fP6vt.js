@@ -3195,7 +3195,7 @@ function wa(e, t = {}) {
         return (i, a) => {
           let o = Object.keys(r).length > 0,
             s = a && Object.keys(a).length > 0,
-            c = o || s ? { ...r, ...(a ?? {}) } : void 0;
+            c = o || s ? { ...r, ...a } : void 0;
           ((t === `error` || t === `warn`) &&
             (t === `error` ? console.error : console.warn)(wr(`[workflow-sdk]`, i, c)),
             Ca(n, process.env.DEBUG) &&
@@ -3214,7 +3214,7 @@ function wa(e, t = {}) {
       error: a(`error`),
       child: (e) => n({ ...r, ...e }),
       forRun: (e, t, i) =>
-        n({ ...r, workflowRunId: e, ...(t === void 0 ? {} : { workflowName: t }), ...(i ?? {}) }),
+        n({ ...r, workflowRunId: e, ...(t === void 0 ? {} : { workflowName: t }), ...i }),
     };
   };
   return n({});

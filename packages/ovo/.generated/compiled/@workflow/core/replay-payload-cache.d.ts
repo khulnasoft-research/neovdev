@@ -56,5 +56,5 @@ export declare class ReplayPayloadCache {
   private workflowInputKey;
   private eventPayloadKey;
 }
-export {};
+
 //# sourceMappingURL=replay-payload-cache.d.ts.map

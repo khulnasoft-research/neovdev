@@ -1,0 +1,16 @@
+{
+  "name": "weather-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ovo dev",
+    "build": "ovo build",
+    "start": "ovo start",
+    "info": "ovo info",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "ovo": "workspace:*",
+    "zod": "catalog:"
+  }
+}

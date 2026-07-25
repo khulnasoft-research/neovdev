@@ -2587,7 +2587,7 @@ var er = i((e, t) => {
       return n[0] && i.join(e, n[0]);
     }
     function y(e) {
-      return /\.node$/.test(e);
+      return e.endsWith(".node");
     }
     function b(e) {
       var t = e.split(`-`);
@@ -3957,7 +3957,7 @@ function Aa(e, t, n) {
     let i = ra(`{`, `}`, e);
     if (!i) return [e];
     let a = i.pre;
-    if (/\$$/.test(i.pre)) {
+    if (i.pre.endsWith("$")) {
       let e = i.post.length ? Aa(i.post, t, !1) : [``];
       for (let n = 0; n < e.length && n < t; n++) {
         let t = a + `{` + i.body + `}` + e[n];
@@ -7439,7 +7439,7 @@ var eu = t(() => {
       (ou = au * 7),
       (su = au * 365.25),
       (cu =
-        /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i),
+        /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i),
       (lu = (e) => {
         let t = cu.exec(e);
         if (!t || (t[4] && t[1])) throw TypeError(`Invalid time period format`);
@@ -10935,14 +10935,12 @@ function Wm(e) {
   }
   return i ? { ...e, eventData: r } : e;
 }
-const Gm = ue
-    .omit({ error: !0, errorCode: !0 })
-    .extend({
-      error: be([v, se()]).optional(),
-      errorCode: ge().optional(),
-      blobStorageBytes: ye().optional(),
-      streamStorageBytes: ye().optional(),
-    }),
+const Gm = ue.omit({ error: !0, errorCode: !0 }).extend({
+    error: be([v, se()]).optional(),
+    errorCode: ge().optional(),
+    blobStorageBytes: ye().optional(),
+    streamStorageBytes: ye().optional(),
+  }),
   Km = Gm,
   qm = Gm.omit({ input: !0, output: !0 }).extend({
     inputRef: se().optional(),
@@ -11068,14 +11066,12 @@ async function th(e, t, n, r) {
 const nh = de
     .omit({ error: !0 })
     .extend({ error: be([v, se()]).optional(), errorRef: se().optional() }),
-  rh = nh
-    .omit({ input: !0, output: !0 })
-    .extend({
-      inputRef: se().optional(),
-      outputRef: se().optional(),
-      input: p(Uint8Array).optional(),
-      output: p(Uint8Array).optional(),
-    });
+  rh = nh.omit({ input: !0, output: !0 }).extend({
+    inputRef: se().optional(),
+    outputRef: se().optional(),
+    input: p(Uint8Array).optional(),
+    output: p(Uint8Array).optional(),
+  });
 function ih(e) {
   let { error: t, errorRef: n, ...r } = e,
     i = { ...r },

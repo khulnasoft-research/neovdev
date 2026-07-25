@@ -124,5 +124,3 @@ export declare interface StreamOptions {
    */
   maxBufferSize?: number | undefined;
 }
-
-export {};

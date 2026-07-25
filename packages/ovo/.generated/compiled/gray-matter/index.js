@@ -6574,9 +6574,9 @@ var __commonJSMin = (e, t) => () => (
       h =
         /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/,
       g = /[\x85\u2028\u2029]/,
-      _ = /[,\[\]\{\}]/,
-      v = /^(?:!|!!|![a-z\-]+!)$/i,
-      y = /^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;
+      _ = /[,[\]{\}]/,
+      v = /^(?:!|!!|![a-z-]+!)$/i,
+      y = /^(?:!|[^,[\]{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;/\?:@&=+\$,_.!~*'(\)[\]])*$/i;
     function b(e) {
       return Object.prototype.toString.call(e);
     }
@@ -8249,4 +8249,3 @@ return ` +
       (t.exports = d));
   });
 export default require_gray_matter();
-export {};

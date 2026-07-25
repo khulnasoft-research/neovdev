@@ -5481,7 +5481,7 @@ var Y,
         i._redirectable = this;
         for (var a of p) i.on(a, m[a]);
         if (
-          ((this._currentUrl = /^\//.test(this._options.path)
+          ((this._currentUrl = this._options.path.startsWith("/")
             ? r.format(this._options)
             : this._options.path),
           this._isRedirect)
@@ -5596,8 +5596,8 @@ var Y,
     }
     function E(e) {
       if (
-        (/^\[/.test(e.hostname) && !/^\[[:0-9a-f]+\]$/i.test(e.hostname)) ||
-        (/^\[/.test(e.host) && !/^\[[:0-9a-f]+\](:\d+)?$/i.test(e.host))
+        (e.hostname.startsWith("[") && !/^\[[:0-9a-f]+\]$/i.test(e.hostname)) ||
+        (e.host.startsWith("[") && !/^\[[:0-9a-f]+\](:\d+)?$/i.test(e.host))
       )
         throw new h({ input: e.href || e });
       return e;
@@ -15324,12 +15324,10 @@ var Ai = class e {
   }
   optionsLoadResponse(e) {
     if (e.length > 0 && `options` in e[0] && Array.isArray(e[0].options)) {
-      let t = e
-        .slice(0, 100)
-        .map((e) => ({
-          label: { type: `plain_text`, text: e.label.slice(0, 75) },
-          options: e.options.slice(0, 100).map(ui),
-        }));
+      let t = e.slice(0, 100).map((e) => ({
+        label: { type: `plain_text`, text: e.label.slice(0, 75) },
+        options: e.options.slice(0, 100).map(ui),
+      }));
       return new Response(JSON.stringify({ option_groups: t }), {
         status: 200,
         headers: { "Content-Type": `application/json` },

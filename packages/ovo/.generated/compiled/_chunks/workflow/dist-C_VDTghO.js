@@ -483,7 +483,7 @@ const Re = (e) => (t, n, r, i) => {
         )
       : /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/,
   st =
-    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
+    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/;
 function ct() {
   return RegExp(`^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`, `u`);
 }
@@ -895,7 +895,7 @@ var Gt = class {
   compile() {
     let e = Function,
       t = this?.args,
-      n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+      n = (this?.content ?? [``]).map((e) => `  ${e}`);
     return new e(
       ...t,
       n.join(`
@@ -2092,7 +2092,7 @@ var fr,
     get(e) {
       let t = e._zod.parent;
       if (t) {
-        let n = { ...(this.get(t) ?? {}) };
+        let n = { ...this.get(t) };
         delete n.id;
         let r = { ...n, ...this._map.get(e) };
         return Object.keys(r).length ? r : void 0;
@@ -2597,7 +2597,7 @@ const wi =
     (e, t, n = {}) =>
     (r) => {
       let { libraryOptions: i, target: a } = r ?? {},
-        o = xi({ ...(i ?? {}), target: a, io: t, processors: n });
+        o = xi({ ...i, target: a, io: t, processors: n });
       return (T(e, o), Si(o, e), Ci(o, e));
     },
   Ei = { guid: `uuid`, url: `uri`, datetime: `date-time`, json_string: `json-string`, regex: `` },
@@ -2619,14 +2619,12 @@ const wi =
       e.length === 1
         ? (i.pattern = e[0].source)
         : e.length > 1 &&
-          (i.allOf = [
-            ...e.map((e) => ({
-              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                ? { type: `string` }
-                : {}),
-              pattern: e.source,
-            })),
-          ]);
+          (i.allOf = e.map((e) => ({
+            ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+              ? { type: `string` }
+              : {}),
+            pattern: e.source,
+          })));
     }
   },
   Oi = (e, t, n, r) => {
@@ -4405,7 +4403,7 @@ const Ss = /^c[^\s-]{8,}$/i,
   Ds = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/,
   Os =
     /^[-+]?P(?!$)(?:(?:[-+]?\d+Y)|(?:[-+]?\d+[.,]\d+Y$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:(?:[-+]?\d+W)|(?:[-+]?\d+[.,]\d+W$))?(?:(?:[-+]?\d+D)|(?:[-+]?\d+[.,]\d+D$))?(?:T(?=[\d+-])(?:(?:[-+]?\d+H)|(?:[-+]?\d+[.,]\d+H$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:[-+]?\d+(?:[.,]\d+)?S)?)??$/,
-  ks = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
+  ks = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i;
 let As;
 const js =
     /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/,
@@ -6116,16 +6114,14 @@ var G = class extends V {
           );
         return { status: t.value, value: a };
       } else
-        return this._def.schema
-          ._parseAsync({ data: n.data, path: n.path, parent: n })
-          .then((e) =>
-            ys(e)
-              ? Promise.resolve(r.transform(e.value, i)).then((e) => ({
-                  status: t.value,
-                  value: e,
-                }))
-              : I,
-          );
+        return this._def.schema._parseAsync({ data: n.data, path: n.path, parent: n }).then((e) =>
+          ys(e)
+            ? Promise.resolve(r.transform(e.value, i)).then((e) => ({
+                status: t.value,
+                value: e,
+              }))
+            : I,
+        );
     A.assertNever(r);
   }
 };
@@ -6636,7 +6632,7 @@ var Mc = class extends TransformStream {
 const Nc = Symbol.for(`workflow-serialize`),
   Pc = Symbol.for(`workflow-deserialize`);
 function Fc(...e) {
-  return e.reduce((e, t) => ({ ...e, ...(t ?? {}) }), {});
+  return e.reduce((e, t) => ({ ...e, ...t }), {});
 }
 function Ic(e) {
   return Object.fromEntries(Object.entries(e).filter(([e, t]) => t != null));
@@ -7144,7 +7140,7 @@ async function Fl(e, t) {
   }
 }
 function Il(e) {
-  return Object.fromEntries([...e.headers]);
+  return Object.fromEntries(e.headers);
 }
 var Ll = (({
   prefix: e,
@@ -7567,7 +7563,7 @@ var Eu = void 0,
     cuid2: /^[0-9a-z]+$/,
     ulid: /^[0-9A-HJKMNP-TV-Z]{26}$/,
     email:
-      /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-\.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9\-]*\.)+[a-zA-Z]{2,}$/,
+      /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+[a-zA-Z]{2,}$/,
     emoji: () => (
       Eu === void 0 && (Eu = RegExp(`^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`, `u`)),
       Eu

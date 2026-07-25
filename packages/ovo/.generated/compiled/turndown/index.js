@@ -660,7 +660,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
     }
     let m = /--!?>/;
     function h(e) {
-      return m.test(e) ? e.replace(/(--\!?)>/g, `$1&gt;`) : e;
+      return m.test(e) ? e.replace(/(--!?)>/g, `$1&gt;`) : e;
     }
     function g(e) {
       return e.includes(`>`) ? e.replaceAll(`>`, `&gt;`) : e;
@@ -3910,11 +3910,11 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
         (t[5] && (this.path = t[5]), t[6] && (this.query = t[7]), t[8] && (this.fragment = t[9]));
       }
     }
-    ((n.pattern = /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/),
+    ((n.pattern = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/),
       (n.userinfoPattern = /^([^@:]*)(:([^@]*))?@/),
       (n.portPattern = /:\d+$/),
-      (n.authorityPattern = /^[^:\/?#]+:\/\//),
-      (n.hierarchyPattern = /^[^:\/?#]+:\//),
+      (n.authorityPattern = /^[^:/?#]+:\/\//),
+      (n.hierarchyPattern = /^[^:/?#]+:\//),
       (n.percentEncode = function (e) {
         var t = e.charCodeAt(0);
         if (t < 256) return `%` + t.toString(16);
@@ -4004,9 +4004,9 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
               else if (r === `/./`) e = `/` + e.substring(3);
               else if (n === `/.` && e.length === 2) e = `/`;
               else if (i === `/../` || (r === `/..` && e.length === 3))
-                ((e = `/` + e.substring(4)), (t = t.replace(/\/?[^\/]*$/, ``)));
+                ((e = `/` + e.substring(4)), (t = t.replace(/\/?[^/]*$/, ``)));
               else {
-                var a = e.match(/(\/?([^\/]*))/)[0];
+                var a = e.match(/(\/?([^/]*))/)[0];
                 ((t += a), (e = e.substring(a.length)));
               }
             }
@@ -4238,7 +4238,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
             r = new n(t);
           (r.isAbsolute() &&
             ((e = e.replace(/:+$/, ``)),
-            (e = e.replace(/[^-+\.a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+.a-zA-Z0-9]/g, n.percentEncode)),
             e.length > 0 && ((r.scheme = e), (t = r.toString()))),
             (this.href = t));
         },
@@ -4255,7 +4255,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
             r = new n(t);
           (r.isAbsolute() &&
             r.isAuthorityBased() &&
-            ((e = e.replace(/[^-+\._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
+            ((e = e.replace(/[^-+._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
             e.length > 0 && ((r.host = e), delete r.port, (t = r.toString()))),
             (this.href = t));
         },
@@ -4271,7 +4271,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
           (r.isAbsolute() &&
             r.isAuthorityBased() &&
             ((e = e.replace(/^\/+/, ``)),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=a-zA-Z0-9]/g, n.percentEncode)),
             e.length > 0 && ((r.host = e), (t = r.toString()))),
             (this.href = t));
         },
@@ -4305,7 +4305,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
           (r.isAbsolute() &&
             r.isHierarchical() &&
             (e.charAt(0) !== `/` && (e = `/` + e),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=@\/a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=@/a-zA-Z0-9]/g, n.percentEncode)),
             (r.path = e),
             (t = r.toString())),
             (this.href = t));
@@ -4322,7 +4322,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
           (r.isAbsolute() &&
             r.isHierarchical() &&
             (e.charAt(0) === `?` && (e = e.substring(1)),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=@\/?a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=@/?a-zA-Z0-9]/g, n.percentEncode)),
             (r.query = e),
             (t = r.toString())),
             (this.href = t));
@@ -4337,7 +4337,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
           var t = this.href,
             r = new n(t);
           (e.charAt(0) === `#` && (e = e.substring(1)),
-            (e = e.replace(/[^-+\._~!$&'()*,;:=@\/?a-zA-Z0-9]/g, n.percentEncode)),
+            (e = e.replace(/[^-+._~!$&'()*,;:=@/?a-zA-Z0-9]/g, n.percentEncode)),
             (r.fragment = e),
             (t = r.toString()),
             (this.href = t));
@@ -4351,7 +4351,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
           var t = this.href,
             r = new n(t);
           (r.isAbsolute() &&
-            ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`\/@\\:]/g, n.percentEncode)),
+            ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`/@\\:]/g, n.percentEncode)),
             (r.username = e),
             (t = r.toString())),
             (this.href = t));
@@ -4367,7 +4367,7 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
           (r.isAbsolute() &&
             (e === ``
               ? (r.password = null)
-              : ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`\/@\\]/g, n.percentEncode)),
+              : ((e = e.replace(/[\x00-\x1F\x7F-\uFFFF "#<>?`/@\\]/g, n.percentEncode)),
                 (r.password = e)),
             (t = r.toString())),
             (this.href = t));
@@ -9173,8 +9173,8 @@ var e = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), (e = null)),
       he = /[^\r"&\u0000]+/g,
       ge = /[^\r'&\u0000]+/g,
       _e = /[^\r\t\n\f &>\u0000]+/g,
-      ve = /[^\r\t\n\f \/>A-Z\u0000]+/g,
-      ye = /[^\r\t\n\f \/=>A-Z\u0000]+/g,
+      ve = /[^\r\t\n\f />A-Z\u0000]+/g,
+      ye = /[^\r\t\n\f /=>A-Z\u0000]+/g,
       be = /[^\]\r\u0000\uffff]*/g,
       xe = /[^&<\r\u0000\uffff]*/g,
       Se = /[^<\r\u0000\uffff]*/g,
@@ -14026,7 +14026,7 @@ var I = {};
           o = Array.prototype.indexOf.call(i.children, t);
         r = (a ? Number(a) + o : o + 1) + `.  `;
       }
-      var s = /\n$/.test(e);
+      var s = e.endsWith("\n");
       return (
         (e =
           we(e) +
@@ -14304,7 +14304,7 @@ function R(e) {
     for (var a = null, o = !1, s = null, c = Ve(s, t, i); c !== t;) {
       if (c.nodeType === 3 || c.nodeType === 4) {
         var l = c.data.replace(/[ \r\n\t]+/g, ` `);
-        if (((!a || / $/.test(a.data)) && !o && l[0] === ` ` && (l = l.substr(1)), !l)) {
+        if (((!a || a.data.endsWith(" ")) && !o && l[0] === ` ` && (l = l.substr(1)), !l)) {
           c = Be(c);
           continue;
         }

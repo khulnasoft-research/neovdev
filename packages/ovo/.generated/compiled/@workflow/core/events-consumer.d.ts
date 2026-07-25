@@ -77,5 +77,5 @@ export declare class EventsConsumer {
   private consumeOne;
   private handleUnconsumed;
 }
-export {};
+
 //# sourceMappingURL=events-consumer.d.ts.map

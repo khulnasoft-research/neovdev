@@ -1918,7 +1918,7 @@ async function Zt(e, t, n) {
 }
 const X = (e) => Math.floor(e.getTime() / 1e3),
   Qt =
-    /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
+    /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
 function Z(e) {
   let t = Qt.exec(e);
   if (!t || (t[4] && t[1])) throw TypeError(`Invalid time period format`);

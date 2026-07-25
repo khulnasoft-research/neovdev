@@ -509,7 +509,7 @@ var ne = Object.create,
               let c = i[n],
                 l = /^".*"$/.test(c) ? c.slice(1, -1) : c,
                 d = r.join(l, e);
-              a(f(!l && /^\.[\\\/]/.test(e) ? e.slice(0, 2) + d : d, n, 0));
+              a(f(!l && /^\.[\\/]/.test(e) ? e.slice(0, 2) + d : d, n, 0));
             }),
           f = (e, n, r) =>
             new Promise((i, o) => {
@@ -533,7 +533,7 @@ var ne = Object.create,
           let s = n[o],
             u = /^".*"$/.test(s) ? s.slice(1, -1) : s,
             d = r.join(u, e),
-            f = !u && /^\.[\\\/]/.test(e) ? e.slice(0, 2) + d : d;
+            f = !u && /^\.[\\/]/.test(e) ? e.slice(0, 2) + d : d;
           for (let e = 0; e < i.length; e++) {
             let n = f + i[e];
             try {
@@ -3540,11 +3540,11 @@ var rr,
       (mr = fr(6)),
       (hr = fr(7)),
       (gr =
-        /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/),
+        /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/),
       (_r =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/),
       (vr =
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
       (yr = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u),
       (br = yr),
       (xr =
@@ -4124,7 +4124,7 @@ var F,
       compile() {
         let e = Function,
           t = this?.args,
-          n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+          n = (this?.content ?? [``]).map((e) => `  ${e}`);
         return new e(
           ...t,
           n.join(`
@@ -10696,7 +10696,7 @@ var al,
         get(e) {
           let t = e._zod.parent;
           if (t) {
-            let n = { ...(this.get(t) ?? {}) };
+            let n = { ...this.get(t) };
             delete n.id;
             let r = { ...n, ...this._map.get(e) };
             return Object.keys(r).length ? r : void 0;
@@ -11302,16 +11302,14 @@ var md,
                     e.length === 1
                       ? (n.pattern = e[0].source)
                       : e.length > 1 &&
-                        (o.schema.allOf = [
-                          ...e.map((e) => ({
-                            ...(this.target === `draft-7` ||
-                            this.target === `draft-4` ||
-                            this.target === `openapi-3.0`
-                              ? { type: `string` }
-                              : {}),
-                            pattern: e.source,
-                          })),
-                        ]);
+                        (o.schema.allOf = e.map((e) => ({
+                          ...(this.target === `draft-7` ||
+                          this.target === `draft-4` ||
+                          this.target === `openapi-3.0`
+                            ? { type: `string` }
+                            : {}),
+                          pattern: e.source,
+                        })));
                   }
                   break;
                 }
@@ -16524,7 +16522,7 @@ var Iv = T(() => {
       (Hv = Vv * 7),
       (Uv = Vv * 365.25),
       (Wv =
-        /^(\+|\-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i),
+        /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i),
       (Gv = (e) => {
         let t = Wv.exec(e);
         if (!t || (t[4] && t[1])) throw TypeError(`Invalid time period format`);
