@@ -1,0 +1,19 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "tool",
+  "epoch": 3,
+  "sha256": "486aa2ec3fa0fac3265f0e524bbebfed2f4fc038a79db2afd3e216d12b5b7e1c",
+  "exports": [
+    "defineBashTool",
+    "defineGlobTool",
+    "defineGrepTool",
+    "defineReadFileTool",
+    "defineTool",
+    "defineWriteFileTool",
+    "disableTool",
+    "experimental_workflow",
+    "isDisabledToolSentinel",
+    "isExperimentalWorkflowToolDefinition",
+    "toolResultFrom"
+  ]
+}

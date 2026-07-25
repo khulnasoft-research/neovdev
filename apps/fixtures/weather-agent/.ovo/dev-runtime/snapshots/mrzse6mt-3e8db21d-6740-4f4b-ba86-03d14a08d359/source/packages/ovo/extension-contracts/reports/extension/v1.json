@@ -1,0 +1,7 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "extension",
+  "epoch": 1,
+  "sha256": "b9c24faae72196bf2707e9fb6d850c19cc22f82c579fcc0a1aab9e29128d893f",
+  "exports": ["defineExtension"]
+}

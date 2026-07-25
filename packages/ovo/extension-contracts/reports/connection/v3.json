@@ -1,0 +1,15 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "connection",
+  "epoch": 3,
+  "sha256": "003431743aa0ed3aed976f64de7e8373da56d8181a94333102d159ef496b9738",
+  "exports": [
+    "ConnectionAuthorizationFailedError",
+    "ConnectionAuthorizationRequiredError",
+    "defineInteractiveAuthorization",
+    "defineMcpClientConnection",
+    "defineOpenAPIConnection",
+    "isConnectionAuthorizationFailedError",
+    "isConnectionAuthorizationRequiredError"
+  ]
+}

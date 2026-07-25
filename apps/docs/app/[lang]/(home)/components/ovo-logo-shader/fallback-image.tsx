@@ -1,7 +1,7 @@
 import { getImageProps } from "next/image";
 import type { ComponentProps } from "react";
-import fallbackDarkImage from "../../../../../public/eve-5/fallback-dark-content.webp";
-import fallbackLightImage from "../../../../../public/eve-5/fallback-light-content.webp";
+import fallbackDarkImage from "../../../../../public/ovo-5/fallback-dark-content.webp";
+import fallbackLightImage from "../../../../../public/ovo-5/fallback-light-content.webp";
 import { BLOOM_RADIUS } from "./render";
 
 // Owns static fallback image sizing and rendering for the Eve hero logo.

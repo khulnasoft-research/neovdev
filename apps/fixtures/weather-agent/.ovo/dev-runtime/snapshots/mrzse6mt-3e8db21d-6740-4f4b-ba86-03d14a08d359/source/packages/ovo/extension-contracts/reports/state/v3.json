@@ -1,0 +1,15 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "state",
+  "epoch": 3,
+  "sha256": "091796fe8eb5ca7ce7c4a7694a8bfa512000f04588ef8190a365f66365c52e36",
+  "exports": [
+    "Session",
+    "SessionAuth",
+    "SessionAuthContext",
+    "SessionContext",
+    "SessionParent",
+    "SessionTurn",
+    "defineState"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "hook",
+  "epoch": 3,
+  "sha256": "f7fdcca4d1275f2bbbcd376be94fc8ec3e7dea4ddce71bde8954c21377bbddf6",
+  "exports": ["defineHook"]
+}

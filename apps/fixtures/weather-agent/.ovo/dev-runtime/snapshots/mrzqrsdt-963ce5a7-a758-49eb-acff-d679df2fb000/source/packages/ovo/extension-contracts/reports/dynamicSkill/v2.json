@@ -1,0 +1,7 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "dynamicSkill",
+  "epoch": 2,
+  "sha256": "d5413542dc0b6a3c83d13a9e5012aab6ff19ee38708c120dfec26cfc9bb4d996",
+  "exports": ["defineDynamic"]
+}

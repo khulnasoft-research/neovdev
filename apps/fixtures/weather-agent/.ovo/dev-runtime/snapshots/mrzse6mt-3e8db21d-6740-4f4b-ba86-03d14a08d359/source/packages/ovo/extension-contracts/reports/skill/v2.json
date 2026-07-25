@@ -1,0 +1,7 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "skill",
+  "epoch": 2,
+  "sha256": "9b7fffefd4506b8a558cb70020b7f4e3ea04c0174dc92e2b8061801f9e67942b",
+  "exports": ["NamedSkillDefinition", "SkillFile", "SkillHandle", "defineSkill"]
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EveLogoShader } from "./eve-logo-shader";
+import { EveLogoShader } from "./ovo-logo-shader";
 import { InstallSwitcher, type InstallAudience } from "./install-switcher";
 
 export function HeroAudience({ tagline }: { tagline: string }) {

@@ -1,0 +1,174 @@
+{
+  "version": "1.0.0",
+  "steps": {
+    "dist/src/execution/cancel-descendant-turns-step.js": {
+      "cancelDescendantTurnsStep": {
+        "stepId": "step//ovo@0.27.1//cancelDescendantTurnsStep"
+      }
+    },
+    "dist/src/execution/create-session-step.js": {
+      "createSessionStep": {
+        "stepId": "step//ovo@0.27.1//createSessionStep"
+      }
+    },
+    "dist/src/execution/delegated-parent-notification.js": {
+      "notifyDelegatedParentStep": {
+        "stepId": "step//ovo@0.27.1//notifyDelegatedParentStep"
+      }
+    },
+    "dist/src/execution/dispatch-runtime-actions-step.js": {
+      "dispatchRuntimeActionsStep": {
+        "stepId": "step//ovo@0.27.1//dispatchRuntimeActionsStep"
+      }
+    },
+    "dist/src/execution/dispatch-workflow-runtime-actions-step.js": {
+      "dispatchWorkflowRuntimeActionsStep": {
+        "stepId": "step//ovo@0.27.1//dispatchWorkflowRuntimeActionsStep"
+      }
+    },
+    "dist/src/execution/forward-turn-delivery-step.js": {
+      "forwardTurnDeliveryStep": {
+        "stepId": "step//ovo@0.27.1//forwardTurnDeliveryStep"
+      }
+    },
+    "dist/src/execution/session-callback-step.js": {
+      "fireSessionCallbackStep": {
+        "stepId": "step//ovo@0.27.1//fireSessionCallbackStep"
+      }
+    },
+    "dist/src/execution/settle-cancelled-turn-step.js": {
+      "settleCancelledTurnStep": {
+        "stepId": "step//ovo@0.27.1//settleCancelledTurnStep"
+      }
+    },
+    "dist/src/execution/subagent-adapter.js": {
+      "forwardSubagentAuthorizationEventStep": {
+        "stepId": "step//ovo@0.27.1//forwardSubagentAuthorizationEventStep"
+      },
+      "forwardSubagentInputRequestStep": {
+        "stepId": "step//ovo@0.27.1//forwardSubagentInputRequestStep"
+      }
+    },
+    "dist/src/execution/subagent-event-proxy-step.js": {
+      "runProxySubagentEventStep": {
+        "stepId": "step//ovo@0.27.1//runProxySubagentEventStep"
+      }
+    },
+    "dist/src/execution/terminal-session-failure-step.js": {
+      "emitTerminalSessionFailureStep": {
+        "stepId": "step//ovo@0.27.1//emitTerminalSessionFailureStep"
+      }
+    },
+    "dist/src/execution/turn-control-protocol.js": {
+      "sendTurnControlStep": {
+        "stepId": "step//ovo@0.27.1//sendTurnControlStep"
+      }
+    },
+    "dist/src/execution/workflow-steps.js": {
+      "turnStep": {
+        "stepId": "step//ovo@0.27.1//turnStep"
+      },
+      "routeProxiedDeliverStep": {
+        "stepId": "step//ovo@0.27.1//routeProxiedDeliverStep"
+      },
+      "dispatchTurnStep": {
+        "stepId": "step//ovo@0.27.1//dispatchTurnStep"
+      }
+    },
+    "src/execution/delegated-parent-notification.ts": {
+      "notifyDelegatedParentStep": {
+        "stepId": "step//ovo@0.27.1//notifyDelegatedParentStep"
+      }
+    },
+    "src/execution/create-session-step.ts": {
+      "createSessionStep": {
+        "stepId": "step//ovo@0.27.1//createSessionStep"
+      }
+    },
+    "src/execution/settle-cancelled-turn-step.ts": {
+      "settleCancelledTurnStep": {
+        "stepId": "step//ovo@0.27.1//settleCancelledTurnStep"
+      }
+    },
+    "src/execution/terminal-session-failure-step.ts": {
+      "emitTerminalSessionFailureStep": {
+        "stepId": "step//ovo@0.27.1//emitTerminalSessionFailureStep"
+      }
+    },
+    "src/execution/session-callback-step.ts": {
+      "fireSessionCallbackStep": {
+        "stepId": "step//ovo@0.27.1//fireSessionCallbackStep"
+      }
+    },
+    "src/execution/cancel-descendant-turns-step.ts": {
+      "cancelDescendantTurnsStep": {
+        "stepId": "step//ovo@0.27.1//cancelDescendantTurnsStep"
+      }
+    },
+    "src/execution/turn-control-protocol.ts": {
+      "sendTurnControlStep": {
+        "stepId": "step//ovo@0.27.1//sendTurnControlStep"
+      }
+    },
+    "src/execution/dispatch-workflow-runtime-actions-step.ts": {
+      "dispatchWorkflowRuntimeActionsStep": {
+        "stepId": "step//ovo@0.27.1//dispatchWorkflowRuntimeActionsStep"
+      }
+    },
+    "src/execution/dispatch-runtime-actions-step.ts": {
+      "dispatchRuntimeActionsStep": {
+        "stepId": "step//ovo@0.27.1//dispatchRuntimeActionsStep"
+      }
+    },
+    "src/execution/subagent-event-proxy-step.ts": {
+      "runProxySubagentEventStep": {
+        "stepId": "step//ovo@0.27.1//runProxySubagentEventStep"
+      }
+    },
+    "src/execution/workflow-steps.ts": {
+      "turnStep": {
+        "stepId": "step//ovo@0.27.1//turnStep"
+      },
+      "routeProxiedDeliverStep": {
+        "stepId": "step//ovo@0.27.1//routeProxiedDeliverStep"
+      },
+      "dispatchTurnStep": {
+        "stepId": "step//ovo@0.27.1//dispatchTurnStep"
+      }
+    },
+    "src/execution/subagent-adapter.ts": {
+      "forwardSubagentAuthorizationEventStep": {
+        "stepId": "step//ovo@0.27.1//forwardSubagentAuthorizationEventStep"
+      },
+      "forwardSubagentInputRequestStep": {
+        "stepId": "step//ovo@0.27.1//forwardSubagentInputRequestStep"
+      }
+    },
+    "src/execution/forward-turn-delivery-step.ts": {
+      "forwardTurnDeliveryStep": {
+        "stepId": "step//ovo@0.27.1//forwardTurnDeliveryStep"
+      }
+    }
+  },
+  "workflows": {
+    "dist/src/execution/workflow-entry.js": {
+      "workflowEntry": {
+        "graph": {
+          "edges": [],
+          "nodes": []
+        },
+        "workflowId": "workflow//ovo//workflowEntry"
+      }
+    },
+    "dist/src/execution/turn-workflow.js": {
+      "turnWorkflow": {
+        "graph": {
+          "edges": [],
+          "nodes": []
+        },
+        "workflowId": "workflow//ovo//turnWorkflow"
+      }
+    }
+  },
+  "classes": {}
+}

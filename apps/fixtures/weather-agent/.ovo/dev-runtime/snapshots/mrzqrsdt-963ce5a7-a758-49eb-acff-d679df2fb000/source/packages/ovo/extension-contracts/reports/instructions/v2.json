@@ -1,0 +1,7 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "instructions",
+  "epoch": 2,
+  "sha256": "756ea2bba762aec0ece9baadf08a20a4c914c5107aeba719d69c8992cc93cc06",
+  "exports": ["defineInstructions"]
+}

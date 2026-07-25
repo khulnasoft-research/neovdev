@@ -1,0 +1,13 @@
+{
+  "kind": "ovo-extension-capability-contract",
+  "capability": "dynamicTool",
+  "epoch": 4,
+  "sha256": "754bd2894d29273bbd488287ad68a372ed728fb486c2a1b389b523e6a7c0ca93",
+  "exports": [
+    "DynamicToolEntry",
+    "DynamicToolEvents",
+    "DynamicToolResult",
+    "DynamicToolSet",
+    "defineDynamic"
+  ]
+}
