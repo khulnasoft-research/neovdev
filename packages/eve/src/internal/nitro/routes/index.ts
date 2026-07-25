@@ -76,7 +76,6 @@ const HOME_PAGE_HTML_TEMPLATE = `<!doctype html>
     font-size: 15px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-    -mneodev-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     display: grid;
     place-items: center;
