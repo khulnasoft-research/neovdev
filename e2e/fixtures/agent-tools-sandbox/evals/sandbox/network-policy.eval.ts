@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 // Distinguishes a real egress block from curl simply being absent: a blocked
 // request fails with a resolution/connection error, never "command not found".
@@ -23,15 +23,12 @@ function isBlocked(value: unknown): boolean {
 export default defineEval({
   description: "Sandbox: setNetworkPolicy('deny-all') blocks sandbox egress mid-turn.",
   async test(t) {
-    const turn = await t.send(
+    await t.send(
       "Use the `network-probe` tool and tell me whether sandbox network egress was blocked.",
     );
-    turn.expectOk();
 
-    t.didNotFail();
-    t.completed();
+    t.succeeded();
     t.calledTool("network-probe", {
-      isError: false,
       output: isBlocked,
     });
   },

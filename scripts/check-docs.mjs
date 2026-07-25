@@ -225,10 +225,10 @@ function checkLinks(rootDir) {
       // Only validate doc-internal links.
       const isRel = target.startsWith("./") || target.startsWith("../");
       const isSite = target.startsWith("/docs/") || target === "/docs";
-      if (!isRel && !isSite) continue; // external, mailto, #anchor, bare /eve/* runtime route, etc.
+      if (!isRel && !isSite) continue; // external, mailto, #anchor, bare /ovo/* runtime route, etc.
       target = target.split("#")[0].split("?")[0];
       if (!target) continue; // pure in-page anchor
-      const resolvedUrl = new URL(target, `https://eve.dev${sourceUrl}`).pathname
+      const resolvedUrl = new URL(target, `https://khulnasoft.com${sourceUrl}`).pathname
         .replace(/\/$/, "")
         .replace(/\.mdx?$/, "");
       if (resolvedUrl === "/docs") continue; // docs root / index

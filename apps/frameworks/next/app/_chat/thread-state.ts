@@ -10,7 +10,7 @@ export const EMPTY_CHAT_SESSION: ChatSessionCursor = {
 };
 
 function createSessionTranscriptPath(sessionId: string): string {
-  return `/eve/v1/session/${encodeURIComponent(sessionId)}/stream`;
+  return `/ovo/v1/session/${encodeURIComponent(sessionId)}/stream`;
 }
 
 function parseTranscriptStreamEvent(line: string): TranscriptStreamEvent {

@@ -1,0 +1,21 @@
+{
+  "name": "dist-extensions",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "ovo build",
+    "dev": "ovo dev",
+    "start": "ovo start",
+    "test:e2e": "ovo eval --strict"
+  },
+  "dependencies": {
+    "gadget-extension": "file:../gadget-extension",
+    "gizmo-extension": "file:../gizmo-extension",
+    "ovo": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

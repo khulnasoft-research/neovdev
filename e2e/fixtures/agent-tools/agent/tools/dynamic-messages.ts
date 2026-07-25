@@ -1,4 +1,4 @@
-import { defineDynamic, defineTool } from "eve/tools";
+import { defineDynamic, defineTool } from "ovo/tools";
 import { z } from "zod";
 
 export default defineDynamic({

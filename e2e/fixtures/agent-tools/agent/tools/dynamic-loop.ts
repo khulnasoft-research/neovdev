@@ -1,5 +1,5 @@
-import { defineDynamic, defineTool } from "eve/tools";
-import type { DynamicToolEntry } from "eve/tools";
+import { defineDynamic, defineTool } from "ovo/tools";
+import type { DynamicToolEntry } from "ovo/tools";
 
 const TOOL_NAMES = ["alpha", "beta"] as const;
 

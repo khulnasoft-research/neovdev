@@ -1,9 +1,9 @@
-import { defineTool } from "eve/tools";
-import { never } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { never } from "ovo/tools/approval";
 import { z } from "zod";
 
 export default defineTool({
-  needsApproval: never(),
+  approval: never(),
   description:
     "Generate a random result: pick one of the given choices, or a random number between min and max.",
   inputSchema: z.object({

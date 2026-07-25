@@ -1,12 +1,12 @@
-const SESSION_API_PATH = "/eve/v1/session";
-const SESSION_STREAM_ROUTE_PREFIX = "/eve/v1/session";
-const INFO_API_PATH = "/eve/v1/info";
+const SESSION_API_PATH = "/ovo/v1/session";
+const SESSION_STREAM_ROUTE_PREFIX = "/ovo/v1/session";
+const INFO_API_PATH = "/ovo/v1/info";
 
 function createSessionContinuePath(sessionId: string): string {
   return `${SESSION_API_PATH}/${encodeURIComponent(sessionId)}`;
 }
 
-const EVE_SESSION_ID_HEADER = "x-eve-session-id";
+const EVE_SESSION_ID_HEADER = "x-ovo-session-id";
 const MESSAGE_STREAM_CONTENT_TYPE = "application/x-ndjson; charset=utf-8";
 const DEFAULT_SESSION_TURN_TIMEOUT_MS = 60_000;
 
@@ -161,7 +161,7 @@ export interface AgentInformation {
     readonly dynamic: readonly AgentInfoDynamicResolverEntry[];
     readonly static: AgentInfoInstructionsEntry | null;
   };
-  readonly kind: "eve-agent-info";
+  readonly kind: "ovo-agent-info";
   readonly mode: "development" | "production";
   readonly sandbox: AgentInfoSandboxEntry | null;
   readonly schedules: readonly AgentInfoScheduleEntry[];
@@ -394,7 +394,7 @@ function assertChannelEntries(value: unknown): void {
 function ensureAgentInformation(value: unknown): AgentInformation {
   const payload = expectRecord(value, INFO_API_PATH);
   if (
-    expectString(payload.kind, INFO_API_PATH) !== "eve-agent-info" ||
+    expectString(payload.kind, INFO_API_PATH) !== "ovo-agent-info" ||
     expectNumber(payload.version, INFO_API_PATH) !== 1
   ) {
     throw new Error(`Invalid JSON response for ${INFO_API_PATH}.`);
@@ -581,8 +581,8 @@ export async function loadAgentInformation(): Promise<AgentInformation> {
 /**
  * Starts or resumes one message turn. When `sessionId` and
  * `continuationToken` are both present the call resumes that session via
- * `POST /eve/v1/session/:sessionId`; otherwise it opens a new session via
- * `POST /eve/v1/session`.
+ * `POST /ovo/v1/session/:sessionId`; otherwise it opens a new session via
+ * `POST /ovo/v1/session`.
  */
 export async function sendMessage(input: SendMessageInput): Promise<SentMessageResult> {
   const isContinue =

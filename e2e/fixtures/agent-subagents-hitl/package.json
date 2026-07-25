@@ -4,14 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "eve build",
-    "dev": "eve dev",
-    "start": "eve start",
-    "typecheck": "eve build && tsc",
-    "test:e2e": "eve eval --strict"
+    "build": "ovo build",
+    "dev": "ovo dev",
+    "start": "ovo start",
+    "typecheck": "ovo build && tsc",
+    "test:e2e": "ovo eval --strict"
   },
   "dependencies": {
-    "eve": "workspace:*",
+    "ovo": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

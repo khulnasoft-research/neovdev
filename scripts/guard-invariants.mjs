@@ -46,12 +46,12 @@
  *   rule 26 — No `loadContext() as ContextContainer` casts. Thread a
  *             `ContextContainer` parameter through instead.
  *   rule 27 — No `state:` field on hook lifecycle result types in
- *             `packages/eve/src/public/definitions/hook.ts`. Hook
+ *             `packages/ovo/src/public/definitions/hook.ts`. Hook
  *             return shapes must carry only what the harness consumes;
- *             durable state belongs on `ctx.eve`.
- *   rule 28 — Imports under `packages/eve/src/setup/scaffold/**` stay within
+ *             durable state belongs on `ctx.ovo`.
+ *   rule 28 — Imports under `packages/ovo/src/setup/scaffold/**` stay within
  *             their layer: node:* builtins, relative siblings, and the shared
- *             `@vercel/eve-catalog` data package. The scaffold stays free of
+ *             `@khulnasoft/ovo-catalog` data package. The scaffold stays free of
  *             framework runtime, compiler, terminal UI, and provider SDK
  *             dependencies.
  *   rule 29 — Changeset package keys must match workspace package names.
@@ -61,22 +61,37 @@
  *   rule 30 — The compiled-vendor pipeline (`scripts/vendor-compiled/**`)
  *             must not write a per-package `package.json` into a vendored
  *             output directory. Such a file creates a package scope that
- *             shadows eve's `#compiled/*` imports map, so a cross-package
+ *             shadows ovo's `#compiled/*` imports map, so a cross-package
  *             `#compiled/<pkg>` reference inside one vendored `.d.ts`
  *             (e.g. `@workflow/core` → `@workflow/world` → `zod`) silently
  *             degrades to `any` under `skipLibCheck`. The bundled ESM
- *             inherits `"type": "module"` from eve's root package.json, so
+ *             inherits `"type": "module"` from ovo's root package.json, so
  *             no per-package file is needed. See `prepareCompiledModule`.
  *   rule 31 — Active source and docs must not reference the removed
- *             `create-eve` package or `eve setup` command. Use `eve init`
+ *             `create-ovo` package or `ovo setup` command. Use `ovo init`
  *             for project creation and the dedicated current commands
- *             (`eve link`, `eve channels add`, `eve deploy`) afterward.
+ *             (`ovo link`, `ovo channels add`, `ovo deploy`) afterward.
  *             Changelogs and changesets are historical records and excluded.
  *   rule 32 — Every Markdown file under `research/` must have valid YAML
  *             frontmatter with non-empty `issue` and `status` fields plus an
  *             ISO `last_updated` date. Research documents are implementation
  *             plans attached to tracked GitHub work, not an unowned parallel
  *             backlog.
+ *   rule 33 — Workflow runtime imports and queue-namespace environment writes
+ *             must go through the `src/internal/workflow/runtime.ts` facade and
+ *             `queue-namespace.ts`. The generated agent bootstrap installs the
+ *             agent-scoped namespace before queue-producing APIs can run.
+ *   rule 34 — `phase` stays a runtime-only dependency. No file under the Ovo\n *             logo renderer's GPU/runtime boundary (render/, shaders/, or the\n *             offline render harness) may import the `phase` package. This keeps\n *             the mechanical separation between the lifecycle layer and the GPU\n *             renderer enforceable.
+ *   rule 35 — No direct `#compiled/gray-matter` imports outside the
+ *             `internal/helpers/gray-matter.ts` wrapper. gray-matter's default
+ *             engines `eval()` a `---js` frontmatter fence, so every call must
+ *             route through `parseFrontmatter`, which is safe by default. A
+ *             direct import lets untrusted input reach an evaluating engine.
+ *   rule 36 — Extension capability epochs have immutable hashed API metadata
+ *             and explicit support history. The current hash must match the
+ *             authoring roots, every historical epoch must be supported or
+ *             dropped, every retained epoch needs a compiling fixture, and
+ *             every public authoring value must belong to a capability.
  *
  * Baselines for rules with pre-existing violations live in
  * `guard-invariants-baseline.json`. Counts and allowlists in that file
@@ -86,6 +101,7 @@ import { readFile, readdir, lstat } from "node:fs/promises";
 import { join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
+import { checkExtensionCapabilityContracts } from "./extension-capability-contracts.mjs";
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
 const BASELINE_PATH = join(REPO_ROOT, "scripts/guard-invariants-baseline.json");
@@ -94,7 +110,7 @@ const SKIP_DIRS = new Set([
   "node_modules",
   ".git",
   ".turbo",
-  ".eve",
+  ".ovo",
   ".next",
   ".nitro",
   ".output",
@@ -164,6 +180,8 @@ function isTsLike(relPath) {
  *   rule26: Violation[];
  *   rule27: Violation[];
  *   rule28: Violation[];
+ *   rule33: Violation[];
+ *   rule35: Violation[];
  *   symlinks: string[];
  * }} state
  */
@@ -190,6 +208,8 @@ async function scanRepo(state) {
     checkRule26(posix, lines, state.rule26);
     checkRule27(posix, lines, state.rule27);
     checkRule28(posix, lines, state.rule28);
+    checkRule33(posix, lines, state.rule33);
+    checkRule35(posix, lines, state.rule35);
   }
 }
 
@@ -220,7 +240,7 @@ const WORKFLOW_IMPORT_RE = /from ["']@workflow\b/;
  */
 function isChannelOrHarness(posix) {
   return (
-    posix.startsWith("packages/eve/src/channel/") || posix.startsWith("packages/eve/src/harness/")
+    posix.startsWith("packages/ovo/src/channel/") || posix.startsWith("packages/ovo/src/harness/")
   );
 }
 
@@ -238,6 +258,73 @@ function checkRule15(posix, lines, violations) {
         file: posix,
         line: idx + 1,
         message: `imports from "@workflow/*". Channel and harness code must stay workflow-agnostic. Move the workflow primitive call into src/runtime/ or src/execution/ and have the channel/harness call a thin runtime helper instead.`,
+      });
+    }
+  });
+}
+
+// ---------- Rule 33: namespaced Workflow runtime boundary ----------
+
+const RAW_WORKFLOW_RUNTIME_SPECIFIER_RE =
+  /["'](?:#compiled\/@workflow\/core\/runtime(?:\.js|\/[^"']+\.js)|@workflow\/core\/runtime(?:\/[^"']+)?|workflow\/(?:api|runtime))["']/;
+const WORKFLOW_QUEUE_NAMESPACE_WRITE_RE =
+  /process\.env(?:\.WORKFLOW_QUEUE_NAMESPACE|\[\s*(?:WORKFLOW_QUEUE_NAMESPACE_ENV|["']WORKFLOW_QUEUE_NAMESPACE["'])\s*\])\s*=/;
+const WORKFLOW_RUNTIME_FACADES = new Set(["packages/ovo/src/internal/workflow/runtime.ts"]);
+const WORKFLOW_QUEUE_NAMESPACE_MODULE = "packages/ovo/src/internal/workflow/queue-namespace.ts";
+
+/**
+ * @param {string} posix
+ * @param {string[]} lines
+ * @param {Violation[]} violations
+ */
+function checkRule33(posix, lines, violations) {
+  lines.forEach((line, idx) => {
+    const isTypeOnlyImport = /^\s*(?:import|export)\s+type\b/.test(line);
+    const isRuntimeImport =
+      /^(?:import|export)\b|^}\s*from\b|\b(?:import|require)\s*\(/.test(line.trimStart()) &&
+      RAW_WORKFLOW_RUNTIME_SPECIFIER_RE.test(line);
+    if (!WORKFLOW_RUNTIME_FACADES.has(posix) && !isTypeOnlyImport && isRuntimeImport) {
+      violations.push({
+        rule: 33,
+        file: posix,
+        line: idx + 1,
+        message: `imports the raw Workflow runtime. Import from "#internal/workflow/runtime.js" to preserve ovo's single Workflow runtime package identity.`,
+      });
+    }
+
+    if (posix !== WORKFLOW_QUEUE_NAMESPACE_MODULE && WORKFLOW_QUEUE_NAMESPACE_WRITE_RE.test(line)) {
+      violations.push({
+        rule: 33,
+        file: posix,
+        line: idx + 1,
+        message: `writes WORKFLOW_QUEUE_NAMESPACE outside the canonical namespace module. Use installEveWorkflowQueueNamespace() so every queue surface derives the same agent-scoped value.`,
+      });
+    }
+  });
+}
+
+// ---------- Rule 35: direct gray-matter imports ----------
+
+const GRAY_MATTER_SPECIFIER_RE = /["']#compiled\/gray-matter(?:\/[^"']+)?["']/;
+const GRAY_MATTER_FACADE = "packages/ovo/src/internal/helpers/gray-matter.ts";
+
+/**
+ * @param {string} posix
+ * @param {string[]} lines
+ * @param {Violation[]} violations
+ */
+function checkRule35(posix, lines, violations) {
+  if (posix === GRAY_MATTER_FACADE) return;
+  lines.forEach((line, idx) => {
+    const isImport =
+      /^(?:import|export)\b|^}\s*from\b|\b(?:import|require)\s*\(/.test(line.trimStart()) &&
+      GRAY_MATTER_SPECIFIER_RE.test(line);
+    if (isImport) {
+      violations.push({
+        rule: 35,
+        file: posix,
+        line: idx + 1,
+        message: `imports "#compiled/gray-matter" directly. gray-matter's default engines eval() a \`---js\` frontmatter fence, so parse through parseFrontmatter() from "#internal/helpers/gray-matter.js" instead — it is safe by default and takes an explicit { allowCodeEngines: true } opt-in for trusted input.`,
       });
     }
   });
@@ -397,7 +484,7 @@ function checkRule26(posix, lines, violations) {
 
 // ---------- Rule 27: hook return shapes have no `state` field ----------
 
-const HOOK_DEFINITIONS_PATH = "packages/eve/src/public/definitions/hook.ts";
+const HOOK_DEFINITIONS_PATH = "packages/ovo/src/public/definitions/hook.ts";
 /** Matches a `state:` (or `readonly state:`, `state?:`) struct member declaration. */
 const HOOK_STATE_FIELD_RE = /^\s*(readonly\s+)?state\??\s*:/;
 
@@ -414,7 +501,7 @@ function checkRule27(posix, lines, violations) {
         rule: 27,
         file: posix,
         line: idx + 1,
-        message: `\`state:\` field detected on a hook type definition. Hook return shapes must not carry a parallel state-patch channel — durable state goes through \`ctx.eve\`. Remove the \`state\` field; if the hook truly needs to persist something across turns, write it to a context key via \`ctx.eve.set(...)\` instead.`,
+        message: `\`state:\` field detected on a hook type definition. Hook return shapes must not carry a parallel state-patch channel — durable state goes through \`ctx.ovo\`. Remove the \`state\` field; if the hook truly needs to persist something across turns, write it to a context key via \`ctx.ovo.set(...)\` instead.`,
       });
     }
   });
@@ -422,15 +509,15 @@ function checkRule27(posix, lines, violations) {
 
 // ---------- Rule 28: scaffold layer dependency whitelist ----------
 
-const SCAFFOLD_PREFIX = "packages/eve/src/setup/scaffold/";
+const SCAFFOLD_PREFIX = "packages/ovo/src/setup/scaffold/";
 
 // The curated connection and channel catalogs (and any future surface
-// overlays) read canonical identity from `@vercel/eve-catalog`, a
+// overlays) read canonical identity from `@khulnasoft/ovo-catalog`, a
 // dependency-free data package shared across the scaffolder and docs. It
 // carries no runtime, compiler, or provider-SDK weight, so the entire scaffold
 // layer may import it. The terminal UI adapters (which carry @clack/core and
-// picocolors) live outside the scaffold, in `packages/eve/src/setup/cli/`.
-const SCAFFOLD_ALLOWED_PACKAGES = new Set(["@vercel/eve-catalog"]);
+// picocolors) live outside the scaffold, in `packages/ovo/src/setup/cli/`.
+const SCAFFOLD_ALLOWED_PACKAGES = new Set(["@khulnasoft/ovo-catalog"]);
 
 const SCAFFOLD_ALLOWED_INTERNAL_IMPORTS = new Set([]);
 
@@ -446,7 +533,7 @@ const SCAFFOLD_IMPORT_RE = /^\s*import\b[^"']*\sfrom\s+["']([^"']+)["']/;
  */
 function checkRule28(posix, lines, violations) {
   if (!posix.startsWith(SCAFFOLD_PREFIX)) return;
-  // Test files never ship in the eve tarball, so the bundle-size rationale
+  // Test files never ship in the ovo tarball, so the bundle-size rationale
   // doesn't apply to them. Allow vitest and other test-only dependencies.
   if (/\.(test|integration\.test|scenario\.test)\.ts$/.test(posix)) return;
   // Channel templates embed full source files inside backtick literals
@@ -471,7 +558,7 @@ function checkRule28(posix, lines, violations) {
             rule: 28,
             file: posix,
             line: idx + 1,
-            message: `import from "${spec}" not allowed in the packages/eve/src/setup/scaffold source layer. Scaffold modules allow only node:* builtins, relative files, and @vercel/eve-catalog. Keep runtime, compiler, terminal UI, and provider SDK dependencies in their owning package.`,
+            message: `import from "${spec}" not allowed in the packages/ovo/src/setup/scaffold source layer. Scaffold modules allow only node:* builtins, relative files, and @khulnasoft/ovo-catalog. Keep runtime, compiler, terminal UI, and provider SDK dependencies in their owning package.`,
           });
         }
       }
@@ -559,7 +646,7 @@ async function checkRule29ChangesetPackageNames() {
       violations.push({
         rule: 29,
         file: relPath,
-        message: `changeset references package "${packageName}", but no workspace package has that name. Use the exact package.json "name" from the target workspace package; for packages/eve that is "eve".`,
+        message: `changeset references package "${packageName}", but no workspace package has that name. Use the exact package.json "name" from the target workspace package; for packages/ovo that is "ovo".`,
       });
     }
   }
@@ -569,7 +656,7 @@ async function checkRule29ChangesetPackageNames() {
 
 // ---------- Rule 30: vendored compiled output has no per-package package.json ----------
 
-const VENDOR_COMPILED_DIR = "packages/eve/scripts/vendor-compiled";
+const VENDOR_COMPILED_DIR = "packages/ovo/scripts/vendor-compiled";
 
 // Matches a write/copy whose path argument is a `join(...)` ending in the
 // `package.json` literal — i.e. emitting a package.json into the vendored
@@ -583,7 +670,7 @@ const COMPILED_PACKAGE_JSON_WRITE_RE =
 
 /**
  * Rule 30. Scans the compiled-vendor scripts for any code that writes a
- * `package.json` into a vendored output directory. Such a file shadows eve's
+ * `package.json` into a vendored output directory. Such a file shadows ovo's
  * `#compiled/*` imports map and silently turns cross-package vendored types
  * into `any` (see the rule 30 note in the header). Scanning the scripts (not
  * the generated artifact) keeps the guard meaningful in the `lint` CI job,
@@ -604,7 +691,7 @@ async function checkRule30VendoredCompiledPackageJson() {
         rule: 30,
         file: toPosix(relPath),
         message:
-          'vendored-compile pipeline writes a package.json into the compiled output. Remove it: a per-package package.json creates a scope that shadows eve\'s `#compiled/*` imports map, so cross-package vendored type references (e.g. @workflow/core -> @workflow/world -> zod) silently resolve to `any` under skipLibCheck. The bundled ESM inherits `"type": "module"` from eve\'s root package.json, so no per-package file is needed.',
+          'vendored-compile pipeline writes a package.json into the compiled output. Remove it: a per-package package.json creates a scope that shadows ovo\'s `#compiled/*` imports map, so cross-package vendored type references (e.g. @workflow/core -> @workflow/world -> zod) silently resolve to `any` under skipLibCheck. The bundled ESM inherits `"type": "module"` from ovo\'s root package.json, so no per-package file is needed.',
       });
     }
   }
@@ -619,17 +706,17 @@ const ACTIVE_CLI_REFERENCE_ROOTS = [
   "apps/",
   "docs/",
   "e2e/",
-  "packages/eve/src/",
-  "packages/eve/test/",
+  "packages/ovo/src/",
+  "packages/ovo/test/",
 ];
 const ACTIVE_CLI_REFERENCE_ROOT_FILES = new Set(["AGENTS.md", "CONTRIBUTING.md", "README.md"]);
 const REMOVED_CLI_REFERENCES = [
   {
-    pattern: /\b(?:npm|pnpm|yarn)\s+create\s+eve(?:@[^\s`"'<>]+)?\b/i,
-    replacement: "`eve init <name>`",
+    pattern: /\b(?:npm|pnpm|yarn)\s+create\s+ovo(?:@[^\s`"'<>]+)?\b/i,
+    replacement: "`ovo init <name>`",
   },
-  { pattern: /\bcreate-eve\b/i, replacement: "`eve init`" },
-  { pattern: /\beve\s+setup\b/i, replacement: "the dedicated current eve command" },
+  { pattern: /\bcreate-ovo\b/i, replacement: "`ovo init`" },
+  { pattern: /\beve\s+setup\b/i, replacement: "the dedicated current ovo command" },
 ];
 
 /**
@@ -662,7 +749,7 @@ async function checkRule31RemovedCliReferences() {
         rule: 31,
         file: posix,
         line: index + 1,
-        message: `references a removed eve CLI entry point. Replace it with ${removed.replacement}. Historical mentions belong only in changelogs or changesets.`,
+        message: `references a removed ovo CLI entry point. Replace it with ${removed.replacement}. Historical mentions belong only in changelogs or changesets.`,
       });
     });
   }
@@ -749,6 +836,53 @@ async function checkRule32ResearchFrontmatter() {
     }
   }
 
+  return violations;
+}
+
+// ---------- Rule 34: no `phase` imports under GPU/shader boundaries ----------
+
+const PHASE_BOUNDARY_DIRS = [
+  "apps/docs/app/[lang]/(home)/components/ovo-logo-shader/render",
+  "apps/docs/app/[lang]/(home)/components/ovo-logo-shader/shaders",
+  "apps/docs/scripts/ovo-render",
+];
+const PHASE_IMPORT_RE =
+  /(from\s+|import\s+)(?:type\s+)?['"]phase(?:\/[^'"]*)?['"]|require\(\s*['"]phase(?:\/[^'")]*)?['"]\s*\)|import\(\s*['"]phase(?:\/[^'")]*)?['"]\s*\)/;
+
+/**
+ * @returns {Promise<Violation[]>}
+ */
+async function checkRule34PhaseBoundary() {
+  /** @type {Violation[]} */
+  const violations = [];
+  for (const relDir of PHASE_BOUNDARY_DIRS) {
+    const absDir = join(REPO_ROOT, relDir);
+    let stats;
+    try {
+      stats = await lstat(absDir);
+    } catch (error) {
+      if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
+        continue;
+      }
+      throw error;
+    }
+    if (!stats.isDirectory()) continue;
+    for await (const entry of walkFiles(absDir)) {
+      if (!entry.stat.isFile()) continue;
+      const content = await readFile(entry.absPath, "utf8");
+      const match = content.match(PHASE_IMPORT_RE);
+      if (!match) continue;
+      const before = content.slice(0, match.index ?? 0);
+      const line = before.split(/\r?\n/).length;
+      violations.push({
+        rule: 34,
+        file: entry.relPath,
+        line,
+        message:
+          "imports the `phase` package inside the GPU/shader boundary. Phase must stay in the lifecycle/runtime layer — add lifecycle hooks above render/ and keep render/, shaders/, and scripts/ovo-render/ free of `phase` imports.",
+      });
+    }
+  }
   return violations;
 }
 
@@ -928,6 +1062,8 @@ async function main() {
     rule26: /** @type {Violation[]} */ ([]),
     rule27: /** @type {Violation[]} */ ([]),
     rule28: /** @type {Violation[]} */ ([]),
+    rule33: /** @type {Violation[]} */ ([]),
+    rule35: /** @type {Violation[]} */ ([]),
     symlinks: /** @type {string[]} */ ([]),
   };
 
@@ -1010,13 +1146,27 @@ async function main() {
   // Rule 32
   violations.push(...(await checkRule32ResearchFrontmatter()));
 
+  // Rule 33
+  violations.push(...state.rule33);
+
+  // Rule 34
+  violations.push(...(await checkRule34PhaseBoundary()));
+
+  // Rule 35
+  violations.push(...state.rule35);
+
+  // Rule 36
+  for (const issue of await checkExtensionCapabilityContracts()) {
+    violations.push({ rule: 36, ...issue });
+  }
+
   if (violations.length === 0) {
-    process.stdout.write("[eve:guard:invariants] ok — all mechanical lints passed.\n");
+    process.stdout.write("[ovo:guard:invariants] ok — all mechanical lints passed.\n");
     return;
   }
 
   process.stderr.write(
-    `[eve:guard:invariants] FAIL: ${violations.length} violation${violations.length === 1 ? "" : "s"} of framework mechanical rules.\n\n`,
+    `[ovo:guard:invariants] FAIL: ${violations.length} violation${violations.length === 1 ? "" : "s"} of framework mechanical rules.\n\n`,
   );
   printViolations(violations);
   process.stderr.write(

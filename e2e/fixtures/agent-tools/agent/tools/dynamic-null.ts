@@ -1,4 +1,4 @@
-import { defineDynamic } from "eve/tools";
+import { defineDynamic } from "ovo/tools";
 
 export default defineDynamic({
   events: {

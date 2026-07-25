@@ -1,4 +1,4 @@
-import { defineEval } from "eve/evals";
+import { defineEval } from "ovo/evals";
 
 const CLIENT_CONTEXT_TOKEN = "clientctx-ok-W7R2";
 
@@ -13,14 +13,12 @@ export default defineEval({
   description: "Session runtime smoke: client context.",
 
   async test(t) {
-    const turn = await t.send({
+    await t.send({
       clientContext: [`include the exact token ${CLIENT_CONTEXT_TOKEN} verbatim`],
       message: "Say hello.",
     });
-    turn.expectOk();
 
-    t.didNotFail();
-    t.completed();
+    t.succeeded();
     t.messageIncludes(CLIENT_CONTEXT_TOKEN);
   },
 });

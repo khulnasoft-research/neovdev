@@ -8,12 +8,15 @@ export const BOOTSTRAP_MARKER_PATH = "/workspace/smoke-marker.txt";
 export const BOOTSTRAP_MARKER_TOKEN = "sandbox-bootstrap-ok-J3Q";
 
 /** Custom CLI installed on the PATH by `bootstrap`. */
-export const SANDBOX_CLI_NAME = "eve-greet";
-export const SANDBOX_CLI_TOKEN = "eve-greet-cli-ok-R7M";
+export const SANDBOX_CLI_NAME = "ovo-greet";
+export const SANDBOX_CLI_TOKEN = "ovo-greet-cli-ok-R7M";
 
 /** Written by `onSession` into each live session (not the template). */
 export const SESSION_MARKER_PATH = "/workspace/session-marker.txt";
 export const SESSION_MARKER_TOKEN = "sandbox-onsession-ok-X5T";
+
+/** Loopback endpoint that releases after ten curl requests arrive concurrently. */
+export const FANOUT_BARRIER_SERVER_URL = "http://127.0.0.1:43100/barrier";
 
 /** Mounted from `agent/sandbox/workspace/seed-data.txt` at session start. */
 export const WORKSPACE_SEED_PATH = "/workspace/seed-data.txt";

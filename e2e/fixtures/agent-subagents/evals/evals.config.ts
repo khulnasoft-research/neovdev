@@ -1,6 +1,6 @@
-import { defineEvalConfig } from "eve/evals";
+import { defineEvalConfig } from "ovo/evals";
 
 /** Default judge model for any `t.judge.*` assertion in this fixture. */
 export default defineEvalConfig({
-  judge: { model: "openai/gpt-5.5" },
+  judge: { model: process.env.EVE_E2E_MODEL ?? "openai/gpt-5.6-sol" },
 });

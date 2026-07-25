@@ -9,28 +9,22 @@
   ],
   "versionGroups": [
     {
-      "label": "docs intentionally pins its own ai / @ai-sdk/react versions",
-      "dependencies": ["ai", "@ai-sdk/react"],
-      "packages": ["eve-docs"],
-      "isIgnored": true
-    },
-    {
       "label": "Workspace packages must use the workspace: protocol",
-      "dependencies": ["eve-*", "eve"],
+      "dependencies": ["ovo-*", "ovo"],
       "dependencyTypes": ["dev", "prod", "peer"],
       "pinVersion": "workspace:*"
     },
     {
-      "label": "eve host peer ranges are intentionally broad",
+      "label": "ovo host peer ranges are intentionally broad",
       "dependencies": ["next", "react"],
-      "packages": ["eve"],
+      "packages": ["ovo"],
       "dependencyTypes": ["peer"],
       "isIgnored": true
     },
     {
       "label": "Next.js projects pin TypeScript 6 for its compiler API",
       "dependencies": ["typescript"],
-      "packages": ["eve-docs", "framework-next", "web-chat-next-template"],
+      "packages": ["ovo-docs", "framework-next", "web-chat-next-template"],
       "dependencyTypes": ["dev"],
       "pinVersion": "6.0.3"
     },
@@ -38,10 +32,8 @@
       "label": "Shared third-party deps must use the catalog: protocol",
       "policy": "catalog",
       "dependencies": [
-        "@ai-sdk/**",
         "@types/node",
         "typescript",
-        "ai",
         "next",
         "@types/react",
         "@types/react-dom",

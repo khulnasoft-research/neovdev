@@ -1,4 +1,4 @@
-import { defineChannel, POST } from "eve/channels";
+import { defineChannel, POST } from "ovo/channels";
 
 interface AnchorRequestBody {
   readonly marker?: string;

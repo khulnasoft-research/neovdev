@@ -9,11 +9,11 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
-    ".eve/**",
+    ".ovo/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Chat UI is a thin wrapper around the eve runtime HTTP surface. Skip the
+    // Chat UI is a thin wrapper around the ovo runtime HTTP surface. Skip the
     // Next.js lints here so it can stay focused on the agent transport contract.
     "app/_chat/**",
   ]),

@@ -8,13 +8,12 @@
       "env": ["VERCEL"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**", ".output/**", ".vercel/output/**"]
@@ -29,13 +28,12 @@
         "**/*.d.ts",
         "tsconfig*.json",
         "package.json",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map"]
@@ -46,16 +44,14 @@
     },
     "test": {
       "cache": false,
-      "env": ["EVE_EXPERIMENTAL_CODE_MODE"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": []
@@ -64,61 +60,54 @@
       "cache": false,
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": []
     },
     "test:integration": {
       "cache": false,
-      "env": ["EVE_EXPERIMENTAL_CODE_MODE"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": []
     },
     "test:scenario": {
       "cache": false,
-      "env": ["EVE_EXPERIMENTAL_CODE_MODE"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": []
     },
     "test:unit": {
       "cache": false,
-      "env": ["EVE_EXPERIMENTAL_CODE_MODE"],
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": []
@@ -137,13 +126,12 @@
         "**/*.jsx",
         "tsconfig*.json",
         "package.json",
-        "!.eve/**",
+        "!.ovo/**",
         "!.next/**",
         "!.nuxt/**",
         "!.output/**",
         "!.svelte-kit/**",
         "!.turbo/**",
-        "!.workflow-data/**",
         "!node_modules/**"
       ],
       "outputs": []

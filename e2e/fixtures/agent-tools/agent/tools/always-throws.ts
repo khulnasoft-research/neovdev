@@ -1,5 +1,5 @@
-import { defineTool } from "eve/tools";
-import { never } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { never } from "ovo/tools/approval";
 import { z } from "zod";
 
 /**
@@ -11,7 +11,7 @@ import { z } from "zod";
  * tool-error result), the harness does NOT emit `turn.failed`, and the
  * session remains usable for a follow-up message.
  *
- * `needsApproval: never()` keeps the test single-turn from a HITL
+ * `approval: never()` keeps the test single-turn from a HITL
  * perspective so the throw path is the only thing under test.
  */
 export default defineTool({
@@ -20,7 +20,7 @@ export default defineTool({
   inputSchema: z.object({
     reason: z.string().describe("Free-form reason for the call. The tool ignores it and throws."),
   }),
-  needsApproval: never(),
+  approval: never(),
   async execute(_input) {
     throw new Error("always-throws: intentional failure for smoke-test coverage");
   },

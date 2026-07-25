@@ -1,7 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  modules: ["eve/nuxt"],
+  modules: ["ovo/nuxt"],
 
   css: ["~/assets/css/main.css"],
 

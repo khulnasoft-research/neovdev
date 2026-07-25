@@ -1,3 +1,7 @@
 {
-  "rootDirectory": "apps/docs"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm run build && tmp=\"$(mktemp -d)\" && pnpm --filter ./packages/ovo pack --pack-destination \"$tmp\" && mkdir -p apps/docs/public && cp \"$tmp\"/ovo-*.tgz apps/docs/public/ovo.tgz && cd apps/docs && pnpm run build",
+  "outputDirectory": "apps/docs/.next",
+  "framework": "nextjs",
+  "ignoreCommand": "npx turbo-ignore"
 }

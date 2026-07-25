@@ -1,5 +1,5 @@
-import type { EveAgentReducer, EveAgentReducerEvent } from "eve/react";
-import type { HandleMessageStreamEvent } from "eve/client";
+import type { EveAgentReducer, EveAgentReducerEvent } from "ovo/react";
+import type { HandleMessageStreamEvent } from "ovo/client";
 
 import { buildTraceTurnsFromTranscript } from "./trace";
 import type { TraceStep, TraceTurn, TranscriptStreamEvent } from "./types";

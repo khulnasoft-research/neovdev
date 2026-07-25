@@ -1,0 +1,20 @@
+{
+  "name": "agent-model",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "ovo build",
+    "dev": "ovo dev",
+    "start": "ovo start",
+    "typecheck": "ovo build && tsc",
+    "test:e2e": "ovo eval --strict"
+  },
+  "dependencies": {
+    "ovo": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

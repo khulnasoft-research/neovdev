@@ -1,7 +1,10 @@
+import { createRequire } from "node:module";
 import { createMDX } from "fumadocs-mdx/next";
 import type { NextConfig } from "next";
 
 const withMDX = createMDX();
+const require = createRequire(import.meta.url);
+const wgslLoader = require.resolve("@vgpu/wgsl/loader-webpack");
 
 const localSiteHost = "localhost:3000";
 
@@ -12,22 +15,41 @@ const config: NextConfig = {
   },
 
   // The integrations gallery sources identity from the workspace package
-  // `@vercel/eve-catalog`; transpile it from source so dev and build compile
+  // `@khulnasoft/ovo-catalog`; transpile it from source so dev and build compile
   // its TypeScript without a separate prebuild step.
-  transpilePackages: ["@vercel/eve-catalog"],
+  transpilePackages: ["@khulnasoft/ovo-catalog"],
 
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
 
+  turbopack: {
+    rules: {
+      "*.wgsl": {
+        loaders: [wgslLoader],
+        as: "*.js",
+      },
+    },
+  },
+
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [75, 95],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "placehold.co",
       },
     ],
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap.xml",
+        destination: "https://crawled-sitemap.vercel.sh/khulnasoft.com-.xml",
+      },
+    ];
   },
 
   async redirects() {

@@ -6,17 +6,17 @@
       "framework": "sveltekit",
       "routePrefix": "/"
     },
-    "eve": {
-      "buildCommand": "eve build",
+    "ovo": {
+      "buildCommand": "ovo build",
       "entrypoint": ".",
-      "framework": "eve",
-      "routePrefix": "/_eve_internal/eve"
+      "framework": "ovo",
+      "routePrefix": "/_eve_internal/ovo"
     }
   },
   "rewrites": [
     {
-      "source": "/eve/v1/:path*",
-      "destination": "/_eve_internal/eve/eve/v1/:path*"
+      "source": "/ovo/v1/:path*",
+      "destination": "/_eve_internal/ovo/ovo/v1/:path*"
     }
   ]
 }

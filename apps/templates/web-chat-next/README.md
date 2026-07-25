@@ -1,6 +1,6 @@
 # Web Chat Next template
 
-A small Next.js app that acts as the source for eve's generated Web Chat template.
+A small Next.js app that acts as the source for ovo's generated Web Chat template.
 
 ## Usage
 
@@ -10,32 +10,32 @@ Start the Next.js app:
 pnpm --filter web-chat-next-template dev
 ```
 
-The Next.js config uses `withEve()` from `eve/next`. In local
-development it starts the app-local eve agent on a random available port and
-rewrites same-origin eve endpoints like `/eve/v1/session` to that server, so
+The Next.js config uses `withEve()` from `ovo/next`. In local
+development it starts the app-local ovo agent on a random available port and
+rewrites same-origin ovo endpoints like `/ovo/v1/session` to that server, so
 the client component can use `useEveAgent()` without configuring a host.
 
-Set `EVE_BASE_URL` before starting Next.js to reuse an already-running eve
+Set `EVE_BASE_URL` before starting Next.js to reuse an already-running ovo
 server instead of letting `withEve()` start one:
 
 ```bash
 EVE_BASE_URL=http://localhost:3000 pnpm --filter web-chat-next-template dev
 ```
 
-When a linked Vercel project is detected, `withEve()` writes generated
-`experimentalServices` to `.vercel/output/config.json` so Next.js deploys at
-`/` and the app-local eve agent runs behind the private
-`/_eve_internal/eve` service prefix, then rewrites public eve endpoints to that
-private service.
+In Vercel builds, or when a linked Vercel project is detected locally,
+`withEve()` writes generated `services` and `routes` to
+`.vercel/output/config.json`. The Next.js app stays the default app, while
+Vercel routes public ovo endpoints directly to the app-local ovo service before
+filesystem routing.
 
 ## Scaffold Source
 
-`packages/eve/src/setup/scaffold/create/web-template.ts` is generated from this app for
-`eve init --web` and `eve channels add web`. Edit this app
+`packages/ovo/src/setup/scaffold/create/web-template.ts` is generated from this app for
+`ovo init --web` and `ovo channels add web`. Edit this app
 first, then regenerate the scaffold module:
 
 ```bash
-pnpm --filter eve generate:web-template
+pnpm --filter ovo generate:web-template
 ```
 
 The generator recursively copies this app's Web Chat files, excluding source-only

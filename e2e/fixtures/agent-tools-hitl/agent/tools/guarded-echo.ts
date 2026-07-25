@@ -1,5 +1,5 @@
-import { defineTool } from "eve/tools";
-import { once } from "eve/tools/approval";
+import { defineTool } from "ovo/tools";
+import { once } from "ovo/tools/approval";
 import { z } from "zod";
 
 /**
@@ -13,7 +13,7 @@ export default defineTool({
   inputSchema: z.object({
     note: z.string().optional().describe("Any note string."),
   }),
-  needsApproval: once(),
+  approval: once(),
   async execute(input) {
     return {
       echoed: input.note ?? null,
