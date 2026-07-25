@@ -26,5 +26,5 @@ export declare const webhookLogger: Logger;
 export declare const eventsLogger: Logger;
 export declare const adapterLogger: Logger;
 export declare const buildLogger: Logger;
-export {};
+
 //# sourceMappingURL=logger.d.ts.map

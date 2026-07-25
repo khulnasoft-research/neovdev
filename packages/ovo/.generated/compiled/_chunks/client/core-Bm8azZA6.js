@@ -848,11 +848,11 @@ const _t = /^[cC][0-9a-z]{6,}$/,
   Dt = L(6),
   Ot = L(7),
   kt =
-    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/,
+    /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/,
   At =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
   jt =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   Mt = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u,
   Nt = Mt,
   Pt =
@@ -1438,7 +1438,7 @@ var Kn = class {
   compile() {
     let e = Function,
       t = this?.args,
-      n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+      n = (this?.content ?? [``]).map((e) => `  ${e}`);
     return new e(
       ...t,
       n.join(`
@@ -8248,7 +8248,7 @@ var zo = class {
   get(e) {
     let t = e._zod.parent;
     if (t) {
-      let n = { ...(this.get(t) ?? {}) };
+      let n = { ...this.get(t) };
       delete n.id;
       let r = { ...n, ...this._map.get(e) };
       return Object.keys(r).length ? r : void 0;
@@ -8996,7 +8996,7 @@ const Kc =
     (e, t, n = {}) =>
     (r) => {
       let { libraryOptions: i, target: a } = r ?? {},
-        o = Y({ ...(i ?? {}), target: a, io: t, processors: n });
+        o = Y({ ...i, target: a, io: t, processors: n });
       return (X(e, o), Z(o, e), Q(o, e));
     },
   Jc = { guid: `uuid`, url: `uri`, datetime: `date-time`, json_string: `json-string`, regex: `` },
@@ -9018,14 +9018,12 @@ const Kc =
       e.length === 1
         ? (i.pattern = e[0].source)
         : e.length > 1 &&
-          (i.allOf = [
-            ...e.map((e) => ({
-              ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
-                ? { type: `string` }
-                : {}),
-              pattern: e.source,
-            })),
-          ]);
+          (i.allOf = e.map((e) => ({
+            ...(t.target === `draft-07` || t.target === `draft-04` || t.target === `openapi-3.0`
+              ? { type: `string` }
+              : {}),
+            pattern: e.source,
+          })));
     }
   },
   Xc = (e, t, n, r) => {

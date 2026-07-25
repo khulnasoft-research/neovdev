@@ -1,0 +1,4 @@
+{
+  "title": "Frontend",
+  "pages": ["overview", "nextjs", "nuxt", "sveltekit", "use-ovo-agent-vue", "use-ovo-agent-svelte"]
+}

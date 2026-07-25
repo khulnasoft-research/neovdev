@@ -315,7 +315,7 @@ var a = i((e, t) => {
               let c = r[n],
                 l = /^".*"$/.test(c) ? c.slice(1, -1) : c,
                 d = i.join(l, e);
-              a(f(!l && /^\.[\\\/]/.test(e) ? e.slice(0, 2) + d : d, n, 0));
+              a(f(!l && /^\.[\\/]/.test(e) ? e.slice(0, 2) + d : d, n, 0));
             }),
           f = (e, n, r) =>
             new Promise((i, s) => {
@@ -339,7 +339,7 @@ var a = i((e, t) => {
           let c = n[s],
             u = /^".*"$/.test(c) ? c.slice(1, -1) : c,
             d = i.join(u, e),
-            f = !u && /^\.[\\\/]/.test(e) ? e.slice(0, 2) + d : d;
+            f = !u && /^\.[\\/]/.test(e) ? e.slice(0, 2) + d : d;
           for (let e = 0; e < r.length; e++) {
             let n = f + r[e];
             try {
@@ -3346,11 +3346,11 @@ var pn,
       (wn = Sn(6)),
       (Tn = Sn(7)),
       (En =
-        /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/),
+        /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/),
       (Dn =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/),
       (On =
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
       (kn = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u),
       (An = kn),
       (jn =
@@ -3930,7 +3930,7 @@ var H,
       compile() {
         let e = Function,
           t = this?.args,
-          n = [...(this?.content ?? [``]).map((e) => `  ${e}`)];
+          n = (this?.content ?? [``]).map((e) => `  ${e}`);
         return new e(
           ...t,
           n.join(`
@@ -10501,7 +10501,7 @@ var hc,
         get(e) {
           let t = e._zod.parent;
           if (t) {
-            let n = { ...(this.get(t) ?? {}) };
+            let n = { ...this.get(t) };
             delete n.id;
             let r = { ...n, ...this._map.get(e) };
             return Object.keys(r).length ? r : void 0;
@@ -11107,16 +11107,14 @@ var bu,
                     e.length === 1
                       ? (n.pattern = e[0].source)
                       : e.length > 1 &&
-                        (o.schema.allOf = [
-                          ...e.map((e) => ({
-                            ...(this.target === `draft-7` ||
-                            this.target === `draft-4` ||
-                            this.target === `openapi-3.0`
-                              ? { type: `string` }
-                              : {}),
-                            pattern: e.source,
-                          })),
-                        ]);
+                        (o.schema.allOf = e.map((e) => ({
+                          ...(this.target === `draft-7` ||
+                          this.target === `draft-4` ||
+                          this.target === `openapi-3.0`
+                            ? { type: `string` }
+                            : {}),
+                          pattern: e.source,
+                        })));
                   }
                   break;
                 }

@@ -1223,5 +1223,5 @@ export interface ListEventsByCorrelationIdParams {
   pagination?: PaginationOptions;
   resolveData?: ResolveData;
 }
-export {};
+
 //# sourceMappingURL=events.d.ts.map

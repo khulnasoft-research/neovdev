@@ -238,5 +238,5 @@ export declare function createWebhook(
   },
 ): Webhook<RequestWithResponse>;
 export declare function createWebhook(options?: WebhookOptions): Webhook<Request>;
-export {};
+
 //# sourceMappingURL=create-hook.d.ts.map

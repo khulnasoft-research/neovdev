@@ -6,5 +6,5 @@ export declare function normalizeAttributeChanges(
   attrs: Record<string, string | undefined>,
   options?: AttributeChangeOptions,
 ): AttributeChange[];
-export {};
+
 //# sourceMappingURL=attribute-changes.d.ts.map

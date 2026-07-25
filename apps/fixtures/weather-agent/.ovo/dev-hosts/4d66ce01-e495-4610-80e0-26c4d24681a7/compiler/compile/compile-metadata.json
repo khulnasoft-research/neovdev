@@ -1,0 +1,30 @@
+{
+  "compile": {
+    "moduleMap": {
+      "path": ".ovo/compile/module-map.mjs",
+      "sha256": "633d9446d1bc0265c4f079a9be7472ccaa0d73baeccaa87387ae40019a3d384b"
+    }
+  },
+  "discovery": {
+    "diagnostics": {
+      "path": ".ovo/discovery/diagnostics.json",
+      "sha256": "4664bbf5470a1c93585e7fad8c1682c7fa897234f6f8edb974d48bdc0d34e256"
+    },
+    "manifest": {
+      "path": ".ovo/discovery/agent-discovery-manifest.json",
+      "sha256": "adfd387e751fa1f824d3f092725a8dcbc33d832972e90b5c64c7416a9d23ecbf"
+    },
+    "sourceGraphHash": "0b05b7c391a4b8595b15b116bfd80209c146661da99555ccf0a2ca714d7c71ae",
+    "summary": {
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "generator": {
+    "name": "ovo",
+    "version": "0.27.1"
+  },
+  "kind": "ovo-compile-metadata",
+  "status": "ready",
+  "version": 5
+}

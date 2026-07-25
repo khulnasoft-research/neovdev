@@ -71,5 +71,5 @@ export type MainToWorkerMessage =
   | WorkerRunMessage
   | WorkerBridgeResponse
   | WorkerBridgeDrainRequest;
-export {};
+
 //# sourceMappingURL=protocol.d.ts.map

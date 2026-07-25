@@ -164,5 +164,5 @@ export declare function registerDeliveryBarrier(
  * breaks hook/sleep `Promise.race` ordering (CorruptedEventLogError).
  */
 export declare function scheduleWhenIdle(ctx: WorkflowOrchestratorContext, fn: () => void): void;
-export {};
+
 //# sourceMappingURL=private.d.ts.map

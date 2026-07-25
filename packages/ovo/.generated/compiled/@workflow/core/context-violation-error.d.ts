@@ -98,5 +98,5 @@ export declare class NotInWorkflowOrStepContextError extends ContextViolationErr
   name: string;
   constructor(functionName: string, docsUrl: DocsUrl);
 }
-export {};
+
 //# sourceMappingURL=context-violation-error.d.ts.map

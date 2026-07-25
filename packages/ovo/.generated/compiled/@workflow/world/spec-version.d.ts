@@ -53,5 +53,5 @@ export declare function isLegacySpecVersion(v: number | undefined | null): boole
  * @returns true if the run requires a newer world version
  */
 export declare function requiresNewerWorld(v: number | undefined | null): boolean;
-export {};
+
 //# sourceMappingURL=spec-version.d.ts.map
